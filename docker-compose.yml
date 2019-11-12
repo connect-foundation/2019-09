@@ -2,6 +2,19 @@ version: "3"
 
 services:
 
+  nginx:
+    image: nginx:1.16.1
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      # - /etc/letsencrypt:/etc/letsencrypt
+      - ./nginx:/etc/nginx/conf.d
+    env_file:
+      - ./.env
+
   trycatch:
     image: node:12.13.0
     container_name: trycatch
@@ -13,6 +26,4 @@ services:
     restart: always
     env_file:
       - ./.env
-    ports:
-      - "3000:3000"
     
