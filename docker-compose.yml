@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+
+  trycatch:
+    image: node:12.13.0
+    container_name: trycatch
+    volumes:
+      - ./:/app/
+    working_dir: /app/server/
+    user: root
+    command: bash -c "npm install pm2 -g && npm install && pm2-runtime bin/www"
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "3000:3000"
+    
