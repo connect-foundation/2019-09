@@ -11,9 +11,10 @@ services:
     restart: always
     volumes:
       # - /etc/letsencrypt:/etc/letsencrypt
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/default.conf.template:/etc/nginx/conf.d/default.conf.template
     env_file:
       - ./.env
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
 
   trycatch:
     image: node:12.13.0
