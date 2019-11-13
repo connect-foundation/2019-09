@@ -1,13 +1,19 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <title>webRTC</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
 
-<head>
-  <title>Express</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
-</head>
-
-<body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
-</body>
-
+  <body>
+    <div class="select-room">
+      <input class="room-number" />
+      <button class="join-button">join</button>
+    </div>
+    <div class="video-wrapper hide">
+      <video class="local-video" autoplay playsinline></video>
+      <video class="remote-video" autoplay playsinline></video>
+    </div>
+    <script src="/javascripts/index.js"></script>
+  </body>
 </html>
