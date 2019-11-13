@@ -7,7 +7,7 @@ server {
     server_name ${NGINX_SERVER_NAME};
 
     location / {
-        return 301 https://$host$request_uri;
+        return 301 https://${NGINX_HOST_REQUEST_URI};
     }
 }
 
