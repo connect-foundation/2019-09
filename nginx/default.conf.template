@@ -12,10 +12,10 @@ server {
 }
 
 server {
-    # listen 443 ssl;
-    # ssl_certificate /etc/letsencrypt/live/${NGINX_SERVER_NAME}/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem;
-    # server_name ${NGINX_SERVER_NAME};
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/${NGINX_SERVER_NAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem;
+    server_name ${NGINX_SERVER_NAME};
 
     location / {
         proxy_pass http://node_server;
