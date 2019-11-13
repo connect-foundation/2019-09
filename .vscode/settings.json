@@ -1,5 +1,9 @@
 {
-  "eslint.workingDirectories": [
-    "server"
-  ]
+  "eslint.workingDirectories": ["server"],
+  "eslint.autoFixOnSave": true,
+  "javascript.format.enable": false,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false
 }
