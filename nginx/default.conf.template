@@ -6,9 +6,9 @@ server {
     listen      80;
     server_name ${NGINX_SERVER_NAME};
 
-    # location / {
-    #     return 301 https://$host$request_uri;
-    # }
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }
 
 server {
@@ -17,9 +17,9 @@ server {
     # ssl_certificate_key /etc/letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem;
     # server_name ${NGINX_SERVER_NAME};
 
-    # location / {
-    #     proxy_pass http://node_server;
-    # }
+    location / {
+        proxy_pass http://node_server;
+    }
 
     gzip on;
     gzip_comp_level 2;
