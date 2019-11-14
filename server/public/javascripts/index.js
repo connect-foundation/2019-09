@@ -14,7 +14,9 @@ const getSdpFromServer = () => {};
 const getIceFromServer = () => {};
 const userLeftHandler = () => {};
 const userJoinHandler = () => {};
-const initSocketId = () => {};
+const initSocketId = () => {
+  socketId = socket.id;
+};
 
 const runWebRTC = async () => {
   if (!navigator.mediaDevices.getUserMedia) {
