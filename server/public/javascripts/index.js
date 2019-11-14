@@ -37,7 +37,31 @@ const getIceFromServer = async (fromId, message) => {
 };
 
 const userLeftHandler = () => {};
-const userJoinHandler = () => {};
+
+const spreadUserJoined = (socketListId) => {
+  if (rtcPeerConnections[socketListId]) return;
+  rtcPeerConnections[socketListId] = new RTCPeerConnection(
+    peerConnectionConfig,
+  );
+
+  rtcPeerConnections[socketListId].onicecandidate = () => {
+    if (event.candidate === null) return;
+    socket.emit('ice', socketListId, { ice: event.candidate });
+  };
+
+  rtcPeerConnections[socketListId].onaddstream = () => gotRemoteStream(event, socketListId);
+
+  rtcPeerConnections[socketListId].addStream(localStream);
+};
+
+const userJoinHandler = async (id, count, clients) => {
+  clients.forEach(spreadUserJoined);
+  if (count < 2) return;
+  const description = await rtcPeerConnections[id].createOffer();
+  await rtcPeerConnections[id].setLocalDescription(description);
+  emitSdpSignal(id, rtcPeerConnections);
+};
+
 const initSocketId = () => {
   socketId = socket.id;
 };
