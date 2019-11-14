@@ -1,3 +1,5 @@
+import { async } from '../../../../../../../../Caches/typescript/3.5/node_modules/rxjs/internal/scheduler/async';
+
 const localVideo = document.querySelector('.local-video');
 const rtcPeerConnections = [];
 let localStream;
@@ -5,12 +7,29 @@ let socketId;
 
 const mediaConstraints = { video: true, audio: false };
 
-const getUserMediaSuccess = stream => {
+const getUserMediaSuccess = (stream) => {
   localStream = stream;
   localVideo.srcObject = stream;
 };
 
-const getSdpFromServer = () => {};
+const emitSdpSignal = (fromId, connections) => {
+  socket.emit('sdp', fromId, {
+    sdp: connections[fromId].localDescription,
+  });
+};
+
+const getSdpFromServer = async (fromId, message) => {
+  if (fromId !== socketId) {
+    await rtcPeerConnections[fromId].setRemoteDescription(
+      new RTCSessionDescription(message.sdp),
+    );
+    if (message.sdp.type !== 'offer') return;
+    const description = await rtcPeerConnections[fromId].createAnswer();
+    await rtcPeerConnections[fromId].setLocalDescription(description);
+    emitSdpSignal(fromId, rtcPeerConnections);
+  }
+};
+
 const getIceFromServer = () => {};
 const userLeftHandler = () => {};
 const userJoinHandler = () => {};
