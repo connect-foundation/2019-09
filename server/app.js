@@ -8,15 +8,21 @@ const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: false,
-}));
+app.use(
+  express.urlencoded({
+    extended: false,
+  }),
+);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
-
-  io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets));
+  io.sockets.emit(
+    'user-joined',
+    socket.id,
+    io.engine.clientsCount,
+    Object.keys(io.sockets.clients().sockets),
+  );
 
   socket.on('sdp', (toId, message) => {
     io.to(toId).emit('sdp', socket.id, message);
@@ -27,11 +33,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    io.sockets.emit("user-left", socket.id);
+    io.sockets.emit('user-left', socket.id);
   });
-
 });
 app.io = io;
-
 
 module.exports = app;
