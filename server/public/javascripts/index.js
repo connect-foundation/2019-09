@@ -1,5 +1,3 @@
-import { async } from '../../../../../../../../Caches/typescript/3.5/node_modules/rxjs/internal/scheduler/async';
-
 const localVideo = document.querySelector('.local-video');
 const rtcPeerConnections = [];
 let localStream;
@@ -30,7 +28,14 @@ const getSdpFromServer = async (fromId, message) => {
   }
 };
 
-const getIceFromServer = () => {};
+const getIceFromServer = async (fromId, message) => {
+  if (fromId !== socketId) {
+    rtcPeerConnections[fromId]
+      .addIceCandidate(new RTCIceCandidate(message.ice))
+      .catch(console.log);
+  }
+};
+
 const userLeftHandler = () => {};
 const userJoinHandler = () => {};
 const initSocketId = () => {
