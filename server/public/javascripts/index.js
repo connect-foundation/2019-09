@@ -3,12 +3,42 @@ const rtcPeerConnections = [];
 let localStream;
 let socketId;
 
-const mediaConstraints = { video: true, audio: false };
+const mediaConstraints = {
+  video: true,
+  audio: false
+};
+
+const peerConnectionConfig = {
+  'iceServers': [{
+      'urls': 'stun:stun.services.mozilla.com'
+    },
+    {
+      'urls': 'stun:stun.l.google.com:19302'
+    },
+  ]
+};
 
 const getUserMediaSuccess = (stream) => {
   localStream = stream;
   localVideo.srcObject = stream;
 };
+
+const getRemoteStream = (event, id) => {
+
+  const video = document.createElement('video');
+  const wrapper = document.createElement('div');
+  const videos = document.querySelector('.videos');
+
+  wrapper.classList.add('video-wrapper');
+  video.setAttribute('data-socket', id);
+  video.srcObject = event.stream;
+  video.autoplay = true;
+  video.muted = true;
+  video.playsinline = true;
+
+  wrapper.appendChild(video);
+  videos.appendChild(wrapper);
+}
 
 const emitSdpSignal = (fromId, connections) => {
   socket.emit('sdp', fromId, {
@@ -36,7 +66,10 @@ const getIceFromServer = async (fromId, message) => {
   }
 };
 
-const userLeftHandler = () => {};
+const userLeftHandler = (id) => {
+  const video = document.querySelector(`[data-socket="${id}"]`);
+  video.parentElement.remove();
+};
 
 const spreadUserJoined = (socketListId) => {
   if (rtcPeerConnections[socketListId]) return;
@@ -46,10 +79,12 @@ const spreadUserJoined = (socketListId) => {
 
   rtcPeerConnections[socketListId].onicecandidate = () => {
     if (event.candidate === null) return;
-    socket.emit('ice', socketListId, { ice: event.candidate });
+    socket.emit('ice', socketListId, {
+      ice: event.candidate
+    });
   };
 
-  rtcPeerConnections[socketListId].onaddstream = () => gotRemoteStream(event, socketListId);
+  rtcPeerConnections[socketListId].onaddstream = () => getRemoteStream(event, socketListId);
 
   rtcPeerConnections[socketListId].addStream(localStream);
 };
