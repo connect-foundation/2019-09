@@ -6,14 +6,13 @@
   </head>
 
   <body>
-    <div class="select-room">
-      <input class="room-number" />
-      <button class="join-button">join</button>
+    <div class="videos">
+      <div class="video-wrapper">
+        <video class="local-video" autoplay muted playsinline></video>
+      </div>
     </div>
-    <div class="video-wrapper hide">
-      <video class="local-video" autoplay playsinline></video>
-      <video class="remote-video" autoplay playsinline></video>
-    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/webrtc-adapter.js"></script>
     <script src="/javascripts/index.js"></script>
   </body>
 </html>
