@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import MainTitle from '../containers';
+import { MainTitle } from '../containers';
 
 const PageWrapper = styled.div`
   width: 100%;

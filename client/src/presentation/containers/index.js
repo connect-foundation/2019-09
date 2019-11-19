@@ -1,3 +1,3 @@
 import MainTitle from './MainTitle';
 
-export default MainTitle;
+export { MainTitle };
