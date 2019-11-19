@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 
 const InputWrapper = styled.div`
   width: 15rem;
-  height: 1.6rem;
-  margin: auto;
+  height: 1.9rem;
   border-style: solid;
   border-radius: 5px;
   border-width: 1px;

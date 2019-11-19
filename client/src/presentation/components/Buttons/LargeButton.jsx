@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const LargeButtonContent = styled.button`
   width: 15rem;
-  height: 1.6rem;
+  height: 2rem;
   border: none;
   outline: none;
   border-style: solid;
