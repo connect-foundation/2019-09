@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { MainTitle } from '../containers';
+import { LargeButton, TextInput } from '../components';
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -19,6 +20,9 @@ const MainPage = () => {
     <PageWrapper>
       <PageContents>
         <MainTitle />
+        <TextInput placeholder="NAME" id="user-name" />
+        <LargeButton name="PLAY" onClick={() => {}} />
+        <LargeButton name="RANK" onClick={() => {}} />
       </PageContents>
     </PageWrapper>
   );
