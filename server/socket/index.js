@@ -2,18 +2,15 @@ const io = require('socket.io')();
 const webRtcUtils = require('./utils');
 
 io.on('connection', socket => {
-  socket.on('join', ({
-    roomNumber
-  }) => {
+  socket.on('join', ({ roomNumber }) => {
     socket.join(roomNumber);
   });
 
-  socket.on('ready', ({
-    isReady
-  }) => {
+  socket.on('ready', ({ isReady }) => {
     const [roomNumber] = Object.keys(socket.rooms);
     const room = io.sockets.adapter.rooms[roomNumber];
     const socketIds = Object.keys(room.sockets);
+    const minUserCount = 2;
 
     if (isReady) {
       room.readyUsers[socket.id] = true;
@@ -21,12 +18,20 @@ io.on('connection', socket => {
       delete room.readyUsers[socket.id];
     }
 
-    if (webRtcUtils.checkAllReady(room)) {
+    if (
+      webRtcUtils.checkAllReady(room) &&
+      room.readyUsers.length >= minUserCount
+    ) {
       const setCount = 80;
-      room.gameStatus = room.gameStatus || webRtcUtils.makeGameStatus(socketIds, roundNumber, setCount);
-      webRtcUtils.distributePlayerTypes(io, gameStatus.gameOrderQueue.shift(), socketIds);
+      room.gameStatus =
+        room.gameStatus ||
+        webRtcUtils.makeGameStatus(socketIds, roomNumber, setCount);
+      webRtcUtils.distributePlayerTypes(
+        io,
+        room.gameStatus.gameOrderQueue.shift(),
+        socketIds,
+      );
     }
-
   });
 });
 
