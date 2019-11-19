@@ -8,4 +8,17 @@ module.exports = {
       }
     });
   },
+
+  makeGameOrderQueue(socketIds, roundNumber) {
+    const gameOrderQueue = [];
+    const roundQueue = socketIds.map(socketId => {
+      return { type: 'player', socketId };
+    });
+
+    for (let i = 0; i < roundNumber; i += 1) {
+      gameOrderQueue.push(...roundQueue);
+      gameOrderQueue.push({ type: 'roundEnd', round: i + 1 });
+    }
+    gameOrderQueue.push({ type: 'gameEnd' });
+  },
 };
