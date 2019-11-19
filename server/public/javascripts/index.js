@@ -23,7 +23,7 @@ class SocketClient {
         streamingContainer.classList.remove('hide');
         roomNumberInput.classList.add('hide');
         const roomNumber = roomNumberInput.value;
-        socket.emit('join', {
+        this.socket.emit('join', {
           roomNumber
         });
       }
