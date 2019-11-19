@@ -1,4 +1,36 @@
-const socket = io();
+class SocketClient {
+
+  constructor(options) {
+    this.playerType;
+    this.localStream;
+    this.socket = io();
+    this.isReady = false;
+    this.rtcPeerConnections = [];
+    this.mediaConstraints = options.mediaConstraints;
+    this.peerConnectionConfig = options.peerConnectionConfig;
+    this.streamerVideo = document.querySelector('.streamer-video');
+    this.registerRoomJoinEvent();
+  }
+
+  registerRoomJoinEvent() {
+    const roomNumberInput = document.querySelector('.room-number-input');
+    const streamingContainer = document.querySelector('.streaming-container');
+    const switchStreamerButton = document.querySelector('.switch-streamer-button');
+    const ENTER_KEY_CODE = 13;
+
+    roomNumberInput.addEventListener('keyup', (e) => {
+      if (e.keyCode === ENTER_KEY_CODE) {
+        streamingContainer.classList.remove('hide');
+        roomNumberInput.classList.add('hide');
+        const roomNumber = roomNumberInput.value;
+        socket.emit('join', {
+          roomNumber
+        });
+      }
+    });
+  }
+
+}
 
 const mediaConstraints = {
   video: true,
@@ -15,18 +47,7 @@ const peerConnectionConfig = {
   ],
 };
 
-const roomNumberInput = document.querySelector('.room-number-input');
-const streamingContainer = document.querySelector('.streaming-container');
-const streamerVideo = document.querySelector('.streamer-video');
-const switchStreamerButton = document.querySelector('.switch-streamer-button');
-
-roomNumberInput.addEventListener('keyup', (e) => {
-  if (e.keyCode == 13) {
-    streamingContainer.classList.remove('hide');
-    roomNumberInput.classList.add('hide');
-    const roomNumber = roomNumberInput.value;
-    socket.emit('join', {
-      roomNumber
-    });
-  }
+new SocketClient({
+  mediaConstraints,
+  peerConnectionConfig
 });
