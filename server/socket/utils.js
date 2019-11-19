@@ -1,3 +1,5 @@
+const config = require('../config');
+
 module.exports = {
   distributePlayerTypes(io, streamer, socketIds) {
     socketIds.forEach(socketId => {
@@ -12,29 +14,19 @@ module.exports = {
   makeGameOrderQueue(socketIds, roundNumber) {
     const gameOrderQueue = [];
     const roundQueue = socketIds.map(socketId => {
-      return {
-        type: 'player',
-        socketId
-      };
+      return { type: 'player', socketId };
     });
 
-    for (let i = 0; i < roundNumber; i += 1) {
+    for (let i = 0; i < roundNumber; i++) {
       gameOrderQueue.push(...roundQueue);
-      gameOrderQueue.push({
-        type: 'roundEnd',
-        round: i + 1
-      });
+      gameOrderQueue.push({ type: 'roundEnd', round: i + 1 });
     }
-    gameOrderQueue.push({
-      type: 'gameEnd'
-    });
+    gameOrderQueue.push({ type: 'gameEnd' });
     return gameOrderQueue;
   },
 
   filterGameOrderQueue(targetSocketId, gameOrderQueue) {
-    return gameOrderQueue.filter(player => {
-      return player.socketId !== targetSocketId
-    });
+    return gameOrderQueue.filter(player => player.socketId !== targetSocketId);
   },
 
   checkAllReady(room) {
@@ -44,15 +36,13 @@ module.exports = {
   },
 
   makeGameStatus(socketIds, roundNumber, count) {
-    const initialRound = 1;
     const initialGameStatus = {
-      gameOrderQueue: makeGameOrderQueue(socketIds, roundNumber),
+      gameOrderQueue: this.makeGameOrderQueue(socketIds, roundNumber),
       currentStreamer: this.gameOrderQueue[0],
       currentCount: count,
       isPlaying: true,
-      currentRound: initialRound,
-    }
+      currentRound: config.INITIAL_ROUND,
+    };
     return initialGameStatus;
   },
-
 };

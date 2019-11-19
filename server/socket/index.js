@@ -1,5 +1,6 @@
 const io = require('socket.io')();
 const webRtcUtils = require('./utils');
+const config = require('../config');
 
 io.on('connection', socket => {
   socket.on('join', ({ roomNumber }) => {
@@ -12,7 +13,6 @@ io.on('connection', socket => {
     const [roomNumber] = Object.keys(socket.rooms);
     const room = io.sockets.adapter.rooms[roomNumber];
     const socketIds = Object.keys(room.sockets);
-    const minUserCount = 2;
 
     if (isReady) {
       room.readyUsers[socket.id] = true;
@@ -22,12 +22,15 @@ io.on('connection', socket => {
 
     if (
       webRtcUtils.checkAllReady(room) &&
-      room.readyUsers.length >= minUserCount
+      room.readyUsers.length >= config.MIN_USER_COUNT
     ) {
-      const setCount = 80;
       room.gameStatus =
         room.gameStatus ||
-        webRtcUtils.makeGameStatus(socketIds, roomNumber, setCount);
+        webRtcUtils.makeGameStatus(
+          socketIds,
+          roomNumber,
+          config.ONE_SET_SECONDS,
+        );
       webRtcUtils.distributePlayerTypes(
         io,
         room.gameStatus.gameOrderQueue.shift(),
