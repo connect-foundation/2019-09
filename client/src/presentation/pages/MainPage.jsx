@@ -10,7 +10,7 @@ const PageWrapper = styled.div`
 `;
 
 const PageContents = styled.div`
-  width: 10rem;
+  width: 20rem;
   height: auto;
 `;
 
