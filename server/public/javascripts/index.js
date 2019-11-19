@@ -34,7 +34,9 @@ class SocketClient {
     const readyButton = document.querySelector('.ready-button');
 
     readyButton.addEventListener('click', () => {
-      this.socket.emit('ready', { isReady: true });
+      this.isReady = !this.isReady;
+      readyButton.innerHTML = this.isReady ? 'Cancel' : 'Ready';
+      this.socket.emit('ready', { isReady: this.isReady });
     });
   }
 }
