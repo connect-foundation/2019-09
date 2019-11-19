@@ -1,7 +1,7 @@
 module.exports = {
-  distributePlayerTypes(io, streamerId, socketIds) {
+  distributePlayerTypes(io, streamer, socketIds) {
     socketIds.forEach(socketId => {
-      if (streamerId === socketId) {
+      if (streamer.socketId === socketId) {
         io.to(socketId).emit('playerType:streamer');
       } else {
         io.to(socketId).emit('playerType:viewer');
@@ -41,6 +41,18 @@ module.exports = {
     const socketIds = Object.keys(room.sockets);
     const readyUsers = Object.keys(room.readyUsers);
     return socketIds.length === readyUsers.length;
-  }
+  },
+
+  makeGameStatus(socketIds, roundNumber, count) {
+    const initialRound = 1;
+    const initialGameStatus = {
+      gameOrderQueue: makeGameOrderQueue(socketIds, roundNumber),
+      currentStreamer: this.gameOrderQueue[0],
+      currentCount: count,
+      isPlaying: true,
+      currentRound: initialRound,
+    }
+    return initialGameStatus;
+  },
 
 };

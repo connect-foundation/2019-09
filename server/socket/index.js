@@ -21,10 +21,10 @@ io.on('connection', socket => {
       delete room.readyUsers[socket.id];
     }
 
-
     if (webRtcUtils.checkAllReady(room)) {
-      const streamerIndex = 0;
-      webRtcUtils.distributePlayerTypes(io, streamerIndex, socketIds)
+      const setCount = 80;
+      room.gameStatus = room.gameStatus || webRtcUtils.makeGameStatus(socketIds, roundNumber, setCount);
+      webRtcUtils.distributePlayerTypes(io, gameStatus.gameOrderQueue.shift(), socketIds);
     }
 
   });
