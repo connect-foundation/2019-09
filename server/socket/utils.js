@@ -37,4 +37,10 @@ module.exports = {
     });
   },
 
+  checkAllReady(room) {
+    const socketIds = Object.keys(room.sockets);
+    const readyUsers = Object.keys(room.readyUsers);
+    return socketIds.length === readyUsers.length;
+  }
+
 };

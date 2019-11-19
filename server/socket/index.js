@@ -13,6 +13,7 @@ io.on('connection', socket => {
   }) => {
     const [roomNumber] = Object.keys(socket.rooms);
     const room = io.sockets.adapter.rooms[roomNumber];
+    const socketIds = Object.keys(room.sockets);
 
     if (isReady) {
       room.readyUsers[socket.id] = true;
@@ -20,10 +21,8 @@ io.on('connection', socket => {
       delete room.readyUsers[socket.id];
     }
 
-    const socketIds = Object.keys(room.sockets);
-    const readyUsers = Object.keys(room.readyUsers);
 
-    if (socketIds.length === readyUsers.length) {
+    if (webRtcUtils.checkAllReady(room)) {
       const streamerIndex = 0;
       webRtcUtils.distributePlayerTypes(io, streamerIndex, socketIds)
     }
