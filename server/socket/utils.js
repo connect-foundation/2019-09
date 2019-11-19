@@ -1,13 +1,11 @@
 module.exports = {
-
-  distributePlayerTypes(io, streamerIndex, socketIds) {
-    socketIds.forEach((socketId, i) => {
-      if (i === streamerIndex) {
+  distributePlayerTypes(io, streamerId, socketIds) {
+    socketIds.forEach(socketId => {
+      if (streamerId === socketId) {
         io.to(socketId).emit('playerType:streamer');
       } else {
         io.to(socketId).emit('playerType:viewer');
       }
     });
-  }
-
-}
+  },
+};
