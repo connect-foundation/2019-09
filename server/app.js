@@ -17,23 +17,8 @@ app.use(
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', socket => {
-  io.sockets.emit(
-    'user-joined',
-    socket.id,
-    io.engine.clientsCount,
-    Object.keys(io.sockets.clients().sockets),
-  );
-
-  socket.on('sdp', (toId, message) => {
-    io.to(toId).emit('sdp', socket.id, message);
-  });
-
-  socket.on('ice', (toId, message) => {
-    io.to(toId).emit('ice', socket.id, message);
-  });
-
-  socket.on('disconnect', () => {
-    io.sockets.emit('user-left', socket.id);
+  socket.on('join', ({ roomNumber }) => {
+    socket.join(roomNumber);
   });
 });
 app.io = io;
