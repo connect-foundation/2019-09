@@ -12,20 +12,6 @@
     </div>
     <input type="text" class="room-number-input"/>
 
-    <script>
-      const roomNumberInput = document.querySelector('.room-number-input');
-      const streamingContainer = document.querySelector('.streaming-container');
-      const streamerVideo = document.querySelector('.streamer-video');
-      const switchStreamerButton = document.querySelector('.switch-streamer-button');
-
-      roomNumberInput.addEventListener('keyup', (e) => {
-        if(e.keyCode == 13) {
-          streamingContainer.classList.remove('hide');
-          roomNumberInput.classList.add('hide');
-        }
-      });
-    </script>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/webrtc-adapter.js"></script>
     <script src="/javascripts/index.js"></script>
