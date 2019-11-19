@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MainTitle, Menu } from '../containers';
+import { MainTitle, Menu, HowToPlay } from '../containers';
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -20,6 +20,7 @@ const MainPage = () => {
       <PageContents>
         <MainTitle />
         <Menu />
+        <HowToPlay />
       </PageContents>
     </PageWrapper>
   );
