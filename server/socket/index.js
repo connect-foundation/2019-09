@@ -4,6 +4,8 @@ const webRtcUtils = require('./utils');
 io.on('connection', socket => {
   socket.on('join', ({ roomNumber }) => {
     socket.join(roomNumber);
+    const room = io.sockets.adapter.rooms[roomNumber];
+    room.readyUsers = room.readyUsers || {};
   });
 
   socket.on('ready', ({ isReady }) => {
