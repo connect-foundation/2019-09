@@ -1,3 +1,4 @@
 import Logo from './Logo';
+import TextInput from './TextInput';
 
-export default Logo;
+export { Logo, TextInput };

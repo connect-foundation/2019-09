@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Logo from '../components';
+import { Logo } from '../components';
 import logoSrc from '../../assets/main-logo-large.png';
 
 const TitleWrapper = styled.div`
