@@ -12,13 +12,29 @@ module.exports = {
   makeGameOrderQueue(socketIds, roundNumber) {
     const gameOrderQueue = [];
     const roundQueue = socketIds.map(socketId => {
-      return { type: 'player', socketId };
+      return {
+        type: 'player',
+        socketId
+      };
     });
 
     for (let i = 0; i < roundNumber; i += 1) {
       gameOrderQueue.push(...roundQueue);
-      gameOrderQueue.push({ type: 'roundEnd', round: i + 1 });
+      gameOrderQueue.push({
+        type: 'roundEnd',
+        round: i + 1
+      });
     }
-    gameOrderQueue.push({ type: 'gameEnd' });
+    gameOrderQueue.push({
+      type: 'gameEnd'
+    });
+    return gameOrderQueue;
   },
+
+  filterGameOrderQueue(targetSocketId, gameOrderQueue) {
+    return gameOrderQueue.filter(player => {
+      return player.socketId !== targetSocketId
+    });
+  },
+
 };
