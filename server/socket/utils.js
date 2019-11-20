@@ -4,11 +4,19 @@ module.exports = {
   distributePlayerTypes({ io, streamer, socketIds }) {
     socketIds.forEach(socketId => {
       if (streamer.socketId === socketId) {
-        io.to(socketId).emit('playerType:streamer');
+        io.to(socketId).emit('playerType:streamer', {
+          viewerSocketIds: this.getViewerSocketIds(socketIds, streamer),
+        });
       } else {
-        io.to(socketId).emit('playerType:viewer');
+        io.to(socketId).emit('playerType:viewer', {
+          streamerSocketId: streamer.socketId,
+        });
       }
     });
+  },
+
+  getViewerSocketIds(socketIds, streamer) {
+    return socketIds.filter(socketId => socketId !== streamer.socketId);
   },
 
   makeGameOrderQueue(socketIds, roundNumber) {
