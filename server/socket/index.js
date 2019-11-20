@@ -52,6 +52,13 @@ io.on('connection', socket => {
       description,
     });
   });
+
+  socket.on('sendCandidate', ({ target, candidate }) => {
+    io.to(target).emit('sendCandidate', {
+      target: socket.id,
+      candidate,
+    });
+  });
 });
 
 module.exports = io;
