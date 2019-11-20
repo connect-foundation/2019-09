@@ -16,11 +16,16 @@ class SocketClient {
   init() {
     this.registerRoomJoinEvent();
     this.registerReadyEvent();
+    this.registerSocketEvents();
   }
 
-  streamerHandler() {}
+  streamerHandler({ viewerSocketIds }) {
+    console.log(viewerSocketIds);
+  }
 
-  viewerHandler() {}
+  viewerHandler({ streamerSocketId }) {
+    console.log(streamerSocketId);
+  }
 
   registerSocketEvents() {
     this.socket.on('playerType:streamer', this.streamerHandler);
