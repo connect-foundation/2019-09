@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Title, Description } from '../components';
+import { MainHowToPlayTitle, MainHowToPlayDescription } from '../../config';
 
 const HowToPlayWrapper = styled.div`
   margin-top: 2rem;
@@ -13,15 +14,11 @@ const HowToPlayWrapper = styled.div`
   padding: 0 0.5rem;
 `;
 
-const title = 'How to play';
-
-const description = `Lorem Ipsum is simply dummy text of the printing and typesetting industry.`;
-
 const HowToPlay = () => {
   return (
     <HowToPlayWrapper>
-      <Title content={title} />
-      <Description content={description} />
+      <Title content={MainHowToPlayTitle} />
+      <Description content={MainHowToPlayDescription} />
     </HowToPlayWrapper>
   );
 };
