@@ -1,8 +1,14 @@
 import React from 'react';
-import { MainPage } from './presentation/pages';
+import { Route } from 'react-router-dom';
+import { MainPage, Game } from './presentation/pages';
 
 const App = () => {
-  return <MainPage />;
+  return (
+    <div>
+      <Route exact path="/" component={MainPage} />
+      <Route path="/game" component={Game} />
+    </div>
+  );
 };
 
 export default App;
