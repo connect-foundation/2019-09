@@ -16,7 +16,6 @@ io.on('connection', socket => {
     const room = io.sockets.adapter.rooms[roomNumber];
     room.readyUsers = room.readyUsers || {};
   });
-
   socket.on('ready', ({ isReady }) => {
     const [roomNumber] = Object.keys(socket.rooms);
     const room = io.sockets.adapter.rooms[roomNumber];
@@ -26,7 +25,6 @@ io.on('connection', socket => {
     } else {
       delete room.readyUsers[socket.id];
     }
-
     if (
       isRoomReady(room) &&
       Object.keys(room.readyUsers).length >= MIN_USER_COUNT
@@ -45,14 +43,12 @@ io.on('connection', socket => {
       });
     }
   });
-
   socket.on('sendDescription', ({ target, description }) => {
     io.to(target).emit('sendDescription', {
       target: socket.id,
       description,
     });
   });
-
   socket.on('sendCandidate', ({ target, candidate }) => {
     io.to(target).emit('sendCandidate', {
       target: socket.id,
@@ -60,5 +56,4 @@ io.on('connection', socket => {
     });
   });
 });
-
 module.exports = io;
