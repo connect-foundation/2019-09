@@ -1,22 +1,30 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
-const LargeButtonContent = styled.button`
-  width: 15rem;
-  height: 2rem;
-  border: none;
-  outline: none;
-  border-style: solid;
-  border-radius: 5px;
-  border-width: 1px;
-  margin-top: 0.3rem;
-  background: #5a96ff;
-  color: #ffffff;
-  font-weight: 600;
-`;
+const useStyles = makeStyles({
+  root: {
+    background: '#5A96FF',
+    border: 0,
+    borderRadius: 3,
+    color: 'white',
+    height: 32,
+    width: 240,
+    padding: '0 30px',
+    '&:hover': {
+      background: '#497FDB',
+    },
+  },
+});
+
 const LargeButton = ({ text, onClick }) => {
-  return <LargeButtonContent onClick={onClick}>{text}</LargeButtonContent>;
+  const classes = useStyles();
+  return (
+    <Button onClick={onClick} variant="contained" className={classes.root}>
+      {text}
+    </Button>
+  );
 };
 
 LargeButton.propTypes = {
