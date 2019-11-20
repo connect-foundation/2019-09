@@ -4,6 +4,7 @@ class SocketClient {
   constructor(options) {
     this.playerType;
     this.localStream;
+    this.remoteStream;
     this.socket = io();
     this.isReady = false;
     this.rtcPeerConnections = [];
@@ -29,7 +30,20 @@ class SocketClient {
     );
   }
 
-  async createRTCPeerConnections(socketId) {
+  registerOnTrackEvent(socketId) {
+    this.rtcPeerConnections[socketId].ontrack = event => {
+      [this.remoteStream] = event.streams;
+    };
+  }
+
+  attachTrack(socketId) {
+    this.rtcPeerConnections[socketId].addTrack(
+      this.localStream.getTracks()[0],
+      this.localStream,
+    );
+  }
+
+  createRTCPeerConnection(socketId) {
     this.rtcPeerConnections[socketId] = new RTCPeerConnection(
       this.peerConnectionConfig,
     );
@@ -37,16 +51,6 @@ class SocketClient {
     this.rtcPeerConnections[
       socketId
     ].onicecandidate = this.icecandidateHandler.bind(this, socketId);
-
-    // rtcPeerConnections[user].ontrack = event => {
-    //   [rtcPeerConnections[user].stream] = event.streams;
-    //   console.log('onTrack', rtcPeerConnections[user].stream);
-    // };
-
-    this.rtcPeerConnections[socketId].addTrack(
-      this.localStream.getTracks()[0],
-      this.localStream,
-    );
   }
 
   icecandidateHandler(socketId, event) {
@@ -59,12 +63,18 @@ class SocketClient {
 
   async streamerHandler({ viewerSocketIds }) {
     await this.setLocalStream();
-    viewerSocketIds.forEach(this.createRTCPeerConnections.bind(this));
+    viewerSocketIds.forEach(viewerSocketId => {
+      this.createRTCPeerConnection(viewerSocketId);
+      this.attachTrack(viewerSocketId);
+    });
+
     console.log(this.rtcPeerConnections);
   }
 
   viewerHandler({ streamerSocketId }) {
-    console.log(streamerSocketId);
+    this.createRTCPeerConnection(streamerSocketId);
+    this.registerOnTrackEvent(streamerSocketId);
+    console.log(this.remoteStream);
   }
 
   registerSocketEvents() {
