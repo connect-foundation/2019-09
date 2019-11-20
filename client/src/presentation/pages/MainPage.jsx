@@ -1,28 +1,27 @@
 import React from 'react';
-import styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 import { MainTitle, Menu, HowToPlay } from '../containers';
 
-const PageWrapper = styled.div`
-  width: 100%;
-  heigth: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const PageContents = styled.div`
-  width: 20rem;
-  height: auto;
-`;
+const useStyle = makeStyles({
+  mainPage: {
+    width: '20rem',
+    display: 'flex',
+    flexDirection: 'column',
+    '& > *': {
+      marginBottom: '1rem',
+    },
+  },
+});
 
 const MainPage = () => {
+  const classes = useStyle();
   return (
-    <PageWrapper>
-      <PageContents>
-        <MainTitle />
-        <Menu />
-        <HowToPlay />
-      </PageContents>
-    </PageWrapper>
+    <Container maxWidth="md" className={classes.mainPage}>
+      <MainTitle />
+      <Menu />
+      <HowToPlay />
+    </Container>
   );
 };
 
