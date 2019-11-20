@@ -14,10 +14,14 @@ const MenuWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
+const textInpuStyles = {
+  width: '100%',
+};
+
 const Menu = () => {
   return (
     <MenuWrapper>
-      <TextInput placeholder="NAME" id="user-name" />
+      <TextInput label="NAME" id="user-name" style={textInpuStyles} />
       <LargeButton text="PLAY" onClick={() => {}} />
       <LargeButton text="RANK" onClick={() => {}} />
     </MenuWrapper>
