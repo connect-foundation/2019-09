@@ -4,7 +4,7 @@ const {
   makeGameStatus,
   distributePlayerTypes,
 } = require('./utils');
-const config = require('../config');
+const { MIN_USER_COUNT, ONE_SET_SECONDS } = require('../config');
 
 io.on('connection', socket => {
   socket.on('join', ({ roomNumber }) => {
@@ -24,15 +24,19 @@ io.on('connection', socket => {
       delete room.readyUsers[socket.id];
     }
 
-    if (isRoomReady(room) && room.readyUsers.length >= config.MIN_USER_COUNT) {
+    if (isRoomReady(room) && room.readyUsers.length >= MIN_USER_COUNT) {
       room.gameStatus =
         room.gameStatus ||
-        makeGameStatus(socketIds, roomNumber, config.ONE_SET_SECONDS);
-      distributePlayerTypes(
+        makeGameStatus({
+          socketIds,
+          roomNumber,
+          count: ONE_SET_SECONDS,
+        });
+      distributePlayerTypes({
         io,
-        room.gameStatus.gameOrderQueue.shift(),
         socketIds,
-      );
+        streamer: room.gameStatus.gameOrderQueue.shift(),
+      });
     }
   });
 });
