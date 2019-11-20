@@ -8,11 +8,7 @@ const LogoImage = styled.img`
 `;
 
 const Logo = ({ logoSrc }) => {
-  return (
-    <>
-      <LogoImage src={logoSrc} />
-    </>
-  );
+  return <LogoImage src={logoSrc} />;
 };
 
 Logo.propTypes = {
