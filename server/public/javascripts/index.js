@@ -10,6 +10,9 @@ class SocketClient {
     this.mediaConstraints = options.mediaConstraints;
     this.peerConnectionConfig = options.peerConnectionConfig;
     this.streamerVideo = document.querySelector('.streamer-video');
+  }
+
+  init() {
     this.registerRoomJoinEvent();
     this.registerReadyEvent();
   }
