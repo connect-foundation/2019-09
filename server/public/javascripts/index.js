@@ -18,6 +18,15 @@ class SocketClient {
     this.registerReadyEvent();
   }
 
+  streamerHandler() {}
+
+  viewerHandler() {}
+
+  registerSocketEvents() {
+    this.socket.on('playerType:streamer', this.streamerHandler);
+    this.socket.on('playerType:viewer', this.viewerHandler);
+  }
+
   registerRoomJoinEvent() {
     const roomNumberInput = document.querySelector('.room-number-input');
     const streamingContainer = document.querySelector('.streaming-container');
