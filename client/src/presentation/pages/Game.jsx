@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay } from '../components';
+import { StreamingPanel } from '../containers';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 const Game = () => {
   const classes = useStyles();
+  const candidateWords = ['airplane', 'coffee', 'cup'];
   return (
     <div className={classes.root}>
       <Grid container spacing={0} className={classes.gameHeader}>
@@ -43,7 +45,9 @@ const Game = () => {
           <Box className={classes.paper}>xs</Box>
         </Grid>
         <Grid item xs={6}>
-          <Box className={classes.paper}>xs=6</Box>
+          <Box className={classes.paper}>
+            <StreamingPanel words={candidateWords} isStreamer />
+          </Box>
         </Grid>
         <Grid item xs={4}>
           <Box className={classes.paper}>xs</Box>
