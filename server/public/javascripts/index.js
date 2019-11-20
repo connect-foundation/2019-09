@@ -77,7 +77,7 @@ class SocketClient {
   }
 
   async sendDescriptionHandler({ target, description }) {
-    await this.rtcPeerConnections[target].peerConnection.setRemoteDescription(
+    await this.rtcPeerConnections[target].setRemoteDescription(
       new RTCSessionDescription(description),
     );
     if (description.type === 'answer') return;
