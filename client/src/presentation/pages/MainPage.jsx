@@ -5,7 +5,7 @@ import { MainTitle, Menu, HowToPlay } from '../containers';
 
 const useStyle = makeStyles({
   mainPage: {
-    width: '20rem',
+    width: '40rem',
     display: 'flex',
     flexDirection: 'column',
     '& > *': {

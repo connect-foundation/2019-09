@@ -5,8 +5,10 @@ import logoSrc from '../../assets/main-logo-large.png';
 
 const TitleWrapper = styled.div`
   margin-top: 2rem;
-  heigth: 100%;
+  heigth: auto;
   width: 100%;
+  padding: 0 30px;
+  box-sizing: border-box;
 `;
 
 const MainTitle = () => {
