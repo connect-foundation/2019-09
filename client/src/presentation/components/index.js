@@ -5,6 +5,7 @@ import Title from './Title';
 import Description from './Description';
 import Timer from './Timer';
 import QuizDisplay from './QuizDisplay';
+import StreamerVideo from './StreamerVideo';
 
 export {
   Logo,
@@ -15,4 +16,5 @@ export {
   Description,
   Timer,
   QuizDisplay,
+  StreamerVideo,
 };
