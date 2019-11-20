@@ -19,8 +19,18 @@ class SocketClient {
     this.registerSocketEvents();
   }
 
-  streamerHandler({ viewerSocketIds }) {
-    console.log(viewerSocketIds);
+  async setLocalStream() {
+    if (!navigator.mediaDevices.getUserMedia) {
+      alert('Your browser does not support getUserMedia API');
+      return;
+    }
+    this.localStream = await navigator.mediaDevices.getUserMedia(
+      this.mediaConstraints,
+    );
+  }
+
+  async streamerHandler({ viewerSocketIds }) {
+    await this.setLocalStream();
   }
 
   viewerHandler({ streamerSocketId }) {
@@ -28,8 +38,8 @@ class SocketClient {
   }
 
   registerSocketEvents() {
-    this.socket.on('playerType:streamer', this.streamerHandler);
-    this.socket.on('playerType:viewer', this.viewerHandler);
+    this.socket.on('playerType:streamer', this.streamerHandler.bind(this));
+    this.socket.on('playerType:viewer', this.viewerHandler.bind(this));
   }
 
   registerRoomJoinEvent() {

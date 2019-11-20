@@ -38,7 +38,6 @@ io.on('connection', socket => {
           roundNumber: MAX_ROUND_NUMBER,
           count: ONE_SET_SECONDS,
         });
-      console.log(room.gameStatus.gameOrderQueue);
       distributePlayerTypes({
         io,
         socketIds,
