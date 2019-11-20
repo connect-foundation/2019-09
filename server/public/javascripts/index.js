@@ -29,8 +29,38 @@ class SocketClient {
     );
   }
 
+  async createRTCPeerConnections(socketId) {
+    this.rtcPeerConnections[socketId] = new RTCPeerConnection(
+      this.peerConnectionConfig,
+    );
+
+    this.rtcPeerConnections[
+      socketId
+    ].onicecandidate = this.icecandidateHandler.bind(this, socketId);
+
+    // rtcPeerConnections[user].ontrack = event => {
+    //   [rtcPeerConnections[user].stream] = event.streams;
+    //   console.log('onTrack', rtcPeerConnections[user].stream);
+    // };
+
+    this.rtcPeerConnections[socketId].addTrack(
+      this.localStream.getTracks()[0],
+      this.localStream,
+    );
+  }
+
+  icecandidateHandler(socketId, event) {
+    if (!event.candidate) return;
+    this.socket.emit('sendCandidate', {
+      target: socketId,
+      candidate: event.candidate,
+    });
+  }
+
   async streamerHandler({ viewerSocketIds }) {
     await this.setLocalStream();
+    viewerSocketIds.forEach(this.createRTCPeerConnections.bind(this));
+    console.log(this.rtcPeerConnections);
   }
 
   viewerHandler({ streamerSocketId }) {
