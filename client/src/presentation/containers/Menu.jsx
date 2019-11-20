@@ -22,6 +22,10 @@ const useStyle = makeStyles({
 const textInpuStyles = {
   width: '100%',
 };
+const ButtonStyles = {
+  width: '100%',
+  height: '3.2rem',
+};
 
 const Menu = () => {
   const classes = useStyle();
@@ -29,8 +33,8 @@ const Menu = () => {
   return (
     <Container maxWidth="md" className={classes.menu}>
       <TextInput label="NAME" id="user-name" style={textInpuStyles} />
-      <LargeButton text="PLAY" onClick={() => {}} />
-      <LargeButton text="RANK" onClick={() => {}} />
+      <LargeButton text="PLAY" style={ButtonStyles} onClick={() => {}} />
+      <LargeButton text="RANK" style={ButtonStyles} onClick={() => {}} />
     </Container>
   );
 };
