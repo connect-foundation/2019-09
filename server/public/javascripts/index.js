@@ -61,11 +61,27 @@ class SocketClient {
     });
   }
 
+  async createDescription(offerOrAnswer, socketId) {
+    const connection = this.rtcPeerConnections[socketId];
+    const description =
+      offerOrAnswer === 'offer'
+        ? await connection.createOffer()
+        : await connection.createAnswer();
+
+    await connection.setLocalDescription(description);
+
+    this.socket.emit('sendDescription', {
+      target: socketId,
+      description,
+    });
+  }
+
   async streamerHandler({ viewerSocketIds }) {
     await this.setLocalStream();
-    viewerSocketIds.forEach(viewerSocketId => {
+    viewerSocketIds.forEach(async viewerSocketId => {
       this.createRTCPeerConnection(viewerSocketId);
       this.attachTrack(viewerSocketId);
+      await this.createDescription('offer', viewerSocketId);
     });
 
     console.log(this.rtcPeerConnections);
