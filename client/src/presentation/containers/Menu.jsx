@@ -18,8 +18,8 @@ const Menu = () => {
   return (
     <MenuWrapper>
       <TextInput placeholder="NAME" id="user-name" />
-      <LargeButton name="PLAY" onClick={() => {}} />
-      <LargeButton name="RANK" onClick={() => {}} />
+      <LargeButton text="PLAY" onClick={() => {}} />
+      <LargeButton text="RANK" onClick={() => {}} />
     </MenuWrapper>
   );
 };

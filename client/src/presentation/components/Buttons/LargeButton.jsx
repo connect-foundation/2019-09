@@ -15,12 +15,12 @@ const LargeButtonContent = styled.button`
   color: #ffffff;
   font-weight: 600;
 `;
-const LargeButton = ({ name, onClick }) => {
-  return <LargeButtonContent onClick={onClick}>{name}</LargeButtonContent>;
+const LargeButton = ({ text, onClick }) => {
+  return <LargeButtonContent onClick={onClick}>{text}</LargeButtonContent>;
 };
 
 LargeButton.propTypes = {
-  name: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
