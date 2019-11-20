@@ -76,6 +76,14 @@ class SocketClient {
     });
   }
 
+  async sendDescriptionHandler({ target, description }) {
+    await this.rtcPeerConnections[target].peerConnection.setRemoteDescription(
+      new RTCSessionDescription(description),
+    );
+    if (description.type === 'answer') return;
+    await this.createDescription('answer', target);
+  }
+
   async streamerHandler({ viewerSocketIds }) {
     await this.setLocalStream();
     viewerSocketIds.forEach(async viewerSocketId => {
@@ -96,6 +104,7 @@ class SocketClient {
   registerSocketEvents() {
     this.socket.on('playerType:streamer', this.streamerHandler.bind(this));
     this.socket.on('playerType:viewer', this.viewerHandler.bind(this));
+    this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
   }
 
   registerRoomJoinEvent() {
