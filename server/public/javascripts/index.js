@@ -10,6 +10,7 @@ class SocketClient {
     this.mediaConstraints = options.mediaConstraints;
     this.peerConnectionConfig = options.peerConnectionConfig;
     this.streamerVideo = document.querySelector('.streamer-video');
+    this.init();
   }
 
   init() {
@@ -25,12 +26,13 @@ class SocketClient {
     );
 
     roomNumberInput.addEventListener('keyup', e => {
-      if (e.keyCode === config.ENTER_KEY_CODE) {
-        streamingContainer.classList.remove('hide');
-        roomNumberInput.classList.add('hide');
-        const roomNumber = roomNumberInput.value;
-        this.socket.emit('join', { roomNumber });
+      if (e.keyCode !== config.ENTER_KEY_CODE) {
+        return;
       }
+      streamingContainer.classList.remove('hide');
+      roomNumberInput.classList.add('hide');
+      const roomNumber = roomNumberInput.value;
+      this.socket.emit('join', { roomNumber });
     });
   }
 
