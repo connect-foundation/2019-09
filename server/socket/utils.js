@@ -1,7 +1,7 @@
 const config = require('../config');
 
 module.exports = {
-  distributePlayerTypes(io, streamer, socketIds) {
+  distributePlayerTypes({ io, streamer, socketIds }) {
     socketIds.forEach(socketId => {
       if (streamer.socketId === socketId) {
         io.to(socketId).emit('playerType:streamer');
@@ -29,13 +29,13 @@ module.exports = {
     return gameOrderQueue.filter(player => player.socketId !== targetSocketId);
   },
 
-  checkAllReady(room) {
+  isRoomReady(room) {
     const socketIds = Object.keys(room.sockets);
     const readyUsers = Object.keys(room.readyUsers);
     return socketIds.length === readyUsers.length;
   },
 
-  makeGameStatus(socketIds, roundNumber, count) {
+  makeGameStatus({ socketIds, roundNumber, count }) {
     const initialGameStatus = {
       gameOrderQueue: this.makeGameOrderQueue(socketIds, roundNumber),
       currentStreamer: this.gameOrderQueue[0],
