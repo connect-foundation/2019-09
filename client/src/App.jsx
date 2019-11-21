@@ -1,13 +1,13 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { MainPage, Game } from './presentation/pages';
 
 const App = () => {
   return (
-    <div>
+    <Router>
       <Route exact path="/" component={MainPage} />
       <Route path="/game" component={Game} />
-    </div>
+    </Router>
   );
 };
 
