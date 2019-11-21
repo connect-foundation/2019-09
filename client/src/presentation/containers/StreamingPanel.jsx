@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import Candidates from './Candidates';
+import WordCandidates from './WordCandidates';
 import { StreamerVideo } from '../components';
 
 const useStyles = makeStyles(() => ({
@@ -18,7 +18,7 @@ const StreamingPanel = ({ words, isStreamer }) => {
   return (
     <Container className={classes.container}>
       <StreamerVideo />
-      {isStreamer ? <Candidates words={words} /> : ''}
+      {isStreamer ? <WordCandidates words={words} /> : ''}
     </Container>
   );
 };

@@ -18,8 +18,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Candidates = ({ words }) => {
-  const candidateWords = words;
+const WordCandidates = ({ words }) => {
+  const wordCandidates = words;
   const classes = useStyles();
   const candidateButtonStyle = {
     width: '10rem',
@@ -27,11 +27,11 @@ const Candidates = ({ words }) => {
   };
   return (
     <Container className={classes.candidateContainer}>
-      {candidateWords.map(candidate => {
+      {wordCandidates.map(wordCandidate => {
         return (
           <LargeButton
             style={candidateButtonStyle}
-            text={candidate}
+            text={wordCandidate}
             onClick={() => {}}
           />
         );
@@ -40,8 +40,8 @@ const Candidates = ({ words }) => {
   );
 };
 
-Candidates.propTypes = {
+WordCandidates.propTypes = {
   words: PropTypes.array.isRequired,
 };
 
-export default Candidates;
+export default WordCandidates;
