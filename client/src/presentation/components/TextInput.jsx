@@ -20,7 +20,7 @@ const TextInput = ({ label, style, textChangeHandler }) => {
   return (
     <TextField
       onChange={e => {
-        textChangeHandler(e.value);
+        textChangeHandler(e.target.value);
       }}
       label={label}
       className={classes.textField}
