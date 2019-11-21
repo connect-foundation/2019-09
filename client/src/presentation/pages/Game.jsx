@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay } from '../components';
 import { StreamingPanel } from '../containers';
+import { GlobalContext } from '../../contexts';
+import SocketClient from '../../service/socket/SocketClient';
+import {
+  MEDIA_CONSTRAINTS,
+  PEER_CONNECTION_CONFIG,
+} from '../../service/socket/config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +27,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Game = () => {
+  const { state } = useContext(GlobalContext);
+  let socketClient;
+  useEffect(() => {
+    console.log(state.roomId);
+    socketClient = new SocketClient({
+      mediaConstraints: MEDIA_CONSTRAINTS,
+      peerConnectionConfig: PEER_CONNECTION_CONFIG,
+    });
+
+    socketClient.init(state.roomId);
+  }, []);
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup'];
   return (
