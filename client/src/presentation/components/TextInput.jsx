@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 
-const TextInput = ({ label, style }) => {
+const TextInput = ({ label, style, textChangeHandler }) => {
   const useStyles = makeStyles(theme => ({
     textField: {
       marginLeft: theme.spacing(1),
@@ -18,13 +18,21 @@ const TextInput = ({ label, style }) => {
   const classes = useStyles();
 
   return (
-    <TextField label={label} className={classes.textField} variant="outlined" />
+    <TextField
+      onChange={e => {
+        textChangeHandler(e.value);
+      }}
+      label={label}
+      className={classes.textField}
+      variant="outlined"
+    />
   );
 };
 
 TextInput.propTypes = {
   label: PropTypes.string.isRequired,
   style: PropTypes.object.isRequired,
+  textChangeHandler: PropTypes.func.isRequired,
 };
 
 export default TextInput;

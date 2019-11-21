@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { Link } from 'react-router-dom';
 import { LargeButton, TextInput } from '../components';
+import { StateReducerContext } from '../../App';
 
 const useStyle = makeStyles({
   menu: {
@@ -28,12 +30,26 @@ const ButtonStyles = {
 };
 
 const Menu = () => {
+  const { dispatch } = useContext(StateReducerContext);
   const classes = useStyle();
+
+  const getTextValue = roomId => {
+    dispatch({ type: 'changeRoomId', payload: { roomId } });
+  };
 
   return (
     <Container maxWidth="md" className={classes.menu}>
-      <TextInput label="ROOM NUMBER" style={textInpuStyles} />
-      <LargeButton text="PLAY" style={ButtonStyles} onClick={() => {}} />
+      <TextInput
+        label="ROOM NUMBER"
+        style={textInpuStyles}
+        textChangeHandler={getTextValue}
+      />
+      <LargeButton
+        text="PLAY"
+        style={ButtonStyles}
+        component={Link}
+        to="/game"
+      />
       <LargeButton text="RANK" style={ButtonStyles} onClick={() => {}} />
     </Container>
   );
