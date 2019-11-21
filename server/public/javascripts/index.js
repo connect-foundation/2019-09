@@ -1,59 +1,70 @@
-import config from './config.js';
+import {
+  MEDIA_CONSTRAINTS,
+  PEER_CONNECTION_CONFIG,
+  ENTER_KEY_CODE,
+  NO_MEDIA_STREAM_MESSAGE,
+} from './config.js';
+
 class SocketClient {
   constructor(options) {
     this.playerType;
-    this.localStream;
-    this.remoteStream;
+    this.stream;
     this.socket = io();
     this.isReady = false;
     this.rtcPeerConnections = [];
     this.mediaConstraints = options.mediaConstraints;
     this.peerConnectionConfig = options.peerConnectionConfig;
     this.streamerVideo = document.querySelector('.streamer-video');
-    this.init();
   }
+
   init() {
     this.registerRoomJoinEvent();
     this.registerReadyEvent();
     this.registerSocketEvents();
   }
+
   async setLocalStream() {
     if (!navigator.mediaDevices.getUserMedia) {
-      alert('Your browser does not support getUserMedia API');
+      alert(NO_MEDIA_STREAM_MESSAGE);
       return;
     }
-    this.localStream = await navigator.mediaDevices.getUserMedia(
+    this.stream = await navigator.mediaDevices.getUserMedia(
       this.mediaConstraints,
     );
+    this.streamerVideo.srcObject = this.stream;
   }
+
   registerOnTrackEvent(socketId) {
     this.rtcPeerConnections[socketId].ontrack = event => {
-      [this.remoteStream] = event.streams;
-      this.streamerVideo.srcObject = this.remoteStream;
-      console.log(this.remoteStream);
+      [this.stream] = event.streams;
+      this.streamerVideo.srcObject = this.stream;
     };
   }
+
   attachTrack(socketId) {
     this.rtcPeerConnections[socketId].addTrack(
-      this.localStream.getTracks()[0],
-      this.localStream,
+      this.stream.getTracks()[0],
+      this.stream,
     );
   }
+
   createRTCPeerConnection(socketId) {
     this.rtcPeerConnections[socketId] = new RTCPeerConnection(
       this.peerConnectionConfig,
     );
     this.rtcPeerConnections[
       socketId
-    ].onicecandidate = this.icecandidateHandler.bind(this, socketId);
+    ].onicecandidate = this.iceCandidateHandler.bind(this, socketId);
   }
-  icecandidateHandler(socketId, event) {
+
+  iceCandidateHandler(socketId, event) {
     if (!event.candidate) return;
     this.socket.emit('sendCandidate', {
       target: socketId,
       candidate: event.candidate,
     });
   }
+
   async createDescription(offerOrAnswer, socketId) {
     const connection = this.rtcPeerConnections[socketId];
     const description =
@@ -66,6 +77,7 @@ class SocketClient {
       description,
     });
   }
+
   async sendDescriptionHandler({ target, description }) {
     await this.rtcPeerConnections[target].setRemoteDescription(
       new RTCSessionDescription(description),
@@ -73,10 +85,12 @@ class SocketClient {
     if (description.type === 'answer') return;
     await this.createDescription('answer', target);
   }
+
   async sendCandidateHandler({ target, candidate }) {
     const rtcIceCandidate = new RTCIceCandidate(candidate);
     await this.rtcPeerConnections[target].addIceCandidate(rtcIceCandidate);
   }
+
   async streamerHandler({ viewerSocketIds }) {
     await this.setLocalStream();
     viewerSocketIds.forEach(async viewerSocketId => {
@@ -84,19 +98,20 @@ class SocketClient {
       this.attachTrack(viewerSocketId);
       await this.createDescription('offer', viewerSocketId);
     });
-    console.log(this.rtcPeerConnections);
   }
+
   viewerHandler({ streamerSocketId }) {
     this.createRTCPeerConnection(streamerSocketId);
     this.registerOnTrackEvent(streamerSocketId);
-    console.log(this.remoteStream);
   }
+
   registerSocketEvents() {
     this.socket.on('playerType:streamer', this.streamerHandler.bind(this));
     this.socket.on('playerType:viewer', this.viewerHandler.bind(this));
     this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
     this.socket.on('sendCandidate', this.sendCandidateHandler.bind(this));
   }
+
   registerRoomJoinEvent() {
     const roomNumberInput = document.querySelector('.room-number-input');
     const streamingContainer = document.querySelector('.streaming-container');
@@ -104,7 +119,7 @@ class SocketClient {
       '.switch-streamer-button',
     );
     roomNumberInput.addEventListener('keyup', e => {
-      if (e.keyCode !== config.ENTER_KEY_CODE) {
+      if (e.keyCode !== ENTER_KEY_CODE) {
         return;
       }
       streamingContainer.classList.remove('hide');
@@ -113,6 +128,7 @@ class SocketClient {
       this.socket.emit('join', { roomNumber });
     });
   }
+
   registerReadyEvent() {
     const readyButton = document.querySelector('.ready-button');
     readyButton.addEventListener('click', () => {
@@ -122,7 +138,9 @@ class SocketClient {
     });
   }
 }
-new SocketClient({
-  mediaConstraints: config.mediaConstraints,
-  peerConnectionConfig: config.peerConnectionConfig,
+const socketClient = new SocketClient({
+  mediaConstraints: MEDIA_CONSTRAINTS,
+  peerConnectionConfig: PEER_CONNECTION_CONFIG,
 });
+
+socketClient.init();
