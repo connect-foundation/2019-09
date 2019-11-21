@@ -12,7 +12,6 @@ const {
 
 io.on('connection', socket => {
   socket.on('join', ({ roomId }) => {
-    console.log(roomId);
     socket.join(roomId);
     const room = io.sockets.adapter.rooms[roomId];
     room.readyUsers = room.readyUsers || {};
@@ -57,4 +56,5 @@ io.on('connection', socket => {
     });
   });
 });
+
 module.exports = io;

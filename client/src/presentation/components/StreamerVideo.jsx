@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
 
 const StreamerVideo = () => {
   const classes = useStyles();
-  return <video className={classes.video} />;
+  return <video className={classes.video} autoPlay />;
 };
 
 export default StreamerVideo;

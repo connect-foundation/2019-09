@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import { Timer, QuizDisplay } from '../components';
+import { Timer, QuizDisplay, LargeButton } from '../components';
 import { StreamingPanel } from '../containers';
 import { GlobalContext } from '../../contexts';
 import SocketClient from '../../service/socket/SocketClient';
@@ -30,7 +30,6 @@ const Game = () => {
   const { state } = useContext(GlobalContext);
   let socketClient;
   useEffect(() => {
-    console.log(state.roomId);
     socketClient = new SocketClient({
       mediaConstraints: MEDIA_CONSTRAINTS,
       peerConnectionConfig: PEER_CONNECTION_CONFIG,
@@ -39,7 +38,17 @@ const Game = () => {
     socketClient.init(state.roomId);
   }, []);
   const classes = useStyles();
+  const ButtonStyles = {
+    width: '100%',
+    height: '3.2rem',
+  };
   const candidateWords = ['airplane', 'coffee', 'cup'];
+
+  const readyButtonHandler = () => {
+    const isReady = true;
+    socketClient.emitReady(isReady);
+  };
+
   return (
     <div className={classes.root}>
       <Grid container spacing={0} className={classes.gameHeader}>
@@ -59,7 +68,13 @@ const Game = () => {
       </Grid>
       <Grid container spacing={0}>
         <Grid item xs={2}>
-          <Box className={classes.paper}>xs</Box>
+          <Box className={classes.paper}>
+            <LargeButton
+              text="Ready"
+              onClick={() => readyButtonHandler()}
+              style={ButtonStyles}
+            />
+          </Box>
         </Grid>
         <Grid item xs={6}>
           <Box className={classes.paper}>

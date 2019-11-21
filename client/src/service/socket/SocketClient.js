@@ -10,10 +10,11 @@ class SocketClient {
     this.rtcPeerConnections = [];
     this.mediaConstraints = options.mediaConstraints;
     this.peerConnectionConfig = options.peerConnectionConfig;
-    this.streamerVideo = document.querySelector('.streamer-video');
+    this.streamerVideo = document.querySelector('video');
   }
 
   init(roomId) {
+    this.registerSocketEvents();
     this.socket.emit('join', { roomId });
   }
 
@@ -99,6 +100,10 @@ class SocketClient {
     this.registerOnTrackEvent(streamerSocketId);
   }
 
+  emitReady(isReady) {
+    this.socket.emit('ready', { isReady });
+  }
+
   registerSocketEvents() {
     this.socket.on('playerType:streamer', this.streamerHandler.bind(this));
     this.socket.on('playerType:viewer', this.viewerHandler.bind(this));
@@ -106,4 +111,5 @@ class SocketClient {
     this.socket.on('sendCandidate', this.sendCandidateHandler.bind(this));
   }
 }
+
 export default SocketClient;
