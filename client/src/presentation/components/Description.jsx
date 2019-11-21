@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const DescriptionContent = styled.p`
   margin: 0 0.2rem;
+  font-size: 1.2rem;
 `;
 
 const Description = ({ content }) => {

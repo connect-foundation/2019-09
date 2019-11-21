@@ -14,6 +14,8 @@ const LargeButton = ({ text, onClick, style, component, to }) => {
       color: 'white',
       height: style.height || '',
       width: style.width || '',
+      fontSize: style.fontSize || '1rem',
+      fontWeight: style.fontWeight || '',
       padding: '0 30px',
       '&:hover': {
         background: '#497FDB',

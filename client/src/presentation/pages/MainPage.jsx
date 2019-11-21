@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, HowToPlay } from '../containers';
 
 const useStyle = makeStyles({
@@ -12,16 +13,25 @@ const useStyle = makeStyles({
       marginBottom: '1rem',
     },
   },
+  mainPageWrapper: {
+    margin: 0,
+    width: '100%',
+    height: '100%',
+    background: '#E5F1FF',
+    overflow: 'auto',
+  },
 });
 
 const MainPage = () => {
   const classes = useStyle();
   return (
-    <Container maxWidth="md" className={classes.mainPage}>
-      <MainTitle />
-      <Menu />
-      <HowToPlay />
-    </Container>
+    <Box className={classes.mainPageWrapper}>
+      <Container maxWidth="md" className={classes.mainPage}>
+        <MainTitle />
+        <Menu />
+        <HowToPlay />
+      </Container>
+    </Box>
   );
 };
 

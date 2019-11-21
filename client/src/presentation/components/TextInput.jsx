@@ -12,6 +12,10 @@ const TextInput = ({ label, style, textChangeHandler }) => {
       marginRight: theme.spacing(1),
       boxSizing: 'border-box',
       width: style.width || '',
+      '& > *': {
+        fontSize: '1.2rem',
+        fontWeight: '600',
+      },
     },
   }));
 
