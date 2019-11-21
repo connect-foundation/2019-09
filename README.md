@@ -18,6 +18,14 @@
   <!---->
 </p>
 
+<br/>
+<p align="middle">
+  <img src="https://i.imgur.com/Np85GoX.png" width="50%">
+</p>
+<br/>
+<br/>
+
+
 > 🙆 💁 🙋 레크레이션 게임 &#34;몸으로 말해요&#34;의 온라인 게임입니다.
 
 <br>
