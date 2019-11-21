@@ -18,6 +18,13 @@ class SocketClient {
     this.socket.emit('join', { roomId });
   }
 
+  stopStream() {
+    const tracks = this.stream.getTracks();
+    tracks.forEach(track => {
+      track.stop();
+    });
+  }
+
   async setLocalStream() {
     if (!navigator.mediaDevices.getUserMedia) {
       alert(NO_MEDIA_STREAM_MESSAGE);
