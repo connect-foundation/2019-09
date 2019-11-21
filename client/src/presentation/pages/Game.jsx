@@ -46,7 +46,7 @@ const Game = () => {
         </Grid>
         <Grid item xs={6}>
           <Box className={classes.paper}>
-            <StreamingPanel words={candidateWords} isStreamer />
+            <StreamingPanel words={candidateWords} isVisible />
           </Box>
         </Grid>
         <Grid item xs={4}>
