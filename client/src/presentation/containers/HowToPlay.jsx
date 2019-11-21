@@ -1,25 +1,33 @@
 import React from 'react';
-import styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 import { Title, Description } from '../components';
 import { MainHowToPlayTitle, MainHowToPlayDescription } from '../../config';
 
-const HowToPlayWrapper = styled.div`
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  box-shadow: 0rem 0.1rem 0.1rem 0rem grey;
-  height: 10rem;
-  overflow-y: auto;
-  padding: 0 0.5rem;
-`;
+const useStyle = makeStyles({
+  menu: {
+    width: '100%',
+    height: 220,
+    padding: '20px',
+    border: '1px solid #cccccc',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    borderRadius: 5,
+    boxShadow:
+      '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)',
+  },
+});
 
 const HowToPlay = () => {
+  const classes = useStyle();
+
   return (
-    <HowToPlayWrapper>
+    <Container maxWidth="md" className={classes.menu}>
       <Title content={MainHowToPlayTitle} />
       <Description content={MainHowToPlayDescription} />
-    </HowToPlayWrapper>
+    </Container>
   );
 };
 

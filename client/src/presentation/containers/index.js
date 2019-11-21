@@ -1,6 +1,6 @@
 import MainTitle from './MainTitle';
 import Menu from './Menu';
 import HowToPlay from './HowToPlay';
+import StreamingPanel from './StreamingPanel';
 
-// 메인 메뉴와 메인 타이틀을 외부로 export합니다.
-export { MainTitle, Menu, HowToPlay };
+export { MainTitle, Menu, HowToPlay, StreamingPanel };
