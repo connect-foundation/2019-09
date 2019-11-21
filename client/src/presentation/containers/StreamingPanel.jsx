@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import Candidates from './Candidates';
+import WordCandidates from './WordCandidates';
 import { StreamerVideo } from '../components';
 
 const useStyles = makeStyles(() => ({
@@ -13,19 +13,19 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const StreamingPanel = ({ words, isStreamer }) => {
+const StreamingPanel = ({ words, isVisible }) => {
   const classes = useStyles();
   return (
     <Container className={classes.container}>
       <StreamerVideo />
-      {isStreamer ? <Candidates words={words} /> : ''}
+      {isVisible ? <WordCandidates words={words} /> : ''}
     </Container>
   );
 };
 
 StreamingPanel.propTypes = {
   words: PropTypes.array.isRequired,
-  isStreamer: PropTypes.bool.isRequired,
+  isVisible: PropTypes.bool.isRequired,
 };
 
 export default StreamingPanel;

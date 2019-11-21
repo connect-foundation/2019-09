@@ -1,6 +1,4 @@
-import MainTitle from './MainTitle';
-import Menu from './Menu';
-import HowToPlay from './HowToPlay';
-import StreamingPanel from './StreamingPanel';
-
-export { MainTitle, Menu, HowToPlay, StreamingPanel };
+export { default as MainTitle } from './MainTitle';
+export { default as Menu } from './Menu';
+export { default as HowToPlay } from './HowToPlay';
+export { default as StreamingPanel } from './StreamingPanel';
