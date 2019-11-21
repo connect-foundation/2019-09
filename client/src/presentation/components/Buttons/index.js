@@ -1,4 +1,2 @@
-import SmallButton from './SmallButton';
-import LargeButton from './LargeButton';
-
-export { SmallButton, LargeButton };
+export { default as SmallButton } from './SmallButton';
+export { default as LargeButton } from './LargeButton';

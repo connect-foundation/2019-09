@@ -1,20 +1,8 @@
-import Logo from './Logo';
-import TextInput from './TextInput';
-import { SmallButton, LargeButton } from './Buttons';
-import Title from './Title';
-import Description from './Description';
-import Timer from './Timer';
-import QuizDisplay from './QuizDisplay';
-import StreamerVideo from './StreamerVideo';
-
-export {
-  Logo,
-  TextInput,
-  SmallButton,
-  LargeButton,
-  Title,
-  Description,
-  Timer,
-  QuizDisplay,
-  StreamerVideo,
-};
+export { default as Logo } from './Logo';
+export { default as TextInput } from './TextInput';
+export { default as Title } from './Title';
+export { default as Description } from './Description';
+export { default as Timer } from './Timer';
+export { default as QuizDisplay } from './QuizDisplay';
+export { default as StreamerVideo } from './StreamerVideo';
+export { SmallButton, LargeButton } from './Buttons';

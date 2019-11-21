@@ -1,4 +1,2 @@
-import MainPage from './MainPage';
-import Game from './Game';
-
-export { MainPage, Game };
+export { default as MainPage } from './MainPage';
+export { default as Game } from './Game';
