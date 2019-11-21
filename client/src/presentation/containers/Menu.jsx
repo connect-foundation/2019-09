@@ -32,7 +32,7 @@ const Menu = () => {
 
   return (
     <Container maxWidth="md" className={classes.menu}>
-      <TextInput label="NAME" id="user-name" style={textInpuStyles} />
+      <TextInput label="ROOM NUMBER" style={textInpuStyles} />
       <LargeButton text="PLAY" style={ButtonStyles} onClick={() => {}} />
       <LargeButton text="RANK" style={ButtonStyles} onClick={() => {}} />
     </Container>
