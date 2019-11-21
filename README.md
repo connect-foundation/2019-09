@@ -13,7 +13,7 @@
   </a>
   <!---->
   <a href="https://github.com/connect-foundation/2019-09/pulls">
-    <img alt="pr tracking" src="https://img.shields.io/github/issues-pr/connect-foundation/2019-02"/>
+    <img alt="pr tracking" src="https://img.shields.io/github/issues-pr/connect-foundation/2019-09"/>
   </a>
   <!---->
 </p>
