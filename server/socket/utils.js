@@ -1,4 +1,4 @@
-const config = require('../config');
+const { INITIAL_ROUND } = require('../config');
 
 const getViewerSocketIds = (socketIds, streamer) => {
   return socketIds.filter(socketId => socketId !== streamer.socketId);
@@ -44,12 +44,13 @@ const isRoomReady = room => {
 
 const makeGameStatus = ({ socketIds, roundNumber, count }) => {
   const gameOrderQueue = makeGameOrderQueue(socketIds, roundNumber);
+  const [currentStreamer] = gameOrderQueue;
   const initialGameStatus = {
     gameOrderQueue,
-    currentStreamer: gameOrderQueue[0],
+    currentStreamer,
     currentCount: count,
     isPlaying: true,
-    currentRound: config.INITIAL_ROUND,
+    currentRound: INITIAL_ROUND,
   };
   return initialGameStatus;
 };
