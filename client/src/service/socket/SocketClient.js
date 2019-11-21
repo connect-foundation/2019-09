@@ -19,6 +19,7 @@ class SocketClient {
   }
 
   stopStream() {
+    if (!this.stream) return;
     const tracks = this.stream.getTracks();
     tracks.forEach(track => {
       track.stop();
