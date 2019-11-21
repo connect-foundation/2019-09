@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link } from 'react-router-dom';
 import { LargeButton, TextInput } from '../components';
-import { StateReducerContext } from '../../App';
+import { DispatchContext } from '../../contexts';
 
 const useStyle = makeStyles({
   menu: {
@@ -30,7 +30,7 @@ const ButtonStyles = {
 };
 
 const Menu = () => {
-  const { dispatch } = useContext(StateReducerContext);
+  const { dispatch } = useContext(DispatchContext);
   const classes = useStyle();
 
   const getTextValue = roomId => {
