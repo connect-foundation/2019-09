@@ -24,6 +24,18 @@ const useStyles = makeStyles(theme => ({
   gameHeader: {
     backgroundColor: '#5a96ff',
   },
+  vidoeBox: {
+    padding: theme.spacing(2),
+  },
+  playerPanel: {
+    position: 'relative',
+  },
+  readyButtonContainer: {
+    position: 'absolute',
+    bottom: '0',
+    left: '2rem',
+    right: '2rem',
+  },
 }));
 
 const Game = () => {
@@ -63,12 +75,12 @@ const Game = () => {
           </Box>
         </Grid>
         <Grid item xs>
-          <Box className={classes.paper}>xs</Box>
+          <Box className={classes.paper}> </Box>
         </Grid>
       </Grid>
       <Grid container spacing={0}>
-        <Grid item xs={2}>
-          <Box className={classes.paper}>
+        <Grid item xs={3} className={classes.playerPanel}>
+          <Box className={[classes.paper, classes.readyButtonContainer]}>
             <LargeButton
               text="Ready"
               onClick={() => readyButtonHandler()}
@@ -77,12 +89,12 @@ const Game = () => {
           </Box>
         </Grid>
         <Grid item xs={6}>
-          <Box className={classes.paper}>
+          <Box className={classes.vidoeBox}>
             <StreamingPanel words={candidateWords} isVisible />
           </Box>
         </Grid>
-        <Grid item xs={4}>
-          <Box className={classes.paper}>xs</Box>
+        <Grid item xs={3}>
+          <Box className={classes.paper}> </Box>
         </Grid>
       </Grid>
     </div>
