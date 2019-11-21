@@ -11,9 +11,10 @@ const {
 } = require('../config');
 
 io.on('connection', socket => {
-  socket.on('join', ({ roomNumber }) => {
-    socket.join(roomNumber);
-    const room = io.sockets.adapter.rooms[roomNumber];
+  socket.on('join', ({ roomId }) => {
+    console.log(roomId);
+    socket.join(roomId);
+    const room = io.sockets.adapter.rooms[roomId];
     room.readyUsers = room.readyUsers || {};
   });
   socket.on('ready', ({ isReady }) => {
