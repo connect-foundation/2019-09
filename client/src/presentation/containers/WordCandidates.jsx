@@ -30,6 +30,7 @@ const WordCandidates = ({ words }) => {
       {wordCandidates.map(wordCandidate => {
         return (
           <LargeButton
+            key={wordCandidate}
             style={candidateButtonStyle}
             text={wordCandidate}
             onClick={() => {}}

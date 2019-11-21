@@ -20,8 +20,14 @@ const QuizDisplay = ({ word, isSecret }) => {
   return (
     <div className={classes.quizDisplay}>
       {isSecret
-        ? letters.map(() => <UnderlinedSpace />)
-        : letters.map(letter => <UnderlinedLetter letter={letter} />)}
+        ? letters.map((letter, index) => {
+            const key = `${letter}${index}`;
+            return <UnderlinedSpace key={key} />;
+          })
+        : letters.map((letter, index) => {
+            const key = `${letter}${index}`;
+            return <UnderlinedLetter letter={letter} key={key} />;
+          })}
     </div>
   );
 };
