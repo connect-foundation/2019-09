@@ -7,6 +7,7 @@ import { DispatchContext } from '../../contexts';
 
 const useStyle = makeStyles({
   menu: {
+    background: '#F3F4FE',
     width: '100%',
     height: 220,
     padding: '20px',
@@ -27,6 +28,8 @@ const textInpuStyles = {
 const ButtonStyles = {
   width: '100%',
   height: '3.2rem',
+  fontSize: '2rem',
+  fontWeight: '600',
 };
 
 const Menu = () => {
