@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -10,13 +9,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const StreamerVideo = ({ id }) => {
+const StreamerVideo = () => {
   const classes = useStyles();
-  return <video id={id} className={classes.video} />;
-};
-
-StreamerVideo.propTypes = {
-  id: PropTypes.string.isRequired,
+  return <video className={classes.video} />;
 };
 
 export default StreamerVideo;
