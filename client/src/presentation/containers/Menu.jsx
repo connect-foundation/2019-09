@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { Link } from 'react-router-dom';
 import { LargeButton, TextInput } from '../components';
+import { DispatchContext } from '../../contexts';
 
 const useStyle = makeStyles({
   menu: {
+    background: '#F3F4FE',
     width: '100%',
     height: 220,
     padding: '20px',
@@ -25,15 +28,31 @@ const textInpuStyles = {
 const ButtonStyles = {
   width: '100%',
   height: '3.2rem',
+  fontSize: '2rem',
+  fontWeight: '600',
 };
 
 const Menu = () => {
+  const { dispatch } = useContext(DispatchContext);
   const classes = useStyle();
+
+  const getTextValue = roomId => {
+    dispatch({ type: 'changeRoomId', payload: { roomId } });
+  };
 
   return (
     <Container maxWidth="md" className={classes.menu}>
-      <TextInput label="NAME" id="user-name" style={textInpuStyles} />
-      <LargeButton text="PLAY" style={ButtonStyles} onClick={() => {}} />
+      <TextInput
+        label="ROOM NUMBER"
+        style={textInpuStyles}
+        textChangeHandler={getTextValue}
+      />
+      <LargeButton
+        text="PLAY"
+        style={ButtonStyles}
+        component={Link}
+        to="/game"
+      />
       <LargeButton text="RANK" style={ButtonStyles} onClick={() => {}} />
     </Container>
   );

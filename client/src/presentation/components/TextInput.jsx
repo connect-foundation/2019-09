@@ -5,13 +5,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 
-const TextInput = ({ label, id, style }) => {
+const TextInput = ({ label, style, textChangeHandler }) => {
   const useStyles = makeStyles(theme => ({
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       boxSizing: 'border-box',
       width: style.width || '',
+      '& > *': {
+        fontSize: '1.2rem',
+        fontWeight: '600',
+      },
     },
   }));
 
@@ -19,8 +23,10 @@ const TextInput = ({ label, id, style }) => {
 
   return (
     <TextField
+      onChange={e => {
+        textChangeHandler(e.target.value);
+      }}
       label={label}
-      id={id}
       className={classes.textField}
       variant="outlined"
     />
@@ -29,8 +35,8 @@ const TextInput = ({ label, id, style }) => {
 
 TextInput.propTypes = {
   label: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
   style: PropTypes.object.isRequired,
+  textChangeHandler: PropTypes.func.isRequired,
 };
 
 export default TextInput;

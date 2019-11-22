@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 const Timer = ({ currentSeconds }) => {
   const useStyles = makeStyles(() => ({
     timer: {
-      fontSize: '2rem',
+      fontSize: '3rem',
       fontWeight: 'bold',
+      color: '#000000',
+      textAlign: 'left',
     },
   }));
 
