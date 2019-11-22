@@ -1,5 +1,5 @@
 upstream node_server {
-    server trycatch:3000;
+    server trycatch:3001;
 }
 
 server {

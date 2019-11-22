@@ -20,6 +20,10 @@ const useStyle = makeStyles({
     boxShadow:
       '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)',
   },
+
+  fullAnchor: {
+    width: '100%',
+  },
 });
 
 const textInpuStyles = {
@@ -47,12 +51,11 @@ const Menu = () => {
         style={textInpuStyles}
         textChangeHandler={getTextValue}
       />
-      <LargeButton
-        text="PLAY"
-        style={ButtonStyles}
-        component={Link}
-        to="/game"
-      />
+
+      <Link to="/game" className={classes.fullAnchor}>
+        <LargeButton text="PLAY" style={ButtonStyles} />
+      </Link>
+
       <LargeButton text="RANK" style={ButtonStyles} onClick={() => {}} />
     </Container>
   );

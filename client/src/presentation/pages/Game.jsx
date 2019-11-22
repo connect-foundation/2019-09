@@ -96,13 +96,13 @@ const Game = () => {
         </Grid>
         <Grid item xs className={classes.exitButtonGrid}>
           <Box className={classes.paper}>
-            <LargeButton
-              text="Exit"
-              style={ExitButtonStyles}
-              component={Link}
-              to="/"
-              onClick={exitButtonHandler}
-            />
+            <Link to="/">
+              <LargeButton
+                text="Exit"
+                style={ExitButtonStyles}
+                onClick={exitButtonHandler}
+              />
+            </Link>
           </Box>
         </Grid>
       </Grid>

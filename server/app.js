@@ -14,7 +14,14 @@ app.use(
   }),
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.get((req, res) => {
+  res.send('index');
+});
+app.use((req, res) => {
+  res.redirect('/');
+});
+
 app.io = io;
 
 module.exports = app;
