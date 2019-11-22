@@ -6,13 +6,15 @@
   </head>
 
   <body>
-    <div class="videos">
-      <div class="video-wrapper">
-        <video class="local-video" autoplay muted playsinline></video>
-      </div>
+    <div class="streaming-container hide">
+      <button class="switch-streamer-button">Switch Streamer</button>
+      <button class="ready-button">Ready</button>
+      <video class="streamer-video" autoplay muted playsinline></video>
     </div>
+    <input type="text" class="room-number-input" />
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/webrtc-adapter.js"></script>
-    <script src="/javascripts/index.js"></script>
+    <script type="module" src="/javascripts/index.js"></script>
   </body>
 </html>

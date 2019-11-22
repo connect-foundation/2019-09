@@ -1,26 +1,29 @@
-import {
-  MEDIA_CONSTRAINTS,
-  PEER_CONNECTION_CONFIG,
-  ENTER_KEY_CODE,
-  NO_MEDIA_STREAM_MESSAGE,
-} from './config.js';
+import io from 'socket.io-client';
+import { NO_MEDIA_STREAM_MESSAGE } from './config';
 
 class SocketClient {
   constructor(options) {
-    this.playerType;
-    this.stream;
+    // this.playerType;
+    // this.stream;
     this.socket = io();
     this.isReady = false;
     this.rtcPeerConnections = [];
     this.mediaConstraints = options.mediaConstraints;
     this.peerConnectionConfig = options.peerConnectionConfig;
-    this.streamerVideo = document.querySelector('.streamer-video');
+    this.streamerVideo = document.querySelector('video');
   }
 
-  init() {
-    this.registerRoomJoinEvent();
-    this.registerReadyEvent();
+  init(roomId) {
     this.registerSocketEvents();
+    this.socket.emit('join', { roomId });
+  }
+
+  stopStream() {
+    if (!this.stream) return;
+    const tracks = this.stream.getTracks();
+    tracks.forEach(track => {
+      track.stop();
+    });
   }
 
   async setLocalStream() {
@@ -105,42 +108,16 @@ class SocketClient {
     this.registerOnTrackEvent(streamerSocketId);
   }
 
+  emitReady(isReady) {
+    this.socket.emit('ready', { isReady });
+  }
+
   registerSocketEvents() {
     this.socket.on('playerType:streamer', this.streamerHandler.bind(this));
     this.socket.on('playerType:viewer', this.viewerHandler.bind(this));
     this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
     this.socket.on('sendCandidate', this.sendCandidateHandler.bind(this));
   }
-
-  registerRoomJoinEvent() {
-    const roomNumberInput = document.querySelector('.room-number-input');
-    const streamingContainer = document.querySelector('.streaming-container');
-    const switchStreamerButton = document.querySelector(
-      '.switch-streamer-button',
-    );
-    roomNumberInput.addEventListener('keyup', e => {
-      if (e.keyCode !== ENTER_KEY_CODE) {
-        return;
-      }
-      streamingContainer.classList.remove('hide');
-      roomNumberInput.classList.add('hide');
-      const roomNumber = roomNumberInput.value;
-      this.socket.emit('join', { roomNumber });
-    });
-  }
-
-  registerReadyEvent() {
-    const readyButton = document.querySelector('.ready-button');
-    readyButton.addEventListener('click', () => {
-      this.isReady = !this.isReady;
-      readyButton.innerHTML = this.isReady ? 'Cancel' : 'Ready';
-      this.socket.emit('ready', { isReady: this.isReady });
-    });
-  }
 }
-const socketClient = new SocketClient({
-  mediaConstraints: MEDIA_CONSTRAINTS,
-  peerConnectionConfig: PEER_CONNECTION_CONFIG,
-});
 
-socketClient.init();
+export default SocketClient;
