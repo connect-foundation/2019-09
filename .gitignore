@@ -178,3 +178,20 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/node,linux,macos,windows,visualstudiocode
 
 .env
+
+# CRA
+# dependencies
+/.pnp
+.pnp.js
+
+# testing
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

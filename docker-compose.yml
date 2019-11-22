@@ -22,7 +22,7 @@ services:
       - ./:/app/
     working_dir: /app/server/
     user: root
-    command: bash -c "npm install pm2 -g && npm install && pm2-runtime bin/www"
+    command: bash -c "npm install yarn pm2 -g && yarn install && yarn workspace client build && pm2-runtime bin/www"
     restart: always
     env_file:
       - ./.env
