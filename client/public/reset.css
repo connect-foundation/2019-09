@@ -151,3 +151,7 @@ body {
 * {
   font-family: 'Aldrich' !important;
 }
+
+a {
+  text-decoration: none;
+}
