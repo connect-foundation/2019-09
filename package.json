@@ -1,0 +1,12 @@
+{
+  "name": "trycatch",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/connect-foundation/2019-09.git",
+  "author": "OriginJang <jkwkw17@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "server"
+  ]
+}
