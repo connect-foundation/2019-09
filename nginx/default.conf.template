@@ -1,0 +1,35 @@
+upstream node_server {
+    server trycatch:3000;
+}
+
+server {
+    listen      80;
+    server_name ${NGINX_SERVER_NAME};
+
+    location / {
+        return 301 https://${NGINX_HOST_REQUEST_URI};
+    }
+}
+
+server {
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/${NGINX_SERVER_NAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem;
+    server_name ${NGINX_SERVER_NAME};
+
+    location / {
+        proxy_pass http://node_server;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade ${HTTP_UPGRADE};
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host ${HOST};
+    }
+
+    gzip on;
+    gzip_comp_level 2;
+    gzip_proxied any;
+    gzip_min_length  1000;
+    gzip_disable     "MSIE [1-6]\."
+    gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+}
