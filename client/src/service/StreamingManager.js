@@ -9,7 +9,14 @@ class StreamingManager {
     this.webRTCManager = new WebRTCManager();
   }
 
-  async assignStreamerHandler(socketIds) {
+  registerSocketEvents() {
+    this.socket.on('assignStreamer', this.assignStreamerHandler.bind(this));
+    this.socket.on('assignViewer', this.assignViewerHandler.bind(this));
+    this.socket.on('sendCandidate', this.sendCandidateHandler.bind(this));
+    this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
+  }
+
+  async assignStreamerHandler({ socketIds }) {
     const { webRTCManager, iceCandidateHandler, socket } = this;
 
     webRTCManager.closeAllConnections();
@@ -31,11 +38,37 @@ class StreamingManager {
     });
   }
 
+  async assignViewerHandler({ socketId }) {
+    const { webRTCManager, socket } = this;
+    webRTCManager.createConnection(socketId);
+    webRTCManager.registerIceCandidate(
+      socketId,
+      iceCandidateHandler.bind(this),
+    );
+    webRTCManager.registerTrack(socketId, trackHandler.bind(this));
+  }
+
+  async sendCandidateHandler({ target, candidate }) {
+    await this.webRTCManager.addIceCandidate(target, candidate);
+  }
+
+  async sendDescriptionHandler({ target, description }) {
+    const { webRTCManager, socket } = this;
+    await webRTCManager.setRemoteDescription(target, description);
+    if (description.type === 'answer') return;
+    const description = await webRTCManager.createAnswerDescription(target);
+    socket.emit('sendDescription', { target, description });
+  }
+
   iceCandidateHandler(socketId, event) {
     this.socket.emit('sendCandidate', {
       target: socketId,
       candidate: event.candidate,
     });
+  }
+
+  trackHandler(stream) {
+    this.dispatch({ type: 'setStream', payload: { stream } });
   }
 }
 
