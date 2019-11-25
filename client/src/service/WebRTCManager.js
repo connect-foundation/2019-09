@@ -50,6 +50,12 @@ class WebRTCManager {
     this.peerConnections[key].addTrack(this.stream.getTracks()[0], this.stream);
   }
 
+  addTracks(keys) {
+    keys.forEach(key => {
+      this.addTrack(key);
+    });
+  }
+
   /**
    * onicecandidate 발생할 때, 즉 자신이
    * ice candidate를 찾을 경우, 이를 공유하는 이벤트 등록.
@@ -65,6 +71,12 @@ class WebRTCManager {
     this.peerConnections[key].onicecandidate = event => {
       iceCandidateHandler(key, event);
     };
+  }
+
+  registerIceCandidates(keys, iceCandidateHandler) {
+    keys.forEach(key => {
+      this.registerIceCandidate(key, iceCandidateHandler);
+    });
   }
 
   /**
