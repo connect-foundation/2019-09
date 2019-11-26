@@ -1,10 +1,10 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
+// import { useContext } from 'react';
+// import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 
 class StreamingManager {
   constructor(socket, remotePlayers) {
-    this.dispatch = useContext(DispatchContext).dispatch;
+    // this.dispatch = useContext(DispatchContext).dispatch;
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.webRTCManager = new WebRTCManager();

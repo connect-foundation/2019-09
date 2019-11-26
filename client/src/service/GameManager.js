@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
+// import { useContext } from 'react';
+// import { DispatchContext } from '../contexts';
 
 class GameManager {
   /**
@@ -12,7 +12,7 @@ class GameManager {
    * }
    */
   constructor(socket, localPlayer, remotePlayers) {
-    this.dispatch = useContext(DispatchContext).dispatch;
+    // this.dispatch = useContext(DispatchContext).dispatch;
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
