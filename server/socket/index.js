@@ -1,4 +1,4 @@
-const { matchHandler } = require('./handlers');
+const { matchHandler, sendReadyHandler } = require('./handlers');
 const io = require('./io');
 
 io.on('connection', socket => {
@@ -6,6 +6,8 @@ io.on('connection', socket => {
     socket.emit('sendSocketId', { socketId: socket.id });
   });
   socket.on('match', matchHandler.bind(null, socket));
+
+  socket.on('sendReady', sendReadyHandler.bind(null, socket));
 });
 
 module.exports = io;
