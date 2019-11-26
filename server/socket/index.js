@@ -11,6 +11,9 @@ const {
 } = require('../config');
 
 io.on('connection', socket => {
+  socket.on('askSocketId', () => {
+    socket.emit('sendSocketId', { socketId: socket.id });
+  });
   socket.on('join', ({ roomId }) => {
     socket.join(roomId);
     const room = io.sockets.adapter.rooms[roomId];
