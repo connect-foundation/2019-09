@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay, ReadyButton, ExitButton } from '../components';
-import { StreamingPanel } from '../containers';
+import { StreamingPanel, ChattingPanel } from '../containers';
 import { GlobalContext } from '../../contexts';
 import SocketClient from '../../service/socket/SocketClient';
 import {
@@ -27,9 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
   vidoeBox: {
     padding: theme.spacing(2),
-  },
-  playerPanel: {
-    position: 'relative',
+    height: '100%',
   },
   readyButtonContainer: {
     position: 'absolute',
@@ -42,6 +40,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     padding: theme.spacing(2),
+  },
+  bottomGrid: {
+    height: 'auto',
+  },
+  bottomGridContent: {
+    padding: '1rem',
   },
 }));
 
@@ -91,19 +95,15 @@ const Game = () => {
           </Box>
         </Grid>
       </Grid>
-      <Grid container spacing={0}>
-        <Grid item xs={3} className={classes.playerPanel}>
-          <Box className={[classes.paper, classes.readyButtonContainer]}>
-            <ReadyButton onClick={readyButtonHandler}>Ready</ReadyButton>
-          </Box>
+      <Grid container spacing={0} className={classes.bottomGrid}>
+        <Grid item xs={3} className={classes.bottomGridContent}>
+          <ReadyButton onClick={readyButtonHandler}>Ready</ReadyButton>
         </Grid>
-        <Grid item xs={6}>
-          <Box className={classes.vidoeBox}>
-            <StreamingPanel words={candidateWords} isVisible />
-          </Box>
+        <Grid item xs={6} className={classes.bottomGridContent}>
+          <StreamingPanel words={candidateWords} isVisible />
         </Grid>
-        <Grid item xs={3}>
-          <Box className={classes.paper}> </Box>
+        <Grid item xs={3} className={classes.bottomGridContent}>
+          <ChattingPanel />
         </Grid>
       </Grid>
     </div>
