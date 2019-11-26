@@ -7,7 +7,11 @@ const joinRoom = ({ roomId, socket, nickname }) => {
   const socketId = socket.id;
   socket.roomId = roomId;
   socket.join(roomId);
-  rooms[roomId].sockets[socketId].nickname = nickname;
+  /** @todo rooms[roomId]에 socketData와 같이 사용자
+   * 로직만 담당하는 객체 추가 필요.
+   * 이후의 다른 코드에서도 이를 따라 수정해야 함
+   */
+  rooms[roomId][socketId].nickname = nickname;
 };
 
 const isRoomAvailable = room => {
@@ -72,13 +76,13 @@ const findRoomBySocket = socket => {
 
 const isRoomReady = roomId => {
   const { sockets } = rooms[roomId];
-  const players = Object.keys(sockets);
+  const socketIds = Object.keys(sockets);
   /**  @todo: move constants to config */
-  if (players.length < 2) {
+  if (socketIds.length < 2) {
     return false;
   }
-  return players.all(player => {
-    return player.isReady;
+  return socketIds.every(socketId => {
+    return sockets[socketId].isReady;
   });
 };
 

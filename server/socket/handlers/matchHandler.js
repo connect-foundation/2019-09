@@ -18,7 +18,7 @@ const matchHandler = (socket, { nickname }) => {
   }
 
   const roomId = rooms.createRoomId();
-  rooms.joinRoom(roomId, socket);
+  rooms.joinRoom({ roomId, socket, nickname });
   socket.emit('sendRoomId', { roomId });
 };
 

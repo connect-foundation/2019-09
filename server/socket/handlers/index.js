@@ -1,3 +1,4 @@
 const matchHandler = require('./matchHandler');
+const sendReadyHandler = require('./sendReadyHandler');
 
-module.exports = { matchHandler };
+module.exports = { matchHandler, sendReadyHandler };
