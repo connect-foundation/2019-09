@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import Message from './Message';
 import Nickname from './Nickname';
 
-const ChatRow = ({ nickname, message }) => {
+const ChattingRow = ({ nickname, message }) => {
   const newNickname = `${nickname} : `;
   return (
     <Box>
@@ -14,9 +14,9 @@ const ChatRow = ({ nickname, message }) => {
   );
 };
 
-ChatRow.propTypes = {
+ChattingRow.propTypes = {
   nickname: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
 };
 
-export default ChatRow;
+export default ChattingRow;
