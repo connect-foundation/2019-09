@@ -3,10 +3,10 @@ import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 
 class StreamingManager {
-  constructor(socket, otherPlayers) {
+  constructor(socket, remotePlayers) {
     this.dispatch = useContext(DispatchContext).dispatch;
     this.socket = socket;
-    this.otherPlayers = otherPlayers;
+    this.remotePlayers = remotePlayers;
     this.webRTCManager = new WebRTCManager();
   }
 
@@ -23,9 +23,9 @@ class StreamingManager {
       iceCandidateHandler,
       socket,
       dispatch,
-      otherPlayers,
+      remotePlayers,
     } = this;
-    const socketIds = Object.keys(otherPlayers);
+    const socketIds = Object.keys(remotePlayers);
 
     webRTCManager.closeAllConnections();
     await webRTCManager.createStream();
