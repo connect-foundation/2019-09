@@ -6,11 +6,13 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   PlayerProfile: props => ({
     width: '100%',
+    boxSizing: 'border-box',
     height: '6rem',
+    marginBottom: '1rem',
     padding: '1rem',
     display: 'flex',
     fontSize: '1.6rem',
-    backgroundColor: '#efefef',
+    backgroundColor: '#f4f4f4',
     border: (() => {
       if (props.isReady) return '2px solid #5A96FF';
       if (props.isStreamer) return '2px solid #e74c3c';
@@ -20,8 +22,8 @@ const useStyles = makeStyles({
   playerOrder: {
     display: 'flex',
     alignItems: 'center',
-    flex: 1,
-    fontSize: '2rem',
+    flex: 1.5,
+    fontSize: '1.5rem',
   },
   playerInformation: {
     display: 'flex',

@@ -8,6 +8,7 @@ const useStyle = makeStyles({
     height: '48rem',
     position: 'relative',
     border: '1px solid #e7e7e7',
+    backgroundColor: '#F3F4FE',
   },
 });
 

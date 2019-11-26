@@ -9,7 +9,6 @@ const useStyles = makeStyles({
     ...buttonStyle,
     flex: 1,
     marginLeft: '0.5rem',
-    fontSize: '1.5rem',
   },
 });
 

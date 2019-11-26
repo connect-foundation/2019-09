@@ -4,6 +4,7 @@ const buttonStyle = {
   borderRadius: 3,
   color: 'white',
   padding: '0 30px',
+  fontSize: '1.5rem',
   '&:hover': {
     background: '#497FDB',
   },
