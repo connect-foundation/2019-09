@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Timer, QuizDisplay, LargeButton } from '../components';
+import { Timer, QuizDisplay, ReadyButton, ExitButton } from '../components';
 import { StreamingPanel } from '../containers';
 import { GlobalContext } from '../../contexts';
 import SocketClient from '../../service/socket/SocketClient';
@@ -45,16 +45,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ButtonStyles = {
-  width: '100%',
-  height: '3.2rem',
-};
-
-const ExitButtonStyles = {
-  width: '5rem',
-  height: '3.2rem',
-};
-
 const Game = () => {
   let socketClient;
   const { state } = useContext(GlobalContext);
@@ -62,7 +52,6 @@ const Game = () => {
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-  const readyButtonText = 'Ready'; // Demo Purpose
 
   useEffect(() => {
     socketClient = new SocketClient({
@@ -97,11 +86,7 @@ const Game = () => {
         <Grid item xs className={classes.exitButtonGrid}>
           <Box className={classes.paper}>
             <Link to="/">
-              <LargeButton
-                text="Exit"
-                style={ExitButtonStyles}
-                onClick={exitButtonHandler}
-              />
+              <ExitButton onClick={exitButtonHandler}>Exit</ExitButton>
             </Link>
           </Box>
         </Grid>
@@ -109,11 +94,7 @@ const Game = () => {
       <Grid container spacing={0}>
         <Grid item xs={3} className={classes.playerPanel}>
           <Box className={[classes.paper, classes.readyButtonContainer]}>
-            <LargeButton
-              text={readyButtonText}
-              onClick={readyButtonHandler}
-              style={ButtonStyles}
-            />
+            <ReadyButton onClick={readyButtonHandler}>Ready</ReadyButton>
           </Box>
         </Grid>
         <Grid item xs={6}>

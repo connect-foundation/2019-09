@@ -6,4 +6,10 @@ export { default as Timer } from './Timer';
 export { default as QuizDisplay } from './QuizDisplay';
 export { default as StreamerVideo } from './StreamerVideo';
 export { default as ChattringWindow } from './ChattingWindow';
-export { SmallButton, LargeButton } from './Buttons';
+export {
+  MenuButton,
+  SendButton,
+  ReadyButton,
+  ExitButton,
+  CandidateButton,
+} from './Buttons';

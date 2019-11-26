@@ -7,13 +7,12 @@ import buttonStyle from './style';
 const useStyles = makeStyles({
   button: {
     ...buttonStyle,
-    flex: 1,
-    marginLeft: '0.5rem',
-    fontSize: '1.5rem',
+    width: '10rem',
+    height: '3rem',
   },
 });
 
-const SendButtton = ({ onClick, children }) => {
+const CandidateButton = ({ onClick, children }) => {
   const classes = useStyles();
   return (
     <Button onClick={onClick} variant="contained" className={classes.button}>
@@ -22,9 +21,9 @@ const SendButtton = ({ onClick, children }) => {
   );
 };
 
-SendButtton.propTypes = {
+CandidateButton.propTypes = {
   children: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
-export default SendButtton;
+export default CandidateButton;

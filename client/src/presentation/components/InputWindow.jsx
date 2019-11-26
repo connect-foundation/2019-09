@@ -3,7 +3,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
-import { SendButtton } from './Buttons';
+import { SendButton } from './Buttons';
 
 const useStyles = makeStyles({
   InputWindow: {
@@ -16,7 +16,7 @@ const InputWindow = () => {
   return (
     <Box className={classes.InputWindow}>
       <MessageInput />
-      <SendButtton>Send</SendButtton>
+      <SendButton>Send</SendButton>
     </Box>
   );
 };
