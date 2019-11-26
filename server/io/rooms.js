@@ -1,12 +1,12 @@
-const io = require('./init');
 const short = require('short-uuid');
+const io = require('./init');
 
-const rooms = io.sockets.adapter.rooms;
+const { rooms } = io.sockets.adapter;
 
-const joinRoom = (roomId, socket) => {
+const joinRoom = ({ roomId, socket, nickname }) => {
   const socketId = socket.id;
   socket.join(roomId);
-  rooms[roomId][socketId].nickname = socket.nickname;
+  rooms[roomId][socketId].nickname = nickname;
 };
 
 const isRoomAvailable = room => {
@@ -50,7 +50,7 @@ const getOtherSockets = (roomId, targetSocketId) => {
 
   const keys = Object.keys(sockets);
 
-  return keys.reduce((accumulate, key, index) => {
+  return keys.reduce((accumulate, key) => {
     if (key !== targetSocketId) {
       return [...accumulate, sockets[key]];
     }
