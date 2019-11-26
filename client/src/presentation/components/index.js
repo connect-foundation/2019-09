@@ -7,6 +7,7 @@ export { default as QuizDisplay } from './QuizDisplay';
 export { default as StreamerVideo } from './StreamerVideo';
 export { default as ChattingWindow } from './ChattingWindow';
 export { default as InputWindow } from './InputWindow';
+export { default as PlayerProfile } from './PlayerProfile';
 export {
   MenuButton,
   SendButton,
