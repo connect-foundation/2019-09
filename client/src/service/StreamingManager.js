@@ -3,9 +3,10 @@ import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 
 class StreamingManager {
-  constructor(socket) {
+  constructor(socket, otherPlayers) {
     this.dispatch = useContext(DispatchContext).dispatch;
     this.socket = socket;
+    this.otherPlayers = otherPlayers;
     this.webRTCManager = new WebRTCManager();
   }
 
@@ -16,8 +17,15 @@ class StreamingManager {
     this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
   }
 
-  async assignStreamerHandler({ socketIds }) {
-    const { webRTCManager, iceCandidateHandler, socket, dispatch } = this;
+  async assignStreamerHandler() {
+    const {
+      webRTCManager,
+      iceCandidateHandler,
+      socket,
+      dispatch,
+      otherPlayers,
+    } = this;
+    const socketIds = Object.keys(otherPlayers);
 
     webRTCManager.closeAllConnections();
     await webRTCManager.createStream();
@@ -39,14 +47,14 @@ class StreamingManager {
     });
   }
 
-  async assignViewerHandler({ socketId }) {
+  async assignViewerHandler({ streamerSocketId }) {
     const { webRTCManager, iceCandidateHandler, trackHandler } = this;
-    webRTCManager.createConnection(socketId);
+    webRTCManager.createConnection(streamerSocketId);
     webRTCManager.registerIceCandidate(
-      socketId,
+      streamerSocketId,
       iceCandidateHandler.bind(this),
     );
-    webRTCManager.registerTrack(socketId, trackHandler.bind(this));
+    webRTCManager.registerTrack(streamerSocketId, trackHandler.bind(this));
   }
 
   async sendCandidateHandler({ target, candidate }) {
