@@ -5,6 +5,7 @@ const { rooms } = io.sockets.adapter;
 
 const joinRoom = ({ roomId, socket, nickname }) => {
   const socketId = socket.id;
+  socket.roomId = roomId;
   socket.join(roomId);
   rooms[roomId][socketId].nickname = nickname;
 };
@@ -40,8 +41,7 @@ const getSocketIds = roomId => {
 };
 
 const getSockets = roomId => {
-  const room = rooms[roomId];
-  const sockets = room;
+  const sockets = rooms[roomId];
   return sockets;
 };
 
@@ -52,10 +52,10 @@ const getOtherSockets = (roomId, targetSocketId) => {
 
   return keys.reduce((accumulate, key) => {
     if (key !== targetSocketId) {
-      return [...accumulate, sockets[key]];
+      return { ...accumulate, key: sockets[key] };
     }
     return accumulate;
-  }, []);
+  }, {});
 };
 
 const getOtherSocketIds = (roomId, targetSocketId) => {
@@ -66,6 +66,35 @@ const getOtherSocketIds = (roomId, targetSocketId) => {
   return otherSocketIds;
 };
 
+const findRoomBySocket = socket => {
+  return rooms[socket.roomId];
+};
+
+const isRoomReady = roomId => {
+  const room = rooms[roomId];
+  const players = Object.keys(room);
+  /**  @todo: move constants to config */
+  if (players.length < 2) {
+    return false;
+  }
+  return players.all(player => {
+    return player.isReady;
+  });
+};
+
+const getRoomByRoomId = roomId => {
+  return rooms[roomId];
+};
+
+const resetGameProgress = roomId => {
+  /**  @todo: move constants to config */
+  const initialStatus = {
+    currentRound: 1,
+    currentSet: 1,
+  };
+  rooms[roomId] = { ...rooms[roomId], ...initialStatus };
+};
+
 module.exports = {
   joinRoom,
   getAvailableRoomId,
@@ -73,4 +102,8 @@ module.exports = {
   getSocketIds,
   getOtherSocketIds,
   getOtherSockets,
+  findRoomBySocket,
+  isRoomReady,
+  getRoomByRoomId,
+  resetGameProgress,
 };
