@@ -6,6 +6,10 @@ import ChattingRow from './ChattingRow';
 
 const useStyle = makeStyles({
   chattingWindow: {
+    position: 'absolute',
+    top: '1rem',
+    left: '1rem',
+    right: '1rem',
     padding: '1rem',
     '& > *': {
       marginTop: '0.5rem',
@@ -14,7 +18,7 @@ const useStyle = makeStyles({
   },
 });
 
-const ChattringWindow = ({ chatList }) => {
+const ChattingWindow = ({ chatList }) => {
   const classes = useStyle();
   return (
     <Box className={classes.chattingWindow}>
@@ -35,8 +39,8 @@ const ChattringWindow = ({ chatList }) => {
 /**
  * propstype 지정시 array는 arrayOf / object는 shape
  */
-ChattringWindow.propTypes = {
+ChattingWindow.propTypes = {
   chatList: PropTypes.arrayOf.isRequired,
 };
 
-export default ChattringWindow;
+export default ChattingWindow;

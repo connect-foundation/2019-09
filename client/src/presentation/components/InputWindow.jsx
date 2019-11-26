@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
@@ -8,6 +7,10 @@ import { SendButton } from './Buttons';
 const useStyles = makeStyles({
   InputWindow: {
     display: 'flex',
+    position: 'absolute',
+    bottom: '1rem',
+    left: '1rem',
+    right: '1rem',
   },
 });
 
@@ -20,7 +23,5 @@ const InputWindow = () => {
     </Box>
   );
 };
-
-InputWindow.propTypes = {};
 
 export default InputWindow;
