@@ -1,17 +1,15 @@
-const io = require('../init');
 const rooms = require('../rooms');
 
 const matchHandler = (socket, { nickname }) => {
   const socketId = socket.id;
   const availableRoomId = rooms.getAvailableRoomId();
-  socket.nickname = nickname;
 
   if (availableRoomId) {
-    rooms.joinRoom(availableRoomId, socket);
+    rooms.joinRoom({ roomId: availableRoomId, socket, nickname });
     socket.emit('sendRoomId', { roomId: availableRoomId });
     socket.broadcast
       .to(availableRoomId)
-      .emit('sendNewPlayer', { socketId: socket.id, nickname: nickname });
+      .emit('sendNewPlayer', { socketId: socket.id, nickname });
 
     socket.emit('sendPlayers', {
       players: rooms.getOtherSockets(availableRoomId, socketId),
@@ -21,5 +19,5 @@ const matchHandler = (socket, { nickname }) => {
 
   const roomId = rooms.createRoomId();
   rooms.joinRoom(roomId, socket);
-  socket.emit('sendRoomId', { roomId: roomId });
+  socket.emit('sendRoomId', { roomId });
 };
