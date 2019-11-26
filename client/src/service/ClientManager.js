@@ -4,13 +4,22 @@ import StreamingManager from './StreamingManager';
 
 class ClientManager {
   constructor() {
-    this.socketId = null;
+    this.localPlayer = {
+      isReady: false,
+      nickname: '',
+      isStreamer: false,
+      socketId: '',
+    };
     this.socket = io();
-    this.otherPlayers = {};
-    this.gameManager = new GameManager(this.socket, this.otherPlayers);
+    this.remotePlayers = {};
+    this.gameManager = new GameManager(
+      this.socket,
+      this.localPlayer,
+      this.remotePlayers,
+    );
     this.streamingManager = new StreamingManager(
       this.socket,
-      this.otherPlayers,
+      this.remotePlayers,
     );
   }
 
@@ -19,7 +28,7 @@ class ClientManager {
   }
 
   sendSocketIdHandler({ socketId }) {
-    this.socketId = socketId;
+    this.localPlayer.socketId = socketId;
   }
 
   askSocketId() {
@@ -27,7 +36,12 @@ class ClientManager {
   }
 
   findMatch(nickname) {
+    this.localPlayer.nickname = nickname;
     this.gameManager.findMatch(nickname);
+  }
+
+  toggleReady() {
+    this.gameManager.toggleReady(this.localPlayer.isReady);
   }
 
   init() {
