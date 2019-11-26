@@ -28,18 +28,18 @@ class StreamingManager {
       iceCandidateHandler.bind(this),
     );
     webRTCManager.addTracks(socketIds);
-    const descriptions = await webRTCManager.createOfferDescriptions(socketIds);
-    await webRTCManager.setLocalDescriptions(socketIds, descriptions);
+    const offers = await webRTCManager.createOfferDescriptions(socketIds);
+    await webRTCManager.setLocalDescriptions(socketIds, offers);
     socketIds.forEach((socketId, index) => {
       socket.emit('sendDescription', {
         target: socketId,
-        description: descriptions[index],
+        description: offers[index],
       });
     });
   }
 
   async assignViewerHandler({ socketId }) {
-    const { webRTCManager, socket } = this;
+    const { webRTCManager, iceCandidateHandler, trackHandler } = this;
     webRTCManager.createConnection(socketId);
     webRTCManager.registerIceCandidate(
       socketId,
@@ -56,8 +56,8 @@ class StreamingManager {
     const { webRTCManager, socket } = this;
     await webRTCManager.setRemoteDescription(target, description);
     if (description.type === 'answer') return;
-    const description = await webRTCManager.createAnswerDescription(target);
-    socket.emit('sendDescription', { target, description });
+    const answer = await webRTCManager.createAnswerDescription(target);
+    socket.emit('sendDescription', { target, description: answer });
   }
 
   iceCandidateHandler(socketId, event) {
