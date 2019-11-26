@@ -26,6 +26,10 @@ class ClientManager {
     this.socket.emit('askSocketId');
   }
 
+  findMatch(nickname) {
+    this.gameManager.findMatch(nickname);
+  }
+
   init() {
     this.registerSocketEvents();
     this.askSocketId();

@@ -17,6 +17,10 @@ class GameManager {
     this.playerList = {};
   }
 
+  findMatch(nickname) {
+    this.socket.emit('match', { nickname });
+  }
+
   registerSocketEvents() {}
 }
 
