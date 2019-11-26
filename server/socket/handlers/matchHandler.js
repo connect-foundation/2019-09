@@ -9,7 +9,7 @@ const matchHandler = (socket, { nickname }) => {
     socket.emit('sendRoomId', { roomId: availableRoomId });
     socket.broadcast
       .to(availableRoomId)
-      .emit('sendNewPlayer', { socketId: socket.id, nickname });
+      .emit('sendNewPlayer', { [socketId]: { nickname } });
 
     socket.emit('sendPlayers', {
       players: rooms.getOtherSockets(availableRoomId, socketId),
