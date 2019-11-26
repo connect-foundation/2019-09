@@ -7,7 +7,7 @@ const joinRoom = ({ roomId, socket, nickname }) => {
   const socketId = socket.id;
   socket.roomId = roomId;
   socket.join(roomId);
-  rooms[roomId][socketId].nickname = nickname;
+  rooms[roomId].sockets[socketId].nickname = nickname;
 };
 
 const isRoomAvailable = room => {
@@ -17,7 +17,7 @@ const isRoomAvailable = room => {
 const getAvailableRoomIds = () => {
   const roomIds = Object.keys(rooms);
   const availableRoomIds = roomIds.filter(roomId => {
-    return isRoomAvailable(rooms[roomId]);
+    return isRoomAvailable(rooms[roomId].sockets);
   });
   return availableRoomIds;
 };
@@ -35,13 +35,13 @@ const createRoomId = () => {
 };
 
 const getSocketIds = roomId => {
-  const room = rooms[roomId];
-  const socketIds = Object.keys(room);
+  const { sockets } = rooms[roomId];
+  const socketIds = Object.keys(sockets);
   return socketIds;
 };
 
 const getSockets = roomId => {
-  const sockets = rooms[roomId];
+  const { sockets } = rooms[roomId];
   return sockets;
 };
 
@@ -71,8 +71,8 @@ const findRoomBySocket = socket => {
 };
 
 const isRoomReady = roomId => {
-  const room = rooms[roomId];
-  const players = Object.keys(room);
+  const { sockets } = rooms[roomId];
+  const players = Object.keys(sockets);
   /**  @todo: move constants to config */
   if (players.length < 2) {
     return false;
