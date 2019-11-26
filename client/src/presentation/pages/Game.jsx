@@ -4,8 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Timer, QuizDisplay, ReadyButton, ExitButton } from '../components';
-import { StreamingPanel, ChattingPanel } from '../containers';
+import { Timer, QuizDisplay, ExitButton } from '../components';
+import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
 import { GlobalContext } from '../../contexts';
 import SocketClient from '../../service/socket/SocketClient';
 import {
@@ -16,6 +16,11 @@ import {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    margin: 0,
+    width: '100%',
+    height: '100%',
+    background: '#E5F1FF',
+    overflow: 'auto',
   },
   timerBox: {
     padding: theme.spacing(2),
@@ -65,10 +70,10 @@ const Game = () => {
     socketClient.init(state.roomId);
   }, []);
 
-  const readyButtonHandler = () => {
-    const isReady = true;
-    socketClient.emitReady(isReady);
-  };
+  // const readyButtonHandler = () => {
+  //   const isReady = true;
+  //   socketClient.emitReady(isReady);
+  // };
 
   const exitButtonHandler = () => {
     socketClient.stopStream();
@@ -96,10 +101,10 @@ const Game = () => {
         </Grid>
       </Grid>
       <Grid container spacing={0} className={classes.bottomGrid}>
-        <Grid item xs={3} className={classes.bottomGridContent}>
-          <ReadyButton onClick={readyButtonHandler}>Ready</ReadyButton>
+        <Grid item xs={2} className={classes.bottomGridContent}>
+          <PlayerPanel />
         </Grid>
-        <Grid item xs={6} className={classes.bottomGridContent}>
+        <Grid item xs={7} className={classes.bottomGridContent}>
           <StreamingPanel words={candidateWords} isVisible />
         </Grid>
         <Grid item xs={3} className={classes.bottomGridContent}>
