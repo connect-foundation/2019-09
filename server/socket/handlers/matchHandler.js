@@ -21,3 +21,5 @@ const matchHandler = (socket, { nickname }) => {
   rooms.joinRoom(roomId, socket);
   socket.emit('sendRoomId', { roomId });
 };
+
+module.exports = matchHandler;

@@ -1,5 +1,5 @@
 const short = require('short-uuid');
-const io = require('./init');
+const io = require('./io');
 
 const { rooms } = io.sockets.adapter;
 
