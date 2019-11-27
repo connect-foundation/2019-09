@@ -116,7 +116,7 @@ const resetGameProgress = roomId => {
   const initialStatus = {
     currentRound: 0,
     currentSet: 0,
-    currentStreamer: '',
+    streamerSocketId: '',
   };
   rooms[roomId] = { ...rooms[roomId], ...initialStatus };
 };
@@ -138,7 +138,7 @@ const setSet = roomId => {
 
   if (!targetSocketId) return;
   streamers[targetSocketId].type = 'streamer';
-  room.currentStreamer = targetSocketId;
+  room.streamerSocketId = targetSocketId;
   delete streamers[targetSocketId];
 };
 
