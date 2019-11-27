@@ -2,16 +2,16 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link } from 'react-router-dom';
-import { LargeButton, TextInput } from '../components';
+import { MenuButton, TextInput } from '../components';
 import { DispatchContext } from '../../contexts';
 
 const useStyle = makeStyles({
   menu: {
     background: '#F3F4FE',
     width: '100%',
-    height: 220,
-    padding: '20px',
-    border: '1px solid #cccccc',
+    height: 'auto',
+    padding: '2rem',
+    border: '0.1rem solid #cccccc',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -19,6 +19,10 @@ const useStyle = makeStyles({
     borderRadius: 5,
     boxShadow:
       '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)',
+    '& > *': {
+      marginTop: '0.7rem',
+      marginBottom: '0.7rem',
+    },
   },
 
   fullAnchor: {
@@ -28,12 +32,6 @@ const useStyle = makeStyles({
 
 const textInpuStyles = {
   width: '100%',
-};
-const ButtonStyles = {
-  width: '100%',
-  height: '3.2rem',
-  fontSize: '2rem',
-  fontWeight: '600',
 };
 
 const Menu = () => {
@@ -53,10 +51,10 @@ const Menu = () => {
       />
 
       <Link to="/game" className={classes.fullAnchor}>
-        <LargeButton text="PLAY" style={ButtonStyles} />
+        <MenuButton>PLAY</MenuButton>
       </Link>
 
-      <LargeButton text="RANK" style={ButtonStyles} onClick={() => {}} />
+      <MenuButton>RANK</MenuButton>
     </Container>
   );
 };

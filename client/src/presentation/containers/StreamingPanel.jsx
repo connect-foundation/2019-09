@@ -10,6 +10,10 @@ import { StreamerVideo } from '../components';
 const useStyles = makeStyles(() => ({
   container: {
     position: 'relative',
+    height: '100%',
+    maxHeight: '48rem',
+    border: '1px solid #e7e7e7',
+    backgroundColor: '#F3F4FE',
   },
 }));
 

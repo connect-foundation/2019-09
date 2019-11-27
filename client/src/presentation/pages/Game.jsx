@@ -4,14 +4,19 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Timer, QuizDisplay, LargeButton } from '../components';
-import { StreamingPanel } from '../containers';
-// import { GlobalContext } from '../../contexts';
+import { Timer, QuizDisplay, ExitButton } from '../components';
+import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
+import { GlobalContext } from '../../contexts';
 import ClientManager from '../../service/ClientManager';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    margin: 0,
+    width: '100%',
+    height: '100%',
+    background: '#E5F1FF',
+    overflow: 'auto',
   },
   timerBox: {
     padding: theme.spacing(2),
@@ -23,9 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
   vidoeBox: {
     padding: theme.spacing(2),
-  },
-  playerPanel: {
-    position: 'relative',
+    height: '100%',
   },
   readyButtonContainer: {
     position: 'absolute',
@@ -39,26 +42,21 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: theme.spacing(2),
   },
+  bottomGrid: {
+    height: 'auto',
+  },
+  bottomGridContent: {
+    padding: '1rem',
+  },
 }));
-
-const ButtonStyles = {
-  width: '100%',
-  height: '3.2rem',
-};
-
-const ExitButtonStyles = {
-  width: '5rem',
-  height: '3.2rem',
-};
 
 const Game = () => {
   let clientManager;
-  // const { state } = useContext(GlobalContext);
+  const { roomId } = useContext(GlobalContext);
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-  const readyButtonText = 'Ready'; // Demo Purpose
 
   useEffect(() => {
     clientManager = new ClientManager();
@@ -87,32 +85,20 @@ const Game = () => {
         <Grid item xs className={classes.exitButtonGrid}>
           <Box className={classes.paper}>
             <Link to="/">
-              <LargeButton
-                text="Exit"
-                style={ExitButtonStyles}
-                onClick={exitButtonHandler}
-              />
+              <ExitButton onClick={exitButtonHandler}>Exit</ExitButton>
             </Link>
           </Box>
         </Grid>
       </Grid>
-      <Grid container spacing={0}>
-        <Grid item xs={3} className={classes.playerPanel}>
-          <Box className={[classes.paper, classes.readyButtonContainer]}>
-            <LargeButton
-              text={readyButtonText}
-              onClick={readyButtonHandler}
-              style={ButtonStyles}
-            />
-          </Box>
+      <Grid container spacing={0} className={classes.bottomGrid}>
+        <Grid item xs={2} className={classes.bottomGridContent}>
+          <PlayerPanel />
         </Grid>
-        <Grid item xs={6}>
-          <Box className={classes.vidoeBox}>
-            <StreamingPanel words={candidateWords} isVisible />
-          </Box>
+        <Grid item xs={7} className={classes.bottomGridContent}>
+          <StreamingPanel words={candidateWords} isVisible />
         </Grid>
-        <Grid item xs={3}>
-          <Box className={classes.paper}> </Box>
+        <Grid item xs={3} className={classes.bottomGridContent}>
+          <ChattingPanel />
         </Grid>
       </Grid>
     </div>
