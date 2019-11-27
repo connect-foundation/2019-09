@@ -112,13 +112,14 @@ const getRoomByRoomId = roomId => {
 };
 
 const resetGameProgress = roomId => {
-  /**  @todo: move constants to config */
   const initialStatus = {
     currentRound: 0,
     currentSet: 0,
     streamerSocketId: '',
   };
-  rooms[roomId] = { ...rooms[roomId], ...initialStatus };
+  Object.keys(initialStatus).forEach(key => {
+    rooms[roomId][key] = initialStatus[key];
+  });
 };
 
 const setRound = roomId => {
