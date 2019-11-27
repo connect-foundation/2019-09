@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { PlayerProfile, ReadyButton } from '../components';
@@ -19,7 +20,7 @@ const useStyle = makeStyles({
   },
 });
 
-const PlayerPanel = () => {
+const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
   const playerList = [
     {
@@ -66,12 +67,20 @@ const PlayerPanel = () => {
         );
       })}
       <Box className={classes.readyButtonWrapper}>
-        <ReadyButton>Ready</ReadyButton>
+        <ReadyButton
+          onClick={() => {
+            clientManager.toggleReady();
+          }}
+        >
+          Ready
+        </ReadyButton>
       </Box>
     </Box>
   );
 };
 
-PlayerPanel.propTypes = {};
+PlayerPanel.propTypes = {
+  clientManager: PropTypes.shape.isRequired,
+};
 
 export default PlayerPanel;

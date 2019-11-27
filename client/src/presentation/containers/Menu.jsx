@@ -35,7 +35,7 @@ const textInpuStyles = {
 };
 
 const Menu = () => {
-  const { dispatch } = useContext(DispatchContext);
+  const dispatch = useContext(DispatchContext);
   const classes = useStyle();
 
   const getTextValue = roomId => {
