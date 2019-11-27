@@ -7,8 +7,9 @@ class ClientManager {
     this.localPlayer = {
       isReady: false,
       nickname: '',
-      isStreamer: false,
+      type: 'viewer',
       socketId: '',
+      score: 0,
     };
     /** @todo 이후에 지워야 할 사항. 개발용 */
     this.socket = io('localhost:3001');
@@ -47,6 +48,8 @@ class ClientManager {
 
   init() {
     this.registerSocketEvents();
+    this.gameManager.registerSocketEvents();
+    this.streamingManager.registerSocketEvents();
     this.askSocketId();
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
     this.findMatch('mike');
