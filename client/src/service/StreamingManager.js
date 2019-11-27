@@ -55,7 +55,10 @@ class StreamingManager {
       streamerSocketId,
       iceCandidateHandler.bind(this),
     );
-    webRTCManager.registerTrack(streamerSocketId, trackHandler.bind(this));
+    webRTCManager.registerTrack(
+      streamerSocketId,
+      trackHandler.bind(this.webRTCManager),
+    );
   }
 
   async sendCandidateHandler({ target, candidate }) {
@@ -67,6 +70,7 @@ class StreamingManager {
     await webRTCManager.setRemoteDescription(target, description);
     if (description.type === 'answer') return;
     const answer = await webRTCManager.createAnswerDescription(target);
+    await webRTCManager.setLocalDescription(target, answer);
     socket.emit('sendDescription', { target, description: answer });
   }
 
@@ -79,6 +83,7 @@ class StreamingManager {
   }
 
   trackHandler(stream) {
+    console.log(this.stream);
     document.querySelector('video').srcObject = stream;
     // this.dispatch({ type: 'setStream', payload: { stream } });
   }
