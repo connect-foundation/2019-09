@@ -48,9 +48,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+let flag = false;
+let clientManager;
+
 const Game = () => {
-  const clientManager = new ClientManager();
-  clientManager.init();
+  if (!flag) {
+    clientManager = new ClientManager();
+    clientManager.init();
+    flag = true;
+  }
+
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
