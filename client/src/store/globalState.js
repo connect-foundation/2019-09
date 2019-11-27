@@ -1,5 +1,5 @@
 const initialState = {
-  roomId: null,
+  nickname: '',
   chattingList: [
     {
       nickname: 'mosball',
