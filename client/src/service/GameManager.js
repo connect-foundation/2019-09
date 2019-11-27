@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
+// import { useContext } from 'react';
+// import { DispatchContext } from '../contexts';
 
 class GameManager {
   /**
@@ -11,13 +11,42 @@ class GameManager {
    *  isStreamer
    * }
    */
-  constructor(socket) {
-    this.dispatch = useContext(DispatchContext).dispatch;
+  constructor(socket, localPlayer, remotePlayers) {
+    // this.dispatch = useContext(DispatchContext).dispatch;
     this.socket = socket;
-    this.playerList = {};
+    this.remotePlayers = remotePlayers;
+    this.localPlayer = localPlayer;
   }
 
-  registerSocketEvents() {}
+  findMatch(nickname) {
+    this.socket.emit('match', { nickname });
+  }
+
+  registerSocketEvents() {
+    this.socket.on('sendPlayers', this.sendPlayersHandler.bind(this));
+    this.socket.on('sendNewPlayer', this.sendNewPlayerHandler.bind(this));
+    this.socket.on('sendReady', this.sendReadyHandler.bind(this));
+  }
+
+  sendPlayersHandler({ players }) {
+    this.remotePlayers = players;
+  }
+
+  sendNewPlayerHandler({ socketId, nickname }) {
+    this.remotePlayers = { ...this.remotePlayers, [socketId]: { nickname } };
+  }
+
+  sendReadyHandler({ socketId, isReady }) {
+    if (socketId === this.localPlayer.socketId) {
+      this.localPlayer.isReady = isReady;
+      return;
+    }
+    this.remotePlayers[socketId].isReady = isReady;
+  }
+
+  toggleReady(isReady) {
+    this.socket.emit('sendReady', { isReady: !isReady });
+  }
 }
 
 export default GameManager;

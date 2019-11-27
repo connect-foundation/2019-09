@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { /** useContext, */ useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -6,12 +6,8 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay, LargeButton } from '../components';
 import { StreamingPanel } from '../containers';
-import { GlobalContext } from '../../contexts';
-import SocketClient from '../../service/socket/SocketClient';
-import {
-  MEDIA_CONSTRAINTS,
-  PEER_CONNECTION_CONFIG,
-} from '../../service/socket/config';
+// import { GlobalContext } from '../../contexts';
+import ClientManager from '../../service/ClientManager';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,8 +52,8 @@ const ExitButtonStyles = {
 };
 
 const Game = () => {
-  let socketClient;
-  const { state } = useContext(GlobalContext);
+  let clientManager;
+  // const { state } = useContext(GlobalContext);
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
@@ -65,21 +61,15 @@ const Game = () => {
   const readyButtonText = 'Ready'; // Demo Purpose
 
   useEffect(() => {
-    socketClient = new SocketClient({
-      mediaConstraints: MEDIA_CONSTRAINTS,
-      peerConnectionConfig: PEER_CONNECTION_CONFIG,
-    });
-    socketClient.init(state.roomId);
+    clientManager = new ClientManager();
+    clientManager.init();
   }, []);
 
   const readyButtonHandler = () => {
-    const isReady = true;
-    socketClient.emitReady(isReady);
+    clientManager.toggleReady();
   };
 
-  const exitButtonHandler = () => {
-    socketClient.stopStream();
-  };
+  const exitButtonHandler = () => {};
 
   return (
     <div className={classes.root}>
