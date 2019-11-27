@@ -144,7 +144,11 @@ const setSet = roomId => {
 };
 
 const removePlayerBySocket = socket => {
-  delete rooms[socket.roomId].players[socket.id];
+  try {
+    delete rooms[socket.roomId].players[socket.id];
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 module.exports = {
