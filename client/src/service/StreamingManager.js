@@ -22,15 +22,14 @@ class StreamingManager {
       webRTCManager,
       iceCandidateHandler,
       socket,
-      dispatch,
+      // dispatch,
       remotePlayers,
     } = this;
     const socketIds = Object.keys(remotePlayers);
-
     webRTCManager.closeAllConnections();
     await webRTCManager.createStream();
     // 자신의 로컬 스트림을 생성하면 View로 dispatch 추후 디스플레이여부는 View에서 관장
-    dispatch({ type: 'setStream', payload: { stream: webRTCManager.stream } });
+    // dispatch({ type: 'setStream', payload: { stream: webRTCManager.stream } });
     webRTCManager.createConnections(socketIds);
     webRTCManager.registerIceCandidates(
       socketIds,
@@ -45,6 +44,8 @@ class StreamingManager {
         description: offers[index],
       });
     });
+    const stream = webRTCManager.getStream();
+    document.querySelector('video').srcObject = stream;
   }
 
   async assignViewerHandler({ streamerSocketId }) {
@@ -70,6 +71,7 @@ class StreamingManager {
   }
 
   iceCandidateHandler(socketId, event) {
+    if (!event.candidate) return;
     this.socket.emit('sendCandidate', {
       target: socketId,
       candidate: event.candidate,
@@ -77,7 +79,8 @@ class StreamingManager {
   }
 
   trackHandler(stream) {
-    this.dispatch({ type: 'setStream', payload: { stream } });
+    document.querySelector('video').srcObject = stream;
+    // this.dispatch({ type: 'setStream', payload: { stream } });
   }
 }
 
