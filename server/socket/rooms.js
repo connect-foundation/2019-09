@@ -142,7 +142,6 @@ const setSet = roomId => {
 
 const removePlayerBySocket = socket => {
   delete rooms[socket.roomId].players[socket.id];
-  console.log('current room state : ', rooms[socket.roomId].players);
 };
 
 module.exports = {
