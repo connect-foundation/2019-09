@@ -118,6 +118,11 @@ const resetGameProgress = roomId => {
   rooms[roomId] = { ...rooms[roomId], ...initialStatus };
 };
 
+const removePlayerBySocket = socket => {
+  delete rooms[socket.roomId].players[socket.id];
+  console.log('current room state : ', rooms[socket.roomId].players);
+};
+
 module.exports = {
   joinRoom,
   getAvailableRoomId,
@@ -130,4 +135,5 @@ module.exports = {
   getRoomByRoomId,
   resetGameProgress,
   initializeRoom,
+  removePlayerBySocket,
 };
