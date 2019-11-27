@@ -1,60 +1,13 @@
-const io = require('socket.io')();
-const {
-  isRoomReady,
-  makeGameStatus,
-  distributePlayerTypes,
-} = require('./utils');
-const {
-  MIN_USER_COUNT,
-  ONE_SET_SECONDS,
-  MAX_ROUND_NUMBER,
-} = require('../config');
+const { matchHandler, sendReadyHandler } = require('./handlers');
+const io = require('./io');
 
 io.on('connection', socket => {
-  socket.on('join', ({ roomId }) => {
-    socket.join(roomId);
-    const room = io.sockets.adapter.rooms[roomId];
-    room.readyUsers = room.readyUsers || {};
+  socket.on('askSocketId', () => {
+    socket.emit('sendSocketId', { socketId: socket.id });
   });
-  socket.on('ready', ({ isReady }) => {
-    const [roomNumber] = Object.keys(socket.rooms);
-    const room = io.sockets.adapter.rooms[roomNumber];
-    const socketIds = Object.keys(room.sockets);
-    if (isReady) {
-      room.readyUsers[socket.id] = true;
-    } else {
-      delete room.readyUsers[socket.id];
-    }
-    if (
-      isRoomReady(room) &&
-      Object.keys(room.readyUsers).length >= MIN_USER_COUNT
-    ) {
-      room.gameStatus =
-        room.gameStatus ||
-        makeGameStatus({
-          socketIds,
-          roundNumber: MAX_ROUND_NUMBER,
-          count: ONE_SET_SECONDS,
-        });
-      distributePlayerTypes({
-        io,
-        socketIds,
-        streamer: room.gameStatus.gameOrderQueue.shift(),
-      });
-    }
-  });
-  socket.on('sendDescription', ({ target, description }) => {
-    io.to(target).emit('sendDescription', {
-      target: socket.id,
-      description,
-    });
-  });
-  socket.on('sendCandidate', ({ target, candidate }) => {
-    io.to(target).emit('sendCandidate', {
-      target: socket.id,
-      candidate,
-    });
-  });
+  socket.on('match', matchHandler.bind(null, socket));
+
+  socket.on('sendReady', sendReadyHandler.bind(null, socket));
 });
 
 module.exports = io;
