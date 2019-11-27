@@ -1,36 +1,32 @@
 const short = require('short-uuid');
 const io = require('./io');
+const {
+  INITIAL_PLAYER_STATUS,
+  MIN_USER_COUNT,
+  INITIAL_GAME_STATUS,
+  MAX_USER_COUNT,
+} = require('../config');
 
 const { rooms } = io.sockets.adapter;
 
 const joinRoom = (roomId, socket) => {
   const { players } = rooms[roomId];
-  const player = {
-    nickname: socket.nickname,
-    isReady: false,
-    type: 'viewer',
-    score: 0,
-  };
+  INITIAL_PLAYER_STATUS.nickname = socket.nickname;
 
   socket.roomId = roomId;
   socket.join(roomId);
-  players[socket.id] = player;
+  players[socket.id] = INITIAL_PLAYER_STATUS;
 };
 
 const initializeRoom = (roomId, socket) => {
-  const player = {
-    nickname: socket.nickname,
-    isReady: false,
-    type: 'viewer',
-    score: 0,
-  };
+  INITIAL_PLAYER_STATUS.nickname = socket.nickname;
   socket.roomId = roomId;
   socket.join(roomId);
-  rooms[roomId].players = { [socket.id]: player };
+  rooms[roomId].players = { [socket.id]: INITIAL_PLAYER_STATUS };
 };
 
 const isRoomAvailable = players => {
-  return Object.keys(players).length < 4;
+  return Object.keys(players).length < MAX_USER_COUNT;
 };
 
 const getAvailableRoomIds = () => {
@@ -98,8 +94,7 @@ const findRoomBySocket = socket => {
 const isRoomReady = roomId => {
   const { players } = rooms[roomId];
   const socketIds = Object.keys(players);
-  /**  @todo: move constants to config */
-  if (socketIds.length < 2) {
+  if (socketIds.length < MIN_USER_COUNT) {
     return false;
   }
   return socketIds.every(socketId => {
@@ -112,13 +107,8 @@ const getRoomByRoomId = roomId => {
 };
 
 const resetGameProgress = roomId => {
-  const initialStatus = {
-    currentRound: 0,
-    currentSet: 0,
-    streamerSocketId: '',
-  };
-  Object.keys(initialStatus).forEach(key => {
-    rooms[roomId][key] = initialStatus[key];
+  Object.keys(INITIAL_GAME_STATUS).forEach(key => {
+    rooms[roomId][key] = INITIAL_GAME_STATUS[key];
   });
 };
 
