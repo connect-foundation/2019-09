@@ -16,11 +16,11 @@ const useStyle = makeStyles({
 
 const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { chattingList } = useContext(GlobalContext);
+  const { chattingList, nickname } = useContext(GlobalContext);
   return (
     <Box className={classes.chattingPanel}>
       <ChattingWindow chattingList={chattingList} />
-      <InputWindow clientManager={clientManager} />
+      <InputWindow clientManager={clientManager} nickname={nickname} />
     </Box>
   );
 };

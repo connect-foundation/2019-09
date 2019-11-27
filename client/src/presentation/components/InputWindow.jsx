@@ -15,29 +15,27 @@ const useStyles = makeStyles({
   },
 });
 
-const InputWindow = ({ clientManager }) => {
+const InputWindow = ({ clientManager, nickname }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
+  const sendChattingMessageHandler = () => {
+    clientManager.sendChattingMessage({
+      nickname,
+      message: value,
+    });
+    setValue('');
+  };
   return (
     <Box className={classes.InputWindow}>
       <MessageInput value={value} valueChangeHandler={setValue} />
-      <SendButton
-        onClick={() => {
-          clientManager.sendChattingMessage({
-            nickname: 'mosball',
-            message: value,
-          });
-          setValue('');
-        }}
-      >
-        Send
-      </SendButton>
+      <SendButton onClick={sendChattingMessageHandler}>Send</SendButton>
     </Box>
   );
 };
 
 InputWindow.propTypes = {
   clientManager: PropTypes.shape.isRequired,
+  nickname: PropTypes.string.isRequired,
 };
 
 export default InputWindow;
