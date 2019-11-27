@@ -9,6 +9,7 @@ const joinRoom = (roomId, socket) => {
     nickname: socket.nickname,
     isReady: false,
     type: 'viewer',
+    score: 0,
   };
 
   socket.roomId = roomId;
@@ -21,6 +22,7 @@ const initializeRoom = (roomId, socket) => {
     nickname: socket.nickname,
     isReady: false,
     type: 'viewer',
+    score: 0,
   };
   socket.roomId = roomId;
   socket.join(roomId);
@@ -48,7 +50,7 @@ const getAvailableRoomId = () => {
   if (availableRoomIds) {
     return availableRoomIds[0];
   }
-  return;
+  return undefined;
 };
 
 const createRoomId = () => {
@@ -75,7 +77,7 @@ const getOtherPlayers = (roomId, targetSocketId) => {
   const socketIds = Object.keys(players);
   return socketIds.reduce((accumulate, socketId) => {
     if (socketId !== targetSocketId) {
-      return { ...accumulate, key: players[socketId] };
+      return { ...accumulate, [socketId]: players[socketId] };
     }
     return accumulate;
   }, {});
@@ -112,10 +114,30 @@ const getRoomByRoomId = roomId => {
 const resetGameProgress = roomId => {
   /**  @todo: move constants to config */
   const initialStatus = {
-    currentRound: 1,
-    currentSet: 1,
+    currentRound: 0,
+    currentSet: 0,
   };
   rooms[roomId] = { ...rooms[roomId], ...initialStatus };
+};
+
+const setRound = roomId => {
+  const room = rooms[roomId];
+
+  room.currentRound++;
+  const { players } = room;
+  room.streamers = { ...players };
+};
+
+const setSet = roomId => {
+  const room = rooms[roomId];
+
+  room.currentSet++;
+  const { streamers } = room;
+  const targetSocketId = Object.keys(streamers)[0];
+
+  if (!targetSocketId) return;
+  streamers[targetSocketId].type = 'streamer';
+  delete streamers[targetSocketId];
 };
 
 const removePlayerBySocket = socket => {
@@ -135,5 +157,7 @@ module.exports = {
   getRoomByRoomId,
   resetGameProgress,
   initializeRoom,
+  setRound,
+  setSet,
   removePlayerBySocket,
 };

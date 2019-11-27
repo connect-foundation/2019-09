@@ -1,11 +1,17 @@
 const rooms = require('../rooms');
 const io = require('../io');
 
-const startGame = roomId => {
+const startGame = (socket, roomId) => {
   rooms.resetGameProgress(roomId);
-  io.in(roomId).emit('gameStart');
-  io.in(roomId).emit('roundStart');
-  io.in(roomId).emit('setStart');
+  io.to(roomId).emit('gameStart');
+  rooms.setRound(roomId);
+  io.to(roomId).emit('roundStart', {
+    currentRound: rooms.getRoomByRoomId(roomId).currentRound,
+  });
+  rooms.setSet(roomId);
+  io.to(roomId).emit('setStart', {
+    currentSet: rooms.getRoomByRoomId(roomId).currentSet,
+  });
 };
 
 const setPlayerReady = (socket, isReady) => {
@@ -21,7 +27,7 @@ const sendReadyHandler = (socket, { isReady }) => {
   setPlayerReady(socket, isReady);
   emitReadyToRoom(socket, isReady);
   if (rooms.isRoomReady(socket.roomId)) {
-    startGame(socket.roomId);
+    startGame(socket, socket.roomId);
   }
 };
 
