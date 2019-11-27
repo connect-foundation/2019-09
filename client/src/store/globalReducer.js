@@ -2,10 +2,10 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'changeRoomId':
       return { ...state, roomId: action.payload.roomId };
-    case 'newChatting':
+    case 'addChatting':
       return {
         ...state,
-        chattingList: [...state.chattingList, action.payload.newChat],
+        chattingList: [...state.chattingList, action.payload.newChatting],
       };
     case 'resetChattingList':
       return {
