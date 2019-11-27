@@ -9,14 +9,13 @@ const useStyles = makeStyles({
     flex: 8,
   },
 });
-const MessageInput = ({ value, valueChangeHandler }) => {
+const MessageInput = ({ value, onChange, onKeyUp }) => {
   const classes = useStyles();
   return (
     <Input
       value={value}
-      onChange={e => {
-        valueChangeHandler(e.target.value);
-      }}
+      onChange={onChange}
+      onKeyUp={onKeyUp}
       placeholder="Please enter a message."
       className={classes.input}
       inputProps={{
@@ -27,8 +26,9 @@ const MessageInput = ({ value, valueChangeHandler }) => {
 };
 
 MessageInput.propTypes = {
-  valueChangeHandler: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onKeyUp: PropTypes.func.isRequired,
 };
 
 export default MessageInput;

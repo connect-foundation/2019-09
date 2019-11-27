@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
 import { SendButton } from './Buttons';
+import { CONSTANT_VALUES } from '../../utils';
 
 const useStyles = makeStyles({
   InputWindow: {
@@ -27,7 +28,17 @@ const InputWindow = ({ clientManager, nickname }) => {
   };
   return (
     <Box className={classes.InputWindow}>
-      <MessageInput value={value} valueChangeHandler={setValue} />
+      <MessageInput
+        value={value}
+        onChange={e => {
+          setValue(e.target.value);
+        }}
+        onKeyUp={e => {
+          if (e.keyCode === CONSTANT_VALUES.ENTER_KEYCODE) {
+            sendChattingMessageHandler();
+          }
+        }}
+      />
       <SendButton onClick={sendChattingMessageHandler}>Send</SendButton>
     </Box>
   );
