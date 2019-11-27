@@ -18,11 +18,11 @@ const useStyle = makeStyles({
   },
 });
 
-const ChattingWindow = ({ chatList }) => {
+const ChattingWindow = ({ chattingList }) => {
   const classes = useStyle();
   return (
     <Box className={classes.chattingWindow}>
-      {chatList.map((chat, index) => {
+      {chattingList.map((chat, index) => {
         const key = `${index}${chat.nickname}`;
         return (
           <ChattingRow
@@ -40,7 +40,7 @@ const ChattingWindow = ({ chatList }) => {
  * propstype 지정시 array는 arrayOf / object는 shape
  */
 ChattingWindow.propTypes = {
-  chatList: PropTypes.arrayOf.isRequired,
+  chattingList: PropTypes.arrayOf.isRequired,
 };
 
 export default ChattingWindow;

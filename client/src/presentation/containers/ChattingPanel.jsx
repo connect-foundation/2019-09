@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChattingWindow, InputWindow } from '../components';
+import { GlobalContext } from '../../contexts';
 
 const useStyle = makeStyles({
   chattingPanel: {
@@ -14,9 +15,10 @@ const useStyle = makeStyles({
 
 const ChattingPanel = () => {
   const classes = useStyle();
+  const { chattingList } = useContext(GlobalContext);
   return (
     <Box className={classes.chattingPanel}>
-      <ChattingWindow chatList={[]} />
+      <ChattingWindow chattingList={chattingList} />
       <InputWindow />
     </Box>
   );

@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
 
 const Game = () => {
   let socketClient;
-  const { state } = useContext(GlobalContext);
+  const { roomId } = useContext(GlobalContext);
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
@@ -67,7 +67,7 @@ const Game = () => {
       mediaConstraints: MEDIA_CONSTRAINTS,
       peerConnectionConfig: PEER_CONNECTION_CONFIG,
     });
-    socketClient.init(state.roomId);
+    socketClient.init(roomId);
   }, []);
 
   // const readyButtonHandler = () => {
