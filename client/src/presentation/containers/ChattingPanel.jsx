@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChattingWindow, InputWindow } from '../components';
@@ -13,15 +14,19 @@ const useStyle = makeStyles({
   },
 });
 
-const ChattingPanel = () => {
+const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
   const { chattingList } = useContext(GlobalContext);
   return (
     <Box className={classes.chattingPanel}>
       <ChattingWindow chattingList={chattingList} />
-      <InputWindow />
+      <InputWindow clientManager={clientManager} />
     </Box>
   );
+};
+
+ChattingPanel.propTypes = {
+  clientManager: PropTypes.shape.isRequired,
 };
 
 export default ChattingPanel;

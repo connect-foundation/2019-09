@@ -8,6 +8,7 @@ class ChattingManager {
   }
 
   sendChattingMessage(newChatting) {
+    console.log('sendChattingMessage: ', newChatting);
     this.socket.emit('sendChattingMessage', newChatting);
   }
 
