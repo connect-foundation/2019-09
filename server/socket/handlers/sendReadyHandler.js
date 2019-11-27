@@ -10,7 +10,7 @@ const startGame = roomId => {
 
 const setPlayerReady = (socket, isReady) => {
   const room = rooms.findRoomBySocket(socket);
-  room.sockets[socket.id].isReady = isReady;
+  room.players[socket.id].isReady = isReady;
 };
 
 const emitReadyToRoom = (socket, isReady) => {

@@ -3,31 +3,52 @@ const io = require('./io');
 
 const { rooms } = io.sockets.adapter;
 
-const joinRoom = ({ roomId, socket, nickname }) => {
-  const socketId = socket.id;
+const joinRoom = (roomId, socket) => {
+  const { players } = rooms[roomId];
+  const player = {
+    nickname: socket.nickname,
+    isReady: false,
+    type: 'viewer',
+  };
+
   socket.roomId = roomId;
   socket.join(roomId);
-  /** @todo rooms[roomId]에 socketData와 같이 사용자
-   * 로직만 담당하는 객체 추가 필요.
-   * 이후의 다른 코드에서도 이를 따라 수정해야 함
-   */
-  rooms[roomId][socketId].nickname = nickname;
+  players[socket.id] = player;
 };
 
-const isRoomAvailable = room => {
-  return Object.keys(room).length < 4;
+const initializeRoom = (roomId, socket) => {
+  const player = {
+    nickname: socket.nickname,
+    isReady: false,
+    type: 'viewer',
+  };
+  socket.roomId = roomId;
+  socket.join(roomId);
+  rooms[roomId].players = { [socket.id]: player };
+};
+
+const isRoomAvailable = players => {
+  return Object.keys(players).length < 4;
 };
 
 const getAvailableRoomIds = () => {
   const roomIds = Object.keys(rooms);
+  if (!roomIds) {
+    return [];
+  }
   const availableRoomIds = roomIds.filter(roomId => {
-    return isRoomAvailable(rooms[roomId].sockets);
+    const { players } = rooms[roomId];
+    return players ? isRoomAvailable(players) : false;
   });
   return availableRoomIds;
 };
 
 const getAvailableRoomId = () => {
-  return getAvailableRoomIds()[0];
+  const availableRoomIds = getAvailableRoomIds();
+  if (availableRoomIds) {
+    return availableRoomIds[0];
+  }
+  return;
 };
 
 const createRoomId = () => {
@@ -44,19 +65,17 @@ const getSocketIds = roomId => {
   return socketIds;
 };
 
-const getSockets = roomId => {
-  const { sockets } = rooms[roomId];
-  return sockets;
+const getPlayersByRoomId = roomId => {
+  const { players } = rooms[roomId];
+  return players;
 };
 
-const getOtherSockets = (roomId, targetSocketId) => {
-  const sockets = getSockets(roomId);
-
-  const keys = Object.keys(sockets);
-
-  return keys.reduce((accumulate, key) => {
-    if (key !== targetSocketId) {
-      return { ...accumulate, key: sockets[key] };
+const getOtherPlayers = (roomId, targetSocketId) => {
+  const players = getPlayersByRoomId(roomId);
+  const socketIds = Object.keys(players);
+  return socketIds.reduce((accumulate, socketId) => {
+    if (socketId !== targetSocketId) {
+      return { ...accumulate, key: players[socketId] };
     }
     return accumulate;
   }, {});
@@ -75,14 +94,14 @@ const findRoomBySocket = socket => {
 };
 
 const isRoomReady = roomId => {
-  const { sockets } = rooms[roomId];
-  const socketIds = Object.keys(sockets);
+  const { players } = rooms[roomId];
+  const socketIds = Object.keys(players);
   /**  @todo: move constants to config */
   if (socketIds.length < 2) {
     return false;
   }
   return socketIds.every(socketId => {
-    return sockets[socketId].isReady;
+    return players[socketId].isReady;
   });
 };
 
@@ -105,9 +124,10 @@ module.exports = {
   createRoomId,
   getSocketIds,
   getOtherSocketIds,
-  getOtherSockets,
+  getOtherPlayers,
   findRoomBySocket,
   isRoomReady,
   getRoomByRoomId,
   resetGameProgress,
+  initializeRoom,
 };
