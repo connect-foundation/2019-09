@@ -151,11 +151,11 @@ class WebRTCManager {
   }
 
   async setLocalDescriptions(keys, descriptions) {
-    await Promise.all(
-      keys.forEach((key, i) => {
-        this.setLocalDescription(key, descriptions[i]);
-      }),
-    );
+    // await Promise.all(
+    keys.forEach(async (key, i) => {
+      await this.setLocalDescription(key, descriptions[i]);
+    });
+    // );
   }
 
   /**
@@ -202,6 +202,10 @@ class WebRTCManager {
     this.peerConnections[key].close();
 
     delete this.peerConnections[key];
+  }
+
+  getStream() {
+    return this.stream;
   }
 }
 

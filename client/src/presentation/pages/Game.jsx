@@ -57,12 +57,10 @@ const Game = () => {
     clientManager.init();
     flag = true;
   }
-
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-
   const exitButtonHandler = () => {};
 
   return (
@@ -88,7 +86,7 @@ const Game = () => {
       </Grid>
       <Grid container spacing={0} className={classes.bottomGrid}>
         <Grid item xs={2} className={classes.bottomGridContent}>
-          <PlayerPanel />
+          <PlayerPanel clientManager={clientManager} />
         </Grid>
         <Grid item xs={7} className={classes.bottomGridContent}>
           <StreamingPanel words={candidateWords} isVisible />

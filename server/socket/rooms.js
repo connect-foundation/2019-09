@@ -1,34 +1,33 @@
 const short = require('short-uuid');
 const io = require('./io');
+const {
+  INITIAL_PLAYER_STATUS,
+  MIN_USER_COUNT,
+  INITIAL_GAME_STATUS,
+  MAX_USER_COUNT,
+} = require('../config');
 
 const { rooms } = io.sockets.adapter;
 
 const joinRoom = (roomId, socket) => {
   const { players } = rooms[roomId];
-  const player = {
-    nickname: socket.nickname,
-    isReady: false,
-    type: 'viewer',
-  };
-
+  const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
+  initialPlayerStatus.nickname = socket.nickname;
   socket.roomId = roomId;
   socket.join(roomId);
-  players[socket.id] = player;
+  players[socket.id] = initialPlayerStatus;
 };
 
 const initializeRoom = (roomId, socket) => {
-  const player = {
-    nickname: socket.nickname,
-    isReady: false,
-    type: 'viewer',
-  };
+  const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
+  initialPlayerStatus.nickname = socket.nickname;
   socket.roomId = roomId;
   socket.join(roomId);
-  rooms[roomId].players = { [socket.id]: player };
+  rooms[roomId].players = { [socket.id]: initialPlayerStatus };
 };
 
 const isRoomAvailable = players => {
-  return Object.keys(players).length < 4;
+  return Object.keys(players).length < MAX_USER_COUNT;
 };
 
 const getAvailableRoomIds = () => {
@@ -48,7 +47,7 @@ const getAvailableRoomId = () => {
   if (availableRoomIds) {
     return availableRoomIds[0];
   }
-  return;
+  return undefined;
 };
 
 const createRoomId = () => {
@@ -75,7 +74,7 @@ const getOtherPlayers = (roomId, targetSocketId) => {
   const socketIds = Object.keys(players);
   return socketIds.reduce((accumulate, socketId) => {
     if (socketId !== targetSocketId) {
-      return { ...accumulate, key: players[socketId] };
+      return { ...accumulate, [socketId]: players[socketId] };
     }
     return accumulate;
   }, {});
@@ -96,8 +95,7 @@ const findRoomBySocket = socket => {
 const isRoomReady = roomId => {
   const { players } = rooms[roomId];
   const socketIds = Object.keys(players);
-  /**  @todo: move constants to config */
-  if (socketIds.length < 2) {
+  if (socketIds.length < MIN_USER_COUNT) {
     return false;
   }
   return socketIds.every(socketId => {
@@ -110,12 +108,38 @@ const getRoomByRoomId = roomId => {
 };
 
 const resetGameProgress = roomId => {
-  /**  @todo: move constants to config */
-  const initialStatus = {
-    currentRound: 1,
-    currentSet: 1,
-  };
-  rooms[roomId] = { ...rooms[roomId], ...initialStatus };
+  Object.keys(INITIAL_GAME_STATUS).forEach(key => {
+    rooms[roomId][key] = INITIAL_GAME_STATUS[key];
+  });
+};
+
+const setRound = roomId => {
+  const room = rooms[roomId];
+
+  room.currentRound++;
+  const { players } = room;
+  room.streamers = { ...players };
+};
+
+const setSet = roomId => {
+  const room = rooms[roomId];
+
+  room.currentSet++;
+  const { streamers } = room;
+  const targetSocketId = Object.keys(streamers)[0];
+
+  if (!targetSocketId) return;
+  streamers[targetSocketId].type = 'streamer';
+  room.streamerSocketId = targetSocketId;
+  delete streamers[targetSocketId];
+};
+
+const removePlayerBySocket = socket => {
+  try {
+    delete rooms[socket.roomId].players[socket.id];
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 module.exports = {
@@ -130,4 +154,7 @@ module.exports = {
   getRoomByRoomId,
   resetGameProgress,
   initializeRoom,
+  setRound,
+  setSet,
+  removePlayerBySocket,
 };

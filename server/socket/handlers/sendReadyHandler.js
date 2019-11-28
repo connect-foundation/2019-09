@@ -1,11 +1,43 @@
 const rooms = require('../rooms');
 const io = require('../io');
 
-const startGame = roomId => {
+const assignViewer = socket => {
+  const room = rooms.getRoomByRoomId(socket.roomId);
+  const { streamerSocketId } = room;
+  const socketIds = Object.keys(room.players);
+  socketIds.forEach(socketId => {
+    if (socketId !== streamerSocketId) {
+      io.to(socketId).emit('assignViewer', { streamerSocketId });
+    }
+  });
+};
+
+const assignStreamer = socket => {
+  const { streamerSocketId } = rooms.getRoomByRoomId(socket.roomId);
+  io.to(streamerSocketId).emit('assignStreamer');
+};
+
+const startRound = roomId => {
+  rooms.setRound(roomId);
+  io.to(roomId).emit('roundStart', {
+    currentRound: rooms.getRoomByRoomId(roomId).currentRound,
+  });
+};
+
+const startSet = roomId => {
+  rooms.setSet(roomId);
+  io.to(roomId).emit('setStart', {
+    currentSet: rooms.getRoomByRoomId(roomId).currentSet,
+  });
+};
+
+const startGame = (socket, roomId) => {
   rooms.resetGameProgress(roomId);
-  io.in(roomId).emit('gameStart');
-  io.in(roomId).emit('roundStart');
-  io.in(roomId).emit('setStart');
+  io.to(roomId).emit('gameStart');
+  startRound(roomId);
+  startSet(roomId);
+  assignStreamer(socket);
+  assignViewer(socket);
 };
 
 const setPlayerReady = (socket, isReady) => {
@@ -21,7 +53,7 @@ const sendReadyHandler = (socket, { isReady }) => {
   setPlayerReady(socket, isReady);
   emitReadyToRoom(socket, isReady);
   if (rooms.isRoomReady(socket.roomId)) {
-    startGame(socket.roomId);
+    startGame(socket, socket.roomId);
   }
 };
 
