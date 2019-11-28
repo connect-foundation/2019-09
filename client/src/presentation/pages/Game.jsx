@@ -1,11 +1,12 @@
 import React /** useContext, useEffect */ from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay, ExitButton } from '../components';
 import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
 import ClientManager from '../../service/ClientManager';
+import { browserLocalStorage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,10 +49,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const checkStoredNickname = () => {
+  const nickname = browserLocalStorage.getNickname();
+  const history = useHistory();
+  if (!nickname) history.push('/');
+};
+
 let flag = false;
 let clientManager;
 
 const Game = () => {
+  checkStoredNickname();
+
   if (!flag) {
     clientManager = new ClientManager();
     clientManager.init();
