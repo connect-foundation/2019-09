@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton } from '../components';
 
 const useStyle = makeStyles({
@@ -22,47 +23,19 @@ const useStyle = makeStyles({
 
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const playerList = [
-    {
-      nickname: 'mosball',
-      score: 100,
-      isReady: true,
-      isStreamer: false,
-      isYourProfile: false,
-    },
-    {
-      nickname: 'jacob',
-      score: 20,
-      isReady: false,
-      isStreamer: false,
-      isYourProfile: false,
-    },
-    {
-      nickname: 'young',
-      score: 0,
-      isReady: false,
-      isStreamer: true,
-      isYourProfile: false,
-    },
-    {
-      nickname: 'origin',
-      score: 1000,
-      isReady: false,
-      isStreamer: false,
-      isYourProfile: true,
-    },
-  ];
+  const { viewPlayerList } = useContext(GlobalContext);
+
   return (
     <Box className={classes.playerPanel}>
-      {playerList.map((player, index) => {
+      {viewPlayerList.map((player, index) => {
         return (
           <PlayerProfile
             order={index}
             nickname={player.nickname}
             score={player.score}
             isReady={player.isReady}
-            isStreamer={player.isStreamer}
-            isYourProfile={player.isYourProfile}
+            type={player.type}
+            isLocalPlayer={player.isLocalPlayer}
           />
         );
       })}

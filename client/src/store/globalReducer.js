@@ -10,6 +10,11 @@ const reducer = (state, action) => {
         ...state,
         chattingList: [],
       };
+    case 'setViewPlayerList':
+      return {
+        ...state,
+        viewPlayerList: [...action.payload.viewPlayerList],
+      };
     default:
       throw new Error();
   }

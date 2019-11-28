@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     backgroundColor: '#f4f4f4',
     border: (() => {
       if (props.isReady) return '2px solid #5A96FF';
-      if (props.isStreamer) return '2px solid #e74c3c';
+      if (props.type === 'streamer') return '2px solid #e74c3c';
       return 'none';
     })(),
   }),
@@ -48,16 +48,16 @@ const PlayerProfile = ({
   nickname,
   score,
   isReady,
-  isStreamer,
-  isYourProfile,
+  type,
+  isLocalPlayer,
 }) => {
-  const classes = useStyles({ isReady, isStreamer, isYourProfile });
+  const classes = useStyles({ isReady, type, isLocalPlayer });
   return (
     <Box className={classes.PlayerProfile}>
       <Box className={classes.playerOrder}>{`# ${order}`}</Box>
       <Box className={classes.playerInformation}>
         <Box className={classes.playerNickname}>
-          {`${nickname} ${isYourProfile ? '(You)' : ''}`}
+          {`${nickname} ${isLocalPlayer ? '(You)' : ''}`}
         </Box>
         <Box className={classes.playerScore}>{`Score : ${score}`}</Box>
       </Box>
@@ -70,8 +70,8 @@ PlayerProfile.propTypes = {
   nickname: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   isReady: PropTypes.bool.isRequired,
-  isStreamer: PropTypes.bool.isRequired,
-  isYourProfile: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
+  isLocalPlayer: PropTypes.bool.isRequired,
 };
 
 export default PlayerProfile;
