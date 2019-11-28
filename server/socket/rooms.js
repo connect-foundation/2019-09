@@ -156,6 +156,19 @@ const removePlayerBySocket = socket => {
   }
 };
 
+const isSocketStreamerCandidate = socket => {
+  return rooms[socket.roomId].streamers[socket.id];
+};
+
+const removeStreamerBySocket = socket => {
+  try {
+    const room = rooms[socket.roomId];
+    delete room.streamers[socket.id];
+  } catch (e) {
+    console.log();
+  }
+};
+
 module.exports = {
   joinRoom,
   getAvailableRoomId,
@@ -173,4 +186,6 @@ module.exports = {
   removePlayerBySocket,
   setRoomStatusByRoomId,
   getRoomStatusByRoomId,
+  isSocketStreamerCandidate,
+  removeStreamerBySocket,
 };
