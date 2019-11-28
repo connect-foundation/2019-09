@@ -38,9 +38,7 @@ const Menu = () => {
   const [nickname, setNickname] = useState(browserLocalStorage.getNickname());
   const classes = useStyle();
   const history = useHistory();
-  // const getTextValue = nickname => {
-  //   dispatch({ type: 'changeNickname', payload: { nickname } });
-  // };
+
   const playButtonClickHandler = event => {
     if (!nickname) {
       event.preventDefault();
@@ -59,6 +57,7 @@ const Menu = () => {
         onKeyPress={event => {
           if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
           if (!nickname) return;
+          browserLocalStorage.setNickname(nickname);
           history.push('/game');
         }}
       />
