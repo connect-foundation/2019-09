@@ -14,7 +14,7 @@ class ClientManager {
       score: 0,
     };
     /** @todo 이후에 지워야 할 사항. 개발용 */
-    this.socket = io(`${window.location.hostname}:3001`);
+    this.socket = io();
     this.remotePlayers = {};
     this.gameManager = new GameManager(
       this.socket,
