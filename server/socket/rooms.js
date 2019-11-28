@@ -20,8 +20,12 @@ const setRoomStatusByRoomId = (roomId, status) => {
 };
 
 const getRoomStatusByRoomId = roomId => {
-  const room = rooms[roomId];
-  return room.status;
+  try {
+    const room = rooms[roomId];
+    return room.status;
+  } catch (error) {
+    return 'error';
+  }
 };
 
 const joinRoom = (roomId, socket) => {
@@ -93,12 +97,13 @@ const getPlayersByRoomId = roomId => {
 const getOtherPlayers = (roomId, targetSocketId) => {
   const players = getPlayersByRoomId(roomId);
   const socketIds = Object.keys(players);
-  return socketIds.reduce((accumulate, socketId) => {
+  const otherPlayers = socketIds.reduce((accumulate, socketId) => {
     if (socketId !== targetSocketId) {
       return { ...accumulate, [socketId]: players[socketId] };
     }
     return accumulate;
   }, {});
+  return otherPlayers;
 };
 
 const getOtherSocketIds = (roomId, targetSocketId) => {
@@ -161,7 +166,7 @@ const removePlayerBySocket = socket => {
   try {
     delete rooms[socket.roomId].players[socket.id];
   } catch (e) {
-    console.error(e);
+    console.error('ERROR:\tremovePlayerBySocket\n', e);
   }
 };
 
@@ -170,6 +175,7 @@ const isSocketStreamerCandidate = socket => {
     return rooms[socket.roomId].streamers[socket.id];
   } catch (e) {
     console.error(e);
+    return false;
   }
 };
 
@@ -195,6 +201,7 @@ const resetRoomPlayersBySocket = socket => {
 
 module.exports = {
   getAllrooms,
+  getPlayersByRoomId,
   joinRoom,
   getAvailableRoomId,
   createRoomId,
