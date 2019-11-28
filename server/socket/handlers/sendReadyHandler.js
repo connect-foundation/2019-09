@@ -13,7 +13,7 @@ const emitReadyToRoom = (socket, isReady) => {
 
 const sendReadyHandler = (socket, { isReady }) => {
   const status = rooms.getRoomStatusByRoomId(socket.roomId);
-  if (status === 'playing') {
+  if (status === 'playing' || status === 'error') {
     return;
   }
   setPlayerReady(socket, isReady);

@@ -24,7 +24,7 @@ const useStyle = makeStyles({
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
   const { viewPlayerList } = useContext(GlobalContext);
-
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   return (
     <Box className={classes.playerPanel}>
       {viewPlayerList.map((player, index) => {
@@ -45,7 +45,7 @@ const PlayerPanel = ({ clientManager }) => {
             clientManager.toggleReady();
           }}
         >
-          Ready
+          {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
         </ReadyButton>
       </Box>
     </Box>

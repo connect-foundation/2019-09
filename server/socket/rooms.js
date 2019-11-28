@@ -16,8 +16,12 @@ const setRoomStatusByRoomId = (roomId, status) => {
 };
 
 const getRoomStatusByRoomId = roomId => {
-  const room = rooms[roomId];
-  return room.status;
+  try {
+    const room = rooms[roomId];
+    return room.status;
+  } catch (error) {
+    return 'error';
+  }
 };
 
 const joinRoom = (roomId, socket) => {
