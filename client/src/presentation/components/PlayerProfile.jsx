@@ -14,9 +14,9 @@ const useStyles = makeStyles({
     fontSize: '1.6rem',
     backgroundColor: '#f4f4f4',
     border: (() => {
-      if (props.isReady) return '2px solid #5A96FF';
-      if (props.type === 'streamer') return '2px solid #e74c3c';
-      return 'none';
+      if (props.isReady) return '0.2rem solid #5A96FF';
+      if (props.type === 'streamer') return '0.2rem solid #e74c3c';
+      return '0.2rem solid #f4f4f4';
     })(),
   }),
   playerOrder: {
