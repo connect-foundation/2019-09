@@ -9,6 +9,11 @@ const {
 
 const { rooms } = io.sockets.adapter;
 
+const setRoomStatusByRoomId = (roomId, status) => {
+  const room = rooms[roomId];
+  room.status = status;
+};
+
 const joinRoom = (roomId, socket) => {
   const { players } = rooms[roomId];
   const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
@@ -24,10 +29,14 @@ const initializeRoom = (roomId, socket) => {
   socket.roomId = roomId;
   socket.join(roomId);
   rooms[roomId].players = { [socket.id]: initialPlayerStatus };
+  setRoomStatusByRoomId(roomId, 'waiting');
 };
 
-const isRoomAvailable = players => {
-  return Object.keys(players).length < MAX_USER_COUNT;
+const isRoomAvailable = room => {
+  const { players } = room;
+  const isRoomFull = Object.keys(players).length >= MAX_USER_COUNT;
+  const isRoomPlaying = room.status === 'playing';
+  return !isRoomFull && !isRoomPlaying;
 };
 
 const getAvailableRoomIds = () => {
@@ -36,8 +45,8 @@ const getAvailableRoomIds = () => {
     return [];
   }
   const availableRoomIds = roomIds.filter(roomId => {
-    const { players } = rooms[roomId];
-    return players ? isRoomAvailable(players) : false;
+    const room = rooms[roomId];
+    return room.players ? isRoomAvailable(room) : false;
   });
   return availableRoomIds;
 };
@@ -157,4 +166,5 @@ module.exports = {
   setRound,
   setSet,
   removePlayerBySocket,
+  setRoomStatusByRoomId,
 };

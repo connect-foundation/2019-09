@@ -33,6 +33,7 @@ const startSet = roomId => {
 
 const startGame = (socket, roomId) => {
   rooms.resetGameProgress(roomId);
+  rooms.setRoomStatusByRoomId(roomId, 'playing');
   io.to(roomId).emit('gameStart');
   startRound(roomId);
   startSet(roomId);
