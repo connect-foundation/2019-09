@@ -29,11 +29,15 @@ class GameManager {
   }
 
   sendPlayersHandler({ players }) {
-    this.remotePlayers = players;
+    const socketIds = Object.keys(players);
+    socketIds.forEach(socketId => {
+      this.remotePlayers[socketId] = players[socketId];
+    });
   }
 
-  sendNewPlayerHandler({ socketId, nickname }) {
-    this.remotePlayers = { ...this.remotePlayers, [socketId]: { nickname } };
+  /** @todo 매개변수 통합하여 전송하도록 변경 필요 */
+  sendNewPlayerHandler({ socketId, nickname, isReady, type, score }) {
+    this.remotePlayers[socketId] = { nickname, isReady, type, score };
   }
 
   sendReadyHandler({ socketId, isReady }) {
