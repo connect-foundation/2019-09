@@ -27,6 +27,15 @@ class ChattingManager {
 
   startChattingHandler() {
     this.isAvailableChatting = true;
+    this.dispatch({
+      type: 'addChatting',
+      payload: {
+        newChatting: {
+          nickname: '안내',
+          message: '채팅방에 입장하였습니다. 🙌',
+        },
+      },
+    });
   }
 }
 

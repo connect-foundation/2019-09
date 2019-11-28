@@ -6,6 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   message: {
     fontSize: '1.4rem',
+    color: '#0E0E10',
+    wordWrap: 'break-word',
   },
 });
 

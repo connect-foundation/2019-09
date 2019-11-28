@@ -6,7 +6,11 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
    * room.quiz === message
    *  emit('정답!')
    */
-  io.in(socket.roomId).emit('sendChattingMessage', { nickname, message });
+  io.in(socket.roomId).emit('sendChattingMessage', {
+    nickname,
+    message,
+    nicknameColor: socket.nicknameColor,
+  });
 };
 
 module.exports = sendChattingMessageHandler;

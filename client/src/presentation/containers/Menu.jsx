@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
-import { DispatchContext } from '../../contexts';
+import { browserLocalStorage, CONSTANT_VALUES } from '../../utils';
 
 const useStyle = makeStyles({
   menu: {
@@ -35,11 +35,16 @@ const textInpuStyles = {
 };
 
 const Menu = () => {
-  const dispatch = useContext(DispatchContext);
+  const [nickname, setNickname] = useState(browserLocalStorage.getNickname());
   const classes = useStyle();
+  const history = useHistory();
 
-  const getTextValue = nickname => {
-    dispatch({ type: 'changeNickname', payload: { nickname } });
+  const playButtonClickHandler = event => {
+    if (!nickname) {
+      event.preventDefault();
+      return;
+    }
+    browserLocalStorage.setNickname(nickname);
   };
 
   return (
@@ -47,10 +52,21 @@ const Menu = () => {
       <TextInput
         label="NICKNAME"
         style={textInpuStyles}
-        textChangeHandler={getTextValue}
+        value={nickname}
+        textChangeHandler={setNickname}
+        onKeyPress={event => {
+          if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
+          if (!nickname) return;
+          browserLocalStorage.setNickname(nickname);
+          history.push('/game');
+        }}
       />
 
-      <Link to="/game" className={classes.fullAnchor}>
+      <Link
+        to="/game"
+        className={classes.fullAnchor}
+        onClick={playButtonClickHandler}
+      >
         <MenuButton>PLAY</MenuButton>
       </Link>
 

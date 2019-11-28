@@ -9,13 +9,13 @@ const useStyles = makeStyles({
     flex: 8,
   },
 });
-const MessageInput = ({ value, onChange, onKeyUp }) => {
+const MessageInput = ({ value, onChange, onKeyPress }) => {
   const classes = useStyles();
   return (
     <Input
       value={value}
       onChange={onChange}
-      onKeyUp={onKeyUp}
+      onKeyPress={onKeyPress}
       placeholder="Please enter a message."
       className={classes.input}
       inputProps={{
@@ -28,7 +28,7 @@ const MessageInput = ({ value, onChange, onKeyUp }) => {
 MessageInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  onKeyUp: PropTypes.func.isRequired,
+  onKeyPress: PropTypes.func.isRequired,
 };
 
 export default MessageInput;

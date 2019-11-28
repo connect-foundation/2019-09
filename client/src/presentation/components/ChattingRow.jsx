@@ -4,11 +4,11 @@ import Box from '@material-ui/core/Box';
 import Message from './Message';
 import Nickname from './Nickname';
 
-const ChattingRow = ({ nickname, message }) => {
+const ChattingRow = ({ nickname, nicknameColor, message }) => {
   const newNickname = `${nickname} : `;
   return (
     <Box>
-      <Nickname>{newNickname}</Nickname>
+      <Nickname nicknameColor={nicknameColor}>{newNickname}</Nickname>
       <Message>{message}</Message>
     </Box>
   );
@@ -16,6 +16,7 @@ const ChattingRow = ({ nickname, message }) => {
 
 ChattingRow.propTypes = {
   nickname: PropTypes.string.isRequired,
+  nicknameColor: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
 };
 
