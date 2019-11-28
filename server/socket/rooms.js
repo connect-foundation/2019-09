@@ -143,7 +143,7 @@ const setSet = roomId => {
   const targetSocketId = Object.keys(streamers)[0];
 
   if (!targetSocketId) return;
-  streamers[targetSocketId].type = 'streamer';
+  room.players[targetSocketId].type = 'streamer';
   room.streamerSocketId = targetSocketId;
   delete streamers[targetSocketId];
 };
