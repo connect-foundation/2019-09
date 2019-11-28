@@ -1,5 +1,10 @@
 const rooms = require('../rooms');
 
+const emitEventsAfterJoin = (socket, roomId) => {
+  socket.emit('sendRoomId', { roomId });
+  socket.emit('startChatting');
+};
+
 const matchHandler = (socket, { nickname }) => {
   socket.nickname = nickname;
   const socketId = socket.id;
@@ -7,7 +12,7 @@ const matchHandler = (socket, { nickname }) => {
 
   if (availableRoomId) {
     rooms.joinRoom(availableRoomId, socket);
-    socket.emit('sendRoomId', { roomId: availableRoomId });
+    emitEventsAfterJoin(socket, availableRoomId);
     socket.broadcast
       .to(availableRoomId)
       .emit('sendNewPlayer', { socketId, nickname });
@@ -18,7 +23,7 @@ const matchHandler = (socket, { nickname }) => {
 
   const roomId = rooms.createRoomId();
   rooms.initializeRoom(roomId, socket);
-  socket.emit('sendRoomId', { roomId });
+  emitEventsAfterJoin(socket, roomId);
 };
 
 module.exports = matchHandler;

@@ -1,12 +1,10 @@
-import React /** useContext,  useEffect */ from 'react';
-// import PropTypes from 'prop-types';
+import React /** useContext, useEffect */ from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay, ExitButton } from '../components';
 import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
-// import { GlobalContext } from '../../contexts';
 import ClientManager from '../../service/ClientManager';
 
 const useStyles = makeStyles(theme => ({
@@ -50,19 +48,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+let flag = false;
+let clientManager;
+
 const Game = () => {
-  const clientManager = new ClientManager();
-  clientManager.init();
-  // const { roomId } = useContext(GlobalContext);
+  if (!flag) {
+    clientManager = new ClientManager();
+    clientManager.init();
+    flag = true;
+  }
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-
-  // const readyButtonHandler = () => {
-  //   clientManager.toggleReady();
-  // };
-
   const exitButtonHandler = () => {};
 
   return (
@@ -94,7 +92,7 @@ const Game = () => {
           <StreamingPanel words={candidateWords} isVisible />
         </Grid>
         <Grid item xs={3} className={classes.bottomGridContent}>
-          <ChattingPanel />
+          <ChattingPanel clientManager={clientManager} />
         </Grid>
       </Grid>
     </div>

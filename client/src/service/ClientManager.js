@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
+import ChattingManager from './ChattingManager';
 
 class ClientManager {
   constructor() {
@@ -23,6 +24,7 @@ class ClientManager {
       this.socket,
       this.remotePlayers,
     );
+    this.chattingManager = new ChattingManager(this.socket);
   }
 
   registerSocketEvents() {
@@ -53,6 +55,11 @@ class ClientManager {
     this.askSocketId();
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
     this.findMatch('mike');
+    this.chattingManager.registerSocketEvents();
+  }
+
+  sendChattingMessage(newChatting) {
+    this.chattingManager.sendChattingMessage(newChatting);
   }
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 
@@ -8,10 +9,13 @@ const useStyles = makeStyles({
     flex: 8,
   },
 });
-const MessageInput = () => {
+const MessageInput = ({ value, onChange, onKeyUp }) => {
   const classes = useStyles();
   return (
     <Input
+      value={value}
+      onChange={onChange}
+      onKeyUp={onKeyUp}
       placeholder="Please enter a message."
       className={classes.input}
       inputProps={{
@@ -19,6 +23,12 @@ const MessageInput = () => {
       }}
     />
   );
+};
+
+MessageInput.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onKeyUp: PropTypes.func.isRequired,
 };
 
 export default MessageInput;
