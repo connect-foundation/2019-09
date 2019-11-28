@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 
-const TextInput = ({ label, style, value, textChangeHandler }) => {
+const TextInput = ({ label, style, value, textChangeHandler, onKeyPress }) => {
   const useStyles = makeStyles(theme => ({
     textField: {
       marginLeft: theme.spacing(1),
@@ -21,6 +21,7 @@ const TextInput = ({ label, style, value, textChangeHandler }) => {
 
   return (
     <TextField
+      onKeyPress={onKeyPress}
       onChange={e => {
         textChangeHandler(e.target.value);
       }}
@@ -37,6 +38,7 @@ TextInput.propTypes = {
   style: PropTypes.shape.isRequired,
   value: PropTypes.string.isRequired,
   textChangeHandler: PropTypes.func.isRequired,
+  onKeyPress: PropTypes.func.isRequired,
 };
 
 export default TextInput;
