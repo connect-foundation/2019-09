@@ -24,6 +24,7 @@ class ClientManager {
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
+      this.localPlayer,
     );
     this.chattingManager = new ChattingManager(this.socket);
   }
