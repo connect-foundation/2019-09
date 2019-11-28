@@ -81,9 +81,14 @@ class StreamingManager {
 
   trackHandler(stream) {
     /** @todo 추후 view의 dispatch 연결 */
+    // eslint-disable-next-line
     console.log(this.dispatch);
     document.querySelector('video').srcObject = stream;
     // this.dispatch({ type: 'setStream', payload: { stream } });
+  }
+
+  closeConnection(socketId) {
+    this.webRTCManager.closeConnection(socketId);
   }
 }
 
