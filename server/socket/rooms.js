@@ -14,6 +14,11 @@ const setRoomStatusByRoomId = (roomId, status) => {
   room.status = status;
 };
 
+const getRoomStatusByRoomId = roomId => {
+  const room = rooms[roomId];
+  return room.status;
+};
+
 const joinRoom = (roomId, socket) => {
   const { players } = rooms[roomId];
   const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
@@ -167,4 +172,5 @@ module.exports = {
   setSet,
   removePlayerBySocket,
   setRoomStatusByRoomId,
+  getRoomStatusByRoomId,
 };
