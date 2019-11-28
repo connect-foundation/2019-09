@@ -11,18 +11,19 @@ const { rooms } = io.sockets.adapter;
 
 const joinRoom = (roomId, socket) => {
   const { players } = rooms[roomId];
-  INITIAL_PLAYER_STATUS.nickname = socket.nickname;
-
+  const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
+  initialPlayerStatus.nickname = socket.nickname;
   socket.roomId = roomId;
   socket.join(roomId);
-  players[socket.id] = INITIAL_PLAYER_STATUS;
+  players[socket.id] = initialPlayerStatus;
 };
 
 const initializeRoom = (roomId, socket) => {
-  INITIAL_PLAYER_STATUS.nickname = socket.nickname;
+  const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
+  initialPlayerStatus.nickname = socket.nickname;
   socket.roomId = roomId;
   socket.join(roomId);
-  rooms[roomId].players = { [socket.id]: INITIAL_PLAYER_STATUS };
+  rooms[roomId].players = { [socket.id]: initialPlayerStatus };
 };
 
 const isRoomAvailable = players => {
