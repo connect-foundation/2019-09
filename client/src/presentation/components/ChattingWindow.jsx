@@ -27,13 +27,14 @@ const ChattingWindow = ({ chattingList }) => {
   useEffect(scrollToButtom, [chattingList]);
   return (
     <Box className={classes.chattingWindow}>
-      {chattingList.map((chat, index) => {
-        const key = `${index}${chat.nickname}`;
+      {chattingList.map((chatting, index) => {
+        const key = `${index}${chatting.nickname}`;
         return (
           <ChattingRow
             key={key}
-            nickname={chat.nickname}
-            message={chat.message}
+            nickname={chatting.nickname}
+            nicknameColor={chatting.nicknameColor}
+            message={chatting.message}
           />
         );
       })}

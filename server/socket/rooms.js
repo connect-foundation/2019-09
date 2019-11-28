@@ -6,6 +6,7 @@ const {
   INITIAL_GAME_STATUS,
   MAX_USER_COUNT,
 } = require('../config');
+const colorGenerator = require('../utils/colorGenerator');
 
 const { rooms } = io.sockets.adapter;
 
@@ -14,6 +15,7 @@ const joinRoom = (roomId, socket) => {
   const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
   initialPlayerStatus.nickname = socket.nickname;
   socket.roomId = roomId;
+  socket.nicknameColor = colorGenerator.getRandomColor();
   socket.join(roomId);
   players[socket.id] = initialPlayerStatus;
 };
@@ -22,6 +24,7 @@ const initializeRoom = (roomId, socket) => {
   const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
   initialPlayerStatus.nickname = socket.nickname;
   socket.roomId = roomId;
+  socket.nicknameColor = colorGenerator.getRandomColor();
   socket.join(roomId);
   rooms[roomId].players = { [socket.id]: initialPlayerStatus };
 };
