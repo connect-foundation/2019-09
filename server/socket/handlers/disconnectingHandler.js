@@ -9,7 +9,9 @@ const disconnectingHandler = socket => {
     rooms.removeStreamerBySocket(socket);
   }
   if (!isGameContinuable(socket)) {
-    /** @todo 게임종료 로직 필요 */
+    rooms.resetRoomPlayersBySocket(socket);
+    rooms.setRoomStatusByRoomId(socket.roomId, 'waiting');
+    socket.to(socket.roomId).emit('endGame');
   } else if (socket.id === room.streamerSocketId) {
     endSet(socket.roomId);
     startSet(socket.roomId);
