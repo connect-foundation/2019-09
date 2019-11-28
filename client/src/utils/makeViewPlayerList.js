@@ -4,7 +4,7 @@ const makeViewPlayerList = (localPlayer, remotePlayers) => {
   const viewRemotePlayers = viewRemotePlayerSocketIds.reduce(
     (accum, remotePlayerSocketId) => {
       const viewRemotePlayer = {
-        ...viewRemotePlayers[remotePlayerSocketId],
+        ...remotePlayers[remotePlayerSocketId],
         isLocalPlayer: false,
         socketId: remotePlayerSocketId,
       };
