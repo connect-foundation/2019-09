@@ -5,7 +5,7 @@ const getNickname = () => {
 
 const setNickname = nickname => {
   if (!localStorage) return;
-  localStorage.setItem(nickname);
+  localStorage.setItem('nickname', nickname);
 };
 
 export default { getNickname, setNickname };
