@@ -55,10 +55,7 @@ class StreamingManager {
       streamerSocketId,
       iceCandidateHandler.bind(this),
     );
-    webRTCManager.registerTrack(
-      streamerSocketId,
-      trackHandler.bind(this.webRTCManager),
-    );
+    webRTCManager.registerTrack(streamerSocketId, trackHandler.bind(this));
   }
 
   async sendCandidateHandler({ target, candidate }) {
@@ -83,7 +80,8 @@ class StreamingManager {
   }
 
   trackHandler(stream) {
-    console.log(this.stream);
+    /** @todo 추후 view의 dispatch 연결 */
+    console.log(this.dispatch);
     document.querySelector('video').srcObject = stream;
     // this.dispatch({ type: 'setStream', payload: { stream } });
   }
