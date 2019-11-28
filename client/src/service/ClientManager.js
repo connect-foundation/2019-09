@@ -31,6 +31,7 @@ class ClientManager {
   registerSocketEvents() {
     this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
     this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
+    this.socket.on('endGame', this.resetStreaming.bind(this));
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -74,6 +75,16 @@ class ClientManager {
 
   sendChattingMessage(newChatting) {
     this.chattingManager.sendChattingMessage(newChatting);
+  }
+
+  exitRoom() {
+    this.streamingManager.resetWebRTC();
+    this.socket.disconnect();
+  }
+
+  resetStreaming() {
+    this.localPlayer.isReady = false;
+    this.streamingManager.resetWebRTC();
   }
 }
 
