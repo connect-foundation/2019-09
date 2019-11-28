@@ -70,7 +70,10 @@ const Game = () => {
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-  const exitButtonHandler = () => {};
+  const exitButtonHandler = () => {
+    flag = false;
+    clientManager.exitRoom();
+  };
 
   return (
     <div className={classes.root}>
@@ -87,8 +90,8 @@ const Game = () => {
         </Grid>
         <Grid item xs className={classes.exitButtonGrid}>
           <Box className={classes.paper}>
-            <Link to="/">
-              <ExitButton onClick={exitButtonHandler}>Exit</ExitButton>
+            <Link to="/" onClick={exitButtonHandler}>
+              <ExitButton>Exit</ExitButton>
             </Link>
           </Box>
         </Grid>
