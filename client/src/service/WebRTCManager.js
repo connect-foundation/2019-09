@@ -207,6 +207,16 @@ class WebRTCManager {
   getStream() {
     return this.stream;
   }
+
+  removeTracks() {
+    try {
+      this.stream.getTracks().forEach(track => {
+        track.stop();
+      });
+    } catch (e) {
+      console.log('No stream from local camera');
+    }
+  }
 }
 
 export default WebRTCManager;
