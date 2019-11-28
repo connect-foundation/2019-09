@@ -15,8 +15,12 @@ const getAllrooms = () => {
 };
 
 const setRoomStatusByRoomId = (roomId, status) => {
-  const room = rooms[roomId];
-  room.status = status;
+  try {
+    const room = rooms[roomId];
+    room.status = status;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const getRoomStatusByRoomId = roomId => {
@@ -189,14 +193,18 @@ const removeStreamerBySocket = socket => {
 };
 
 const resetRoomPlayersBySocket = socket => {
-  const room = findRoomBySocket(socket);
-  const socketIds = Object.keys(room.players);
-  const keys = Object.keys(INITIAL_PLAYER_STATUS);
-  socketIds.forEach(socketId => {
-    keys.forEach(key => {
-      room.players[socketId][key] = INITIAL_PLAYER_STATUS[key];
+  try {
+    const room = findRoomBySocket(socket);
+    const socketIds = Object.keys(room.players);
+    const keys = Object.keys(INITIAL_PLAYER_STATUS);
+    socketIds.forEach(socketId => {
+      keys.forEach(key => {
+        room.players[socketId][key] = INITIAL_PLAYER_STATUS[key];
+      });
     });
-  });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 module.exports = {
