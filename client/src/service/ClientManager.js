@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
+import { makeViewPlayerList } from '../utils';
 
 class ClientManager {
   constructor() {
@@ -13,7 +14,7 @@ class ClientManager {
       score: 0,
     };
     /** @todo 이후에 지워야 할 사항. 개발용 */
-    this.socket = io('localhost:3001');
+    this.socket = io(`${window.location.hostname}:3001`);
     this.remotePlayers = {};
     this.gameManager = new GameManager(
       this.socket,
@@ -29,6 +30,19 @@ class ClientManager {
 
   registerSocketEvents() {
     this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
+    this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
+  }
+
+  sendLeftPlayerHandler({ socketId }) {
+    try {
+      this.streamingManager.closeConnection(socketId);
+      delete this.remotePlayers[socketId];
+      /** @todo chatting manager 핸들링 */
+      /** @todo view로 dispatch 필요 */
+      makeViewPlayerList(this.localPlayer, this.remotePlayers);
+    } catch (e) {
+      console.log('someone left');
+    }
   }
 
   sendSocketIdHandler({ socketId }) {

@@ -1,5 +1,6 @@
 // import { useContext } from 'react';
 // import { DispatchContext } from '../contexts';
+import { makeViewPlayerList } from '../utils';
 
 class GameManager {
   /**
@@ -33,11 +34,21 @@ class GameManager {
     socketIds.forEach(socketId => {
       this.remotePlayers[socketId] = players[socketId];
     });
+    /**
+     * @todo 좌측 플레이어리스트 렌더링을 위한 viewPlayerList 배열을 dispatch
+     * dispatch의 payload로 사용
+     */
+    makeViewPlayerList(this.localPlayer, this.remotePlayers);
   }
 
   /** @todo 매개변수 통합하여 전송하도록 변경 필요 */
   sendNewPlayerHandler({ socketId, nickname, isReady, type, score }) {
     this.remotePlayers[socketId] = { nickname, isReady, type, score };
+    /**
+     * @todo 좌측 플레이어리스트 렌더링을 위한 viewPlayerList 배열을 dispatch
+     * dispatch의 payload로 사용
+     */
+    makeViewPlayerList(this.localPlayer, this.remotePlayers);
   }
 
   sendReadyHandler({ socketId, isReady }) {
@@ -46,6 +57,11 @@ class GameManager {
       return;
     }
     this.remotePlayers[socketId].isReady = isReady;
+    /**
+     * @todo 좌측 플레이어리스트 렌더링을 위한 viewPlayerList 배열을 dispatch
+     * dispatch의 payload로 사용
+     */
+    makeViewPlayerList(this.localPlayer, this.remotePlayers);
   }
 
   toggleReady(isReady) {

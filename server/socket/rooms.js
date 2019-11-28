@@ -9,6 +9,16 @@ const {
 
 const { rooms } = io.sockets.adapter;
 
+const setRoomStatusByRoomId = (roomId, status) => {
+  const room = rooms[roomId];
+  room.status = status;
+};
+
+const getRoomStatusByRoomId = roomId => {
+  const room = rooms[roomId];
+  return room.status;
+};
+
 const joinRoom = (roomId, socket) => {
   const { players } = rooms[roomId];
   const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
@@ -24,10 +34,14 @@ const initializeRoom = (roomId, socket) => {
   socket.roomId = roomId;
   socket.join(roomId);
   rooms[roomId].players = { [socket.id]: initialPlayerStatus };
+  setRoomStatusByRoomId(roomId, 'waiting');
 };
 
-const isRoomAvailable = players => {
-  return Object.keys(players).length < MAX_USER_COUNT;
+const isRoomAvailable = room => {
+  const { players } = room;
+  const isRoomFull = Object.keys(players).length >= MAX_USER_COUNT;
+  const isRoomPlaying = room.status === 'playing';
+  return !isRoomFull && !isRoomPlaying;
 };
 
 const getAvailableRoomIds = () => {
@@ -36,8 +50,8 @@ const getAvailableRoomIds = () => {
     return [];
   }
   const availableRoomIds = roomIds.filter(roomId => {
-    const { players } = rooms[roomId];
-    return players ? isRoomAvailable(players) : false;
+    const room = rooms[roomId];
+    return room.players ? isRoomAvailable(room) : false;
   });
   return availableRoomIds;
 };
@@ -129,7 +143,7 @@ const setSet = roomId => {
   const targetSocketId = Object.keys(streamers)[0];
 
   if (!targetSocketId) return;
-  streamers[targetSocketId].type = 'streamer';
+  room.players[targetSocketId].type = 'streamer';
   room.streamerSocketId = targetSocketId;
   delete streamers[targetSocketId];
 };
@@ -139,6 +153,19 @@ const removePlayerBySocket = socket => {
     delete rooms[socket.roomId].players[socket.id];
   } catch (e) {
     console.error(e);
+  }
+};
+
+const isSocketStreamerCandidate = socket => {
+  return rooms[socket.roomId].streamers[socket.id];
+};
+
+const removeStreamerBySocket = socket => {
+  try {
+    const room = rooms[socket.roomId];
+    delete room.streamers[socket.id];
+  } catch (e) {
+    console.log();
   }
 };
 
@@ -157,4 +184,8 @@ module.exports = {
   setRound,
   setSet,
   removePlayerBySocket,
+  setRoomStatusByRoomId,
+  getRoomStatusByRoomId,
+  isSocketStreamerCandidate,
+  removeStreamerBySocket,
 };
