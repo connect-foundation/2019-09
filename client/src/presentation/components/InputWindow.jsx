@@ -9,10 +9,9 @@ import { CONSTANT_VALUES } from '../../utils';
 const useStyles = makeStyles({
   InputWindow: {
     display: 'flex',
-    position: 'absolute',
-    bottom: '1rem',
-    left: '1rem',
-    right: '1rem',
+    padding: '1rem',
+    height: '10%',
+    boxSizing: 'border-box',
   },
 });
 
@@ -20,6 +19,7 @@ const InputWindow = ({ clientManager, nickname }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
   const sendChattingMessageHandler = () => {
+    if (!value) return;
     clientManager.sendChattingMessage({
       nickname,
       message: value,
@@ -33,8 +33,8 @@ const InputWindow = ({ clientManager, nickname }) => {
         onChange={e => {
           setValue(e.target.value);
         }}
-        onKeyUp={e => {
-          if (e.keyCode === CONSTANT_VALUES.ENTER_KEYCODE) {
+        onKeyPress={e => {
+          if (e.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
             sendChattingMessageHandler();
           }
         }}

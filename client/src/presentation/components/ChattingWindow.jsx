@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
@@ -6,20 +6,25 @@ import ChattingRow from './ChattingRow';
 
 const useStyle = makeStyles({
   chattingWindow: {
-    position: 'absolute',
-    top: '1rem',
-    left: '1rem',
-    right: '1rem',
+    overflowY: 'auto',
     padding: '1rem',
+    height: '90%',
+    boxSizing: 'border-box',
     '& > *': {
-      marginTop: '0.5rem',
-      marginBottom: '0.5rem',
+      marginTop: '1rem',
+      marginBottom: '1rem',
     },
   },
 });
 
 const ChattingWindow = ({ chattingList }) => {
   const classes = useStyle();
+  const messageEndRef = useRef(null);
+  const scrollToButtom = () => {
+    messageEndRef.current.scrollIntoView({ behavior: 'auto' });
+  };
+
+  useEffect(scrollToButtom, [chattingList]);
   return (
     <Box className={classes.chattingWindow}>
       {chattingList.map((chat, index) => {
@@ -32,6 +37,7 @@ const ChattingWindow = ({ chattingList }) => {
           />
         );
       })}
+      <div ref={messageEndRef} />
     </Box>
   );
 };

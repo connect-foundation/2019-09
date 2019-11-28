@@ -7,7 +7,7 @@ const Timer = ({ currentSeconds }) => {
     timer: {
       fontSize: '3rem',
       fontWeight: 'bold',
-      color: '#000000',
+      color: '#ffffff',
       textAlign: 'left',
     },
   }));
