@@ -10,6 +10,10 @@ const colorGenerator = require('../utils/colorGenerator');
 
 const { rooms } = io.sockets.adapter;
 
+const getAllrooms = () => {
+  return rooms;
+};
+
 const setRoomStatusByRoomId = (roomId, status) => {
   const room = rooms[roomId];
   room.status = status;
@@ -111,10 +115,12 @@ const findRoomBySocket = socket => {
 
 const isRoomReady = roomId => {
   const { players } = rooms[roomId];
+
   const socketIds = Object.keys(players);
   if (socketIds.length < MIN_USER_COUNT) {
     return false;
   }
+
   return socketIds.every(socketId => {
     return players[socketId].isReady;
   });
@@ -160,7 +166,11 @@ const removePlayerBySocket = socket => {
 };
 
 const isSocketStreamerCandidate = socket => {
-  return rooms[socket.roomId].streamers[socket.id];
+  try {
+    return rooms[socket.roomId].streamers[socket.id];
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const removeStreamerBySocket = socket => {
@@ -168,11 +178,23 @@ const removeStreamerBySocket = socket => {
     const room = rooms[socket.roomId];
     delete room.streamers[socket.id];
   } catch (e) {
-    console.log();
+    console.log(e);
   }
 };
 
+const resetRoomPlayersBySocket = socket => {
+  const room = findRoomBySocket(socket);
+  const socketIds = Object.keys(room.players);
+  const keys = Object.keys(INITIAL_PLAYER_STATUS);
+  socketIds.forEach(socketId => {
+    keys.forEach(key => {
+      room.players[socketId][key] = INITIAL_PLAYER_STATUS[key];
+    });
+  });
+};
+
 module.exports = {
+  getAllrooms,
   joinRoom,
   getAvailableRoomId,
   createRoomId,
@@ -191,4 +213,5 @@ module.exports = {
   getRoomStatusByRoomId,
   isSocketStreamerCandidate,
   removeStreamerBySocket,
+  resetRoomPlayersBySocket,
 };
