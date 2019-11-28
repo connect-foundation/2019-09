@@ -54,6 +54,10 @@ class GameManager {
   sendReadyHandler({ socketId, isReady }) {
     if (socketId === this.localPlayer.socketId) {
       this.localPlayer.isReady = isReady;
+      console.log(
+        'sendReadyHandler : ',
+        makeViewPlayerList(this.localPlayer, this.remotePlayers),
+      );
       return;
     }
     this.remotePlayers[socketId].isReady = isReady;
@@ -61,7 +65,10 @@ class GameManager {
      * @todo 좌측 플레이어리스트 렌더링을 위한 viewPlayerList 배열을 dispatch
      * dispatch의 payload로 사용
      */
-    makeViewPlayerList(this.localPlayer, this.remotePlayers);
+    console.log(
+      'sendReadyHandler : ',
+      makeViewPlayerList(this.localPlayer, this.remotePlayers),
+    );
   }
 
   toggleReady(isReady) {

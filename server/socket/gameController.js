@@ -54,7 +54,11 @@ const startGame = socket => {
 
 const isGameContinuable = socket => {
   const room = rooms.getRoomByRoomId(socket.roomId);
-  return Object.keys(room.players).length > MIN_USER_COUNT;
+  try {
+    return Object.keys(room.players).length > MIN_USER_COUNT;
+  } catch (error) {
+    return false;
+  }
 };
 
 module.exports = {
