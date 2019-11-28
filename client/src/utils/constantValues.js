@@ -2,4 +2,4 @@ const CONSTANT_VALUES = {
   ENTER_KEYCODE: 13,
 };
 
-export { CONSTANT_VALUES };
+export default { CONSTANT_VALUES };

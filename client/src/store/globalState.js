@@ -1,5 +1,4 @@
 const initialState = {
-  nickname: '',
   chattingList: [
     {
       nickname: 'mosball',
