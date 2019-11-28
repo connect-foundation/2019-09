@@ -8,6 +8,7 @@ export { default as StreamerVideo } from './StreamerVideo';
 export { default as ChattingWindow } from './ChattingWindow';
 export { default as InputWindow } from './InputWindow';
 export { default as PlayerProfile } from './PlayerProfile';
+export { default as Slogan } from './Slogan';
 export {
   MenuButton,
   SendButton,
