@@ -91,6 +91,7 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
+    this.dispatch({ type: 'resetChattingList' });
   }
 
   resetStreaming() {
