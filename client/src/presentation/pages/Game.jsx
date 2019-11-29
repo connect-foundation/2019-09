@@ -1,4 +1,4 @@
-import React /** useContext, useEffect */ from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link, useHistory } from 'react-router-dom';
@@ -74,6 +74,12 @@ const Game = () => {
     flag = false;
     clientManager.exitRoom();
   };
+
+  useEffect(() => {
+    window.onpopstate = () => {
+      exitButtonHandler();
+    };
+  }, []);
 
   return (
     <div className={classes.root}>

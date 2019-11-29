@@ -125,7 +125,9 @@ class StreamingManager {
   resetWebRTC() {
     this.webRTCManager.closeAllConnections();
     this.webRTCManager.removeTracks();
-    document.querySelector('video').srcObject = null;
+    if (document.querySelector('video')) {
+      document.querySelector('video').srcObject = null;
+    }
     this.webRTCManager = new WebRTCManager();
   }
 }
