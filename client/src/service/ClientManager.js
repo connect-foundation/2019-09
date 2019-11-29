@@ -1,4 +1,6 @@
 import io from 'socket.io-client';
+import { useContext } from 'react';
+import { DispatchContext } from '../contexts';
 import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
@@ -27,6 +29,7 @@ class ClientManager {
       this.localPlayer,
     );
     this.chattingManager = new ChattingManager(this.socket);
+    this.dispatch = useContext(DispatchContext);
   }
 
   registerSocketEvents() {
@@ -37,13 +40,20 @@ class ClientManager {
 
   sendLeftPlayerHandler({ socketId }) {
     try {
-      this.streamingManager.closeConnection(socketId);
       delete this.remotePlayers[socketId];
-      /** @todo chatting manager 핸들링 */
-      /** @todo view로 dispatch 필요 */
-      makeViewPlayerList(this.localPlayer, this.remotePlayers);
+      const viewPlayerList = makeViewPlayerList(
+        this.localPlayer,
+        this.remotePlayers,
+      );
+      this.dispatch({
+        type: 'setViewPlayerList',
+        payload: {
+          viewPlayerList,
+        },
+      });
+      this.streamingManager.closeConnection(socketId);
     } catch (e) {
-      console.log('someone left');
+      console.log(e);
     }
   }
 
