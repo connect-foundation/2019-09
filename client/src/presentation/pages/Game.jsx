@@ -107,7 +107,7 @@ const Game = () => {
           <PlayerPanel clientManager={clientManager} />
         </Grid>
         <Grid item xs={7} className={classes.bottomGridContent}>
-          <StreamingPanel words={candidateWords} isVisible />
+          <StreamingPanel words={candidateWords} isVisible={false} />
         </Grid>
         <Grid item xs={3} className={classes.bottomGridContent}>
           <ChattingPanel clientManager={clientManager} />
