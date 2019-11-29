@@ -35,7 +35,7 @@ class ClientManager {
   registerSocketEvents() {
     this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
     this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
-    this.socket.on('endGame', this.resetStreaming.bind(this));
+    this.socket.on('endGame', this.endGameHandler.bind(this));
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -91,6 +91,19 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
+  }
+
+  endGameHandler() {
+    this.resetStreaming();
+    this.resetReadyButton();
+  }
+
+  resetReadyButton() {
+    const viewPlayerList = makeViewPlayerList(
+      this.localPlayer,
+      this.remotePlayers,
+    );
+    this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
   }
 
   resetStreaming() {
