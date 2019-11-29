@@ -13,11 +13,13 @@ const matchHandler = (socket, { nickname }) => {
   if (availableRoomId) {
     rooms.joinRoom(availableRoomId, socket);
     emitEventsAfterJoin(socket, availableRoomId);
-    socket.broadcast
-      .to(availableRoomId)
-      .emit('sendNewPlayer', { socketId, nickname });
-    const players = rooms.getOtherPlayers(availableRoomId, socketId);
-    socket.emit('sendPlayers', { players });
+    const newPlayer = rooms.getPlayersByRoomId(availableRoomId)[socketId];
+    socket.broadcast.to(availableRoomId).emit('sendNewPlayer', {
+      socketId,
+      ...newPlayer,
+    });
+    const otherPlayers = rooms.getOtherPlayers(availableRoomId, socketId);
+    socket.emit('sendPlayers', { players: otherPlayers });
     return;
   }
 

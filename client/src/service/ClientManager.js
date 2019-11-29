@@ -1,4 +1,6 @@
 import io from 'socket.io-client';
+import { useContext } from 'react';
+import { DispatchContext } from '../contexts';
 import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
@@ -14,7 +16,7 @@ class ClientManager {
       score: 0,
     };
     /** @todo 이후에 지워야 할 사항. 개발용 */
-    this.socket = io(`${window.location.hostname}:3001`);
+    this.socket = io();
     this.remotePlayers = {};
     this.gameManager = new GameManager(
       this.socket,
@@ -24,24 +26,34 @@ class ClientManager {
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
+      this.localPlayer,
     );
     this.chattingManager = new ChattingManager(this.socket);
+    this.dispatch = useContext(DispatchContext);
   }
 
   registerSocketEvents() {
     this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
     this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
+    this.socket.on('endGame', this.resetStreaming.bind(this));
   }
 
   sendLeftPlayerHandler({ socketId }) {
     try {
-      this.streamingManager.closeConnection(socketId);
       delete this.remotePlayers[socketId];
-      /** @todo chatting manager 핸들링 */
-      /** @todo view로 dispatch 필요 */
-      makeViewPlayerList(this.localPlayer, this.remotePlayers);
+      const viewPlayerList = makeViewPlayerList(
+        this.localPlayer,
+        this.remotePlayers,
+      );
+      this.dispatch({
+        type: 'setViewPlayerList',
+        payload: {
+          viewPlayerList,
+        },
+      });
+      this.streamingManager.closeConnection(socketId);
     } catch (e) {
-      console.log('someone left');
+      console.log(e);
     }
   }
 
@@ -74,6 +86,16 @@ class ClientManager {
 
   sendChattingMessage(newChatting) {
     this.chattingManager.sendChattingMessage(newChatting);
+  }
+
+  exitRoom() {
+    this.streamingManager.resetWebRTC();
+    this.socket.disconnect();
+  }
+
+  resetStreaming() {
+    this.localPlayer.isReady = false;
+    this.streamingManager.resetWebRTC();
   }
 }
 

@@ -1,4 +1,4 @@
-import React /** useContext, useEffect */ from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link, useHistory } from 'react-router-dom';
@@ -70,7 +70,16 @@ const Game = () => {
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-  const exitButtonHandler = () => {};
+  const exitButtonHandler = () => {
+    flag = false;
+    clientManager.exitRoom();
+  };
+
+  useEffect(() => {
+    window.onpopstate = () => {
+      exitButtonHandler();
+    };
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -87,8 +96,8 @@ const Game = () => {
         </Grid>
         <Grid item xs className={classes.exitButtonGrid}>
           <Box className={classes.paper}>
-            <Link to="/">
-              <ExitButton onClick={exitButtonHandler}>Exit</ExitButton>
+            <Link to="/" onClick={exitButtonHandler}>
+              <ExitButton>Exit</ExitButton>
             </Link>
           </Box>
         </Grid>

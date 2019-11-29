@@ -1,11 +1,13 @@
-// import { useContext } from 'react';
-// import { DispatchContext } from '../contexts';
+import { useContext } from 'react';
+import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
+import { makeViewPlayerList } from '../utils';
 
 class StreamingManager {
-  constructor(socket, remotePlayers) {
-    // this.dispatch = useContext(DispatchContext).dispatch;
+  constructor(socket, remotePlayers, localPlayer) {
+    this.dispatch = useContext(DispatchContext);
     this.socket = socket;
+    this.localPlayer = localPlayer;
     this.remotePlayers = remotePlayers;
     this.webRTCManager = new WebRTCManager();
   }
@@ -22,9 +24,20 @@ class StreamingManager {
       webRTCManager,
       iceCandidateHandler,
       socket,
-      // dispatch,
+      dispatch,
       remotePlayers,
+      localPlayer,
     } = this;
+
+    localPlayer.type = 'streamer';
+    const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
+    dispatch({
+      type: 'setViewPlayerList',
+      payload: {
+        viewPlayerList,
+      },
+    });
+
     const socketIds = Object.keys(remotePlayers);
     webRTCManager.closeAllConnections();
     await webRTCManager.createStream();
@@ -49,6 +62,20 @@ class StreamingManager {
   }
 
   async assignViewerHandler({ streamerSocketId }) {
+    const { remotePlayers, localPlayer, dispatch } = this;
+    const socketIds = Object.keys(remotePlayers);
+    socketIds.forEach(socketId => {
+      if (socketId === streamerSocketId) {
+        remotePlayers[socketId].type = 'streamer';
+      }
+    });
+    const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
+    dispatch({
+      type: 'setViewPlayerList',
+      payload: {
+        viewPlayerList,
+      },
+    });
     const { webRTCManager, iceCandidateHandler, trackHandler } = this;
     webRTCManager.createConnection(streamerSocketId);
     webRTCManager.registerIceCandidate(
@@ -83,12 +110,27 @@ class StreamingManager {
     /** @todo 추후 view의 dispatch 연결 */
     // eslint-disable-next-line
     console.log(this.dispatch);
-    document.querySelector('video').srcObject = stream;
+    if (document.querySelector('video')) {
+      document.querySelector('video').srcObject = stream;
+    }
     // this.dispatch({ type: 'setStream', payload: { stream } });
   }
 
   closeConnection(socketId) {
     this.webRTCManager.closeConnection(socketId);
+  }
+
+  closeAllConnections() {
+    this.webRTCManager.closeAllConnections();
+  }
+
+  resetWebRTC() {
+    this.webRTCManager.closeAllConnections();
+    this.webRTCManager.removeTracks();
+    if (document.querySelector('video')) {
+      document.querySelector('video').srcObject = null;
+    }
+    this.webRTCManager = new WebRTCManager();
   }
 }
 

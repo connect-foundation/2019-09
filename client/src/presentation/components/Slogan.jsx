@@ -4,22 +4,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyle = makeStyles({
-  title: {
-    margin: '0.5rem 0',
+  slogan: {
+    margin: '0 0.2rem',
+    whiteSpace: 'pre-line',
+    fontWeight: '600',
   },
 });
 
-const Title = ({ content }) => {
+const Slogan = ({ content }) => {
   const classes = useStyle();
   return (
-    <Typography className={classes.title} variant="h2" gutterBottom>
+    <Typography className={classes.slogan} variant="h5" gutterBottom>
       {content}
     </Typography>
   );
 };
 
-Title.propTypes = {
+Slogan.propTypes = {
   content: PropTypes.string.isRequired,
 };
 
-export default Title;
+export default Slogan;
