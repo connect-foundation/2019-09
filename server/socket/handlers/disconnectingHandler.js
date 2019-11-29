@@ -11,7 +11,9 @@ const disconnectingHandler = socket => {
   if (!isGameContinuable(socket)) {
     rooms.resetRoomPlayersBySocket(socket);
     rooms.setRoomStatusByRoomId(socket.roomId, 'waiting');
-    socket.to(socket.roomId).emit('endGame');
+    if (socket) {
+      socket.to(socket.roomId).emit('endGame');
+    }
   } else if (socket.id === room.streamerSocketId) {
     endSet(socket.roomId);
     startSet(socket.roomId);

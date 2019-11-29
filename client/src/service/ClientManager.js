@@ -95,6 +95,16 @@ class ClientManager {
   }
 
   endGameHandler() {
+    this.localPlayer.type = 'viewer';
+    this.localPlayer.isReady = false;
+    const keys = Object.keys(this.remotePlayers);
+    keys.forEach(key => {
+      this.remotePlayers[key].type = 'viewer';
+      this.remotePlayers[key].isReady = false;
+    });
+
+    this.gameManager.makeAndDispatchViewPlayerList();
+
     this.resetStreaming();
     this.resetReadyButton();
   }
