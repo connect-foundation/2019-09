@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-const TitleContent = styled.h2`
-  margin: 0.5rem 0;
-  font-size: 3rem;
-  font-weight: 600;
-`;
+const useStyle = makeStyles({
+  title: {
+    margin: '0.5rem 0',
+  },
+});
 
 const Title = ({ content }) => {
-  return <TitleContent>{content}</TitleContent>;
+  const classes = useStyle();
+  return (
+    <Typography className={classes.title} variant="h2" gutterBottom>
+      {content}
+    </Typography>
+  );
 };
 
 Title.propTypes = {

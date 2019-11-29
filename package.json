@@ -9,5 +9,8 @@
   "workspaces": [
     "server",
     "client"
-  ]
+  ],
+  "scripts": {
+    "test": "yarn workspace client test && yarn workspace server test"
+  }
 }

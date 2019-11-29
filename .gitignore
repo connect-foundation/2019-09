@@ -183,6 +183,7 @@ $RECYCLE.BIN/
 # dependencies
 /.pnp
 .pnp.js
+build/
 
 # testing
 
