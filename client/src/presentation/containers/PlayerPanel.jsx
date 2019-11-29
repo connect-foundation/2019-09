@@ -4,14 +4,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton } from '../components';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
   playerPanel: {
     height: '48rem',
     position: 'relative',
-    border: '1px solid #e7e7e7',
     padding: '1rem',
     boxSizing: 'border-box',
+    backgroundColor: STYLE_COLORS.PANEL_BACKGROUND_COLOR,
   },
   readyButtonWrapper: {
     position: 'absolute',

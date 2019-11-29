@@ -6,14 +6,14 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import WordCandidates from './WordCandidates';
 import { StreamerVideo } from '../components';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyles = makeStyles(() => ({
   container: {
     position: 'relative',
     height: '100%',
     maxHeight: '48rem',
-    border: '1px solid #e7e7e7',
-    backgroundColor: '#F3F4FE',
+    backgroundColor: STYLE_COLORS.PANEL_BACKGROUND_COLOR,
   },
 }));
 

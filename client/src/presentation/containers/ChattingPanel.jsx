@@ -4,14 +4,13 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChattingWindow, InputWindow } from '../components';
 import { GlobalContext } from '../../contexts';
-import { browserLocalStorage } from '../../utils';
+import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
   chattingPanel: {
     height: '48rem',
     position: 'relative',
-    border: '1px solid #e7e7e7',
-    backgroundColor: '#F3F4FE',
+    backgroundColor: STYLE_COLORS.PANEL_BACKGROUND_COLOR,
   },
 });
 

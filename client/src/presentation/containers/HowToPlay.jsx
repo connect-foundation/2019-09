@@ -3,14 +3,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Title, Description } from '../components';
 import { MainHowToPlayTitle, MainHowToPlayDescription } from '../../config';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
   menu: {
-    background: '#F3F4FE',
+    background: STYLE_COLORS.WHITE_COLOR,
     width: '100%',
     height: 220,
     padding: '20px',
-    border: '1px solid #cccccc',
+    border: `0.1rem solid ${STYLE_COLORS.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

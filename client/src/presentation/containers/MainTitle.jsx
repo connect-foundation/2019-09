@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Logo } from '../components';
-import logoSrc from '../../assets/main-logo-large.png';
+import logoSrc from '../../assets/trycatch4_black2.png';
 
 const TitleWrapper = styled.div`
   margin-top: 2rem;
