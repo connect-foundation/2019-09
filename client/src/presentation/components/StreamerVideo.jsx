@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
   video: {
     width: '100%',
-    height: 'auto',
+    height: '100%',
+    transform: 'rotateY(180deg)',
   },
 }));
 

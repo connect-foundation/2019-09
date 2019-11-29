@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import { LargeButton } from '../components';
+import { CandidateButton } from '../components';
 
 const useStyles = makeStyles(() => ({
   candidateContainer: {
@@ -21,20 +21,11 @@ const useStyles = makeStyles(() => ({
 const WordCandidates = ({ words }) => {
   const wordCandidates = words;
   const classes = useStyles();
-  const candidateButtonStyle = {
-    width: '10rem',
-    height: '3rem',
-  };
   return (
     <Container className={classes.candidateContainer}>
       {wordCandidates.map(wordCandidate => {
         return (
-          <LargeButton
-            key={wordCandidate}
-            style={candidateButtonStyle}
-            text={wordCandidate}
-            onClick={() => {}}
-          />
+          <CandidateButton key={wordCandidate}>{wordCandidate}</CandidateButton>
         );
       })}
     </Container>

@@ -1,21 +1,21 @@
-import React, { useContext, useEffect } from 'react';
-// import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Timer, QuizDisplay, LargeButton } from '../components';
-import { StreamingPanel } from '../containers';
-import { GlobalContext } from '../../contexts';
-import SocketClient from '../../service/socket/SocketClient';
-import {
-  MEDIA_CONSTRAINTS,
-  PEER_CONNECTION_CONFIG,
-} from '../../service/socket/config';
+import { Timer, QuizDisplay, ExitButton } from '../components';
+import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
+import ClientManager from '../../service/ClientManager';
+import { browserLocalStorage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    margin: 0,
+    width: '100%',
+    height: '100%',
+    background: '#E5F1FF',
+    overflow: 'auto',
   },
   timerBox: {
     padding: theme.spacing(2),
@@ -27,9 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
   vidoeBox: {
     padding: theme.spacing(2),
-  },
-  playerPanel: {
-    position: 'relative',
+    height: '100%',
   },
   readyButtonContainer: {
     position: 'absolute',
@@ -43,43 +41,45 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: theme.spacing(2),
   },
+  bottomGrid: {
+    height: 'auto',
+  },
+  bottomGridContent: {
+    padding: '1rem',
+  },
 }));
 
-const ButtonStyles = {
-  width: '100%',
-  height: '3.2rem',
+const checkStoredNickname = () => {
+  const nickname = browserLocalStorage.getNickname();
+  const history = useHistory();
+  if (!nickname) history.push('/');
 };
 
-const ExitButtonStyles = {
-  width: '5rem',
-  height: '3.2rem',
-};
+let flag = false;
+let clientManager;
 
 const Game = () => {
-  let socketClient;
-  const { state } = useContext(GlobalContext);
+  checkStoredNickname();
+
+  if (!flag) {
+    clientManager = new ClientManager();
+    clientManager.init();
+    flag = true;
+  }
   const classes = useStyles();
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-  const readyButtonText = 'Ready'; // Demo Purpose
+  const exitButtonHandler = () => {
+    flag = false;
+    clientManager.exitRoom();
+  };
 
   useEffect(() => {
-    socketClient = new SocketClient({
-      mediaConstraints: MEDIA_CONSTRAINTS,
-      peerConnectionConfig: PEER_CONNECTION_CONFIG,
-    });
-    socketClient.init(state.roomId);
+    window.onpopstate = () => {
+      exitButtonHandler();
+    };
   }, []);
-
-  const readyButtonHandler = () => {
-    const isReady = true;
-    socketClient.emitReady(isReady);
-  };
-
-  const exitButtonHandler = () => {
-    socketClient.stopStream();
-  };
 
   return (
     <div className={classes.root}>
@@ -96,33 +96,21 @@ const Game = () => {
         </Grid>
         <Grid item xs className={classes.exitButtonGrid}>
           <Box className={classes.paper}>
-            <Link to="/">
-              <LargeButton
-                text="Exit"
-                style={ExitButtonStyles}
-                onClick={exitButtonHandler}
-              />
+            <Link to="/" onClick={exitButtonHandler}>
+              <ExitButton>Exit</ExitButton>
             </Link>
           </Box>
         </Grid>
       </Grid>
-      <Grid container spacing={0}>
-        <Grid item xs={3} className={classes.playerPanel}>
-          <Box className={[classes.paper, classes.readyButtonContainer]}>
-            <LargeButton
-              text={readyButtonText}
-              onClick={readyButtonHandler}
-              style={ButtonStyles}
-            />
-          </Box>
+      <Grid container spacing={0} className={classes.bottomGrid}>
+        <Grid item xs={2} className={classes.bottomGridContent}>
+          <PlayerPanel clientManager={clientManager} />
         </Grid>
-        <Grid item xs={6}>
-          <Box className={classes.vidoeBox}>
-            <StreamingPanel words={candidateWords} isVisible />
-          </Box>
+        <Grid item xs={7} className={classes.bottomGridContent}>
+          <StreamingPanel words={candidateWords} isVisible={false} />
         </Grid>
-        <Grid item xs={3}>
-          <Box className={classes.paper}> </Box>
+        <Grid item xs={3} className={classes.bottomGridContent}>
+          <ChattingPanel clientManager={clientManager} />
         </Grid>
       </Grid>
     </div>
