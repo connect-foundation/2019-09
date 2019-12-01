@@ -56,7 +56,8 @@ const isGameContinuable = socket => {
   const room = rooms.getRoomByRoomId(socket.roomId);
   try {
     return Object.keys(room.players).length > MIN_USER_COUNT;
-  } catch (error) {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 };

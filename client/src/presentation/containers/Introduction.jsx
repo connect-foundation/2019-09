@@ -1,8 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Title, Description } from '../components';
-import { MainHowToPlayTitle, MainHowToPlayDescription } from '../../config';
+import { Title, Description, Slogan } from '../components';
+import {
+  MainIntroductionTitle,
+  MainIntroductionDescription,
+  MainSlogan,
+} from '../../config';
 import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
@@ -21,15 +25,17 @@ const useStyle = makeStyles({
   },
 });
 
-const HowToPlay = () => {
+const Introduction = () => {
   const classes = useStyle();
 
   return (
     <Container maxWidth="md" className={classes.menu}>
-      <Title content={MainHowToPlayTitle} />
-      <Description content={MainHowToPlayDescription} />
+      <Title content={MainIntroductionTitle} />
+      <Description content={MainIntroductionDescription} />
+      <br />
+      <Slogan content={MainSlogan} />
     </Container>
   );
 };
 
-export default HowToPlay;
+export default Introduction;

@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import { MainTitle, Menu, HowToPlay } from '../containers';
+import { MainTitle, Menu, Introduction } from '../containers';
 import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
@@ -30,7 +30,7 @@ const MainPage = () => {
       <Container maxWidth="md" className={classes.mainPage}>
         <MainTitle />
         <Menu />
-        <HowToPlay />
+        <Introduction />
       </Container>
     </Box>
   );

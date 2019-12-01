@@ -5,7 +5,7 @@ import Message from './Message';
 import Nickname from './Nickname';
 
 const ChattingRow = ({ nickname, nicknameColor, message }) => {
-  const newNickname = `${nickname} : `;
+  const newNickname = nickname ? `${nickname} : ` : 'Guest : ';
   return (
     <Box>
       <Nickname nicknameColor={nicknameColor}>{newNickname}</Nickname>

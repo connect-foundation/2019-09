@@ -1,14 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-const DescriptionContent = styled.p`
-  margin: 0 0.2rem;
-  font-size: 1.2rem;
-`;
+const useStyle = makeStyles({
+  description: {
+    margin: '0 0.2rem',
+    fontSize: '1.2rem',
+    whiteSpace: 'pre-line',
+  },
+});
 
 const Description = ({ content }) => {
-  return <DescriptionContent>{content}</DescriptionContent>;
+  const classes = useStyle();
+  return (
+    <Typography className={classes.description} variant="body1" gutterBottom>
+      {content}
+    </Typography>
+  );
 };
 
 Description.propTypes = {

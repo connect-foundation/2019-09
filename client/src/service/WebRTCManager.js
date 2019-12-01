@@ -1,5 +1,6 @@
+// eslint-disable-next-line no-unused-vars
+import adapter from 'webrtc-adapter';
 import { PEER_CONNECTION_CONFIG, MEDIA_CONSTRAINTS } from './config';
-
 /**
  * stream 관리
  * rtcPeerConnection 관리
@@ -206,6 +207,16 @@ class WebRTCManager {
 
   getStream() {
     return this.stream;
+  }
+
+  removeTracks() {
+    try {
+      this.stream.getTracks().forEach(track => {
+        track.stop();
+      });
+    } catch (e) {
+      console.log('No stream from local camera');
+    }
   }
 }
 
