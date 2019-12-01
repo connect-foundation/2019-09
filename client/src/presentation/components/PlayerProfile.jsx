@@ -13,13 +13,14 @@ const useStyles = makeStyles({
     padding: '1rem',
     display: 'flex',
     fontSize: '1.6rem',
-    color: STYLE_COLORS.WHITE_COLOR,
-    backgroundColor: STYLE_COLORS.PLAYER_PROFILE_BACKGROUND_COLOR,
+    color: STYLE_COLORS.BASE_BLACK_COLOR,
+    backgroundColor: STYLE_COLORS.BASE_WHITE_COLOR,
+    boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.6)',
+    borderRadius: '0.3rem',
     border: (() => {
-      if (props.isReady)
-        return `0.1rem solid ${STYLE_COLORS.READY_STATUS_BORDER_COLOR}`;
-      if (props.type === 'streamer') return '0.1rem solid #e74c3c';
-      return `0.1rem solid ${STYLE_COLORS.PLAYER_PROFILE_BACKGROUND_COLOR}`;
+      if (props.isReady) return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
+      if (props.type === 'streamer') return '0.2rem solid #e74c3c';
+      return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
     })(),
   }),
   playerOrder: {

@@ -8,7 +8,7 @@ const useStyles = makeStyles({
   nickname: props => ({
     fontSize: '1.6rem',
     fontWeight: 'bold',
-    color: props.nicknameColor || STYLE_COLORS.WHITE_COLOR,
+    color: props.nicknameColor || STYLE_COLORS.BASE_BLACK_COLOR,
   }),
 });
 

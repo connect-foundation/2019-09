@@ -11,11 +11,11 @@ import {
 
 const useStyle = makeStyles({
   menu: {
-    background: STYLE_COLORS.WHITE_COLOR,
+    backgroundColor: '#FFFFFF',
     width: '100%',
     height: 'auto',
     padding: '2rem',
-    border: `0.1rem solid ${STYLE_COLORS.THEME_COLOR}`,
+    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

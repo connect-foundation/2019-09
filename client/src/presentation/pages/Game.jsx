@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     width: '100%',
     height: '100%',
-    background: STYLE_COLORS.GAME_PAGE_BACKGROUND_COLOR,
+    background: STYLE_COLORS.BACKGROUND_COLOR,
     overflow: 'auto',
   },
   timerBox: {
@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
   },
   gameHeader: {
-    backgroundColor: STYLE_COLORS.HEADER_BACKGROUND_COLOR,
+    backgroundColor: STYLE_COLORS.THEME_COLOR,
+    boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
   },
   vidoeBox: {
     padding: theme.spacing(2),

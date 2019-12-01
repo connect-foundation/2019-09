@@ -10,7 +10,9 @@ const useStyle = makeStyles({
   chattingPanel: {
     height: '48rem',
     position: 'relative',
-    backgroundColor: STYLE_COLORS.PANEL_BACKGROUND_COLOR,
+    backgroundColor: STYLE_COLORS.PANEL_COLOR,
+    boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.5)',
+    borderRadius: '0.3rem',
   },
 });
 

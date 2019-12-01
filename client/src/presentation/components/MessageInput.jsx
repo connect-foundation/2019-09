@@ -6,7 +6,7 @@ import { STYLE_COLORS } from '../../utils';
 
 const useStyles = makeStyles({
   input: {
-    color: STYLE_COLORS.WHITE_COLOR,
+    color: STYLE_COLORS.BASE_BLACK_COLOR,
     fontSize: '1.5rem ',
     flex: 8,
   },

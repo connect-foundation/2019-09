@@ -7,7 +7,7 @@ import { STYLE_COLORS } from '../../utils';
 const useStyles = makeStyles({
   message: {
     fontSize: '1.4rem',
-    color: STYLE_COLORS.WHITE_COLOR,
+    color: STYLE_COLORS.BASE_BLACK_COLOR,
     wordWrap: 'break-word',
   },
 });

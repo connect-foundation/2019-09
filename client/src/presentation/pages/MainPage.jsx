@@ -18,7 +18,7 @@ const useStyle = makeStyles({
     margin: 0,
     width: '100%',
     height: '100%',
-    background: STYLE_COLORS.WHITE_COLOR,
+    background: STYLE_COLORS.BACKGROUND_COLOR,
     overflow: 'auto',
   },
 });
