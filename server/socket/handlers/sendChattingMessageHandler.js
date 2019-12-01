@@ -1,3 +1,4 @@
+const short = require('short-uuid');
 const io = require('../io');
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
@@ -10,6 +11,7 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
     nickname,
     message,
     nicknameColor: socket.nicknameColor,
+    id: short.generate(),
   });
 };
 
