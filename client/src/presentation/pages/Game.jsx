@@ -150,7 +150,32 @@ const Game = () => {
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
-            <button>Show Players</button>
+            <button
+              type="button"
+              onClick={event => {
+                const { target } = event;
+                const grandParent = target.parentElement.parentElement;
+                const children = grandParent.childNodes;
+                children.forEach(child => {
+                  console.log(child);
+                  if (child !== target.parentElement) {
+                    if (child.style.display === 'none') {
+                      // eslint-disable-next-line no-param-reassign
+                      child.style.display = 'block';
+                      // eslint-disable-next-line no-param-reassign
+                      target.innerText = 'Hide Players';
+                      return;
+                    }
+                    // eslint-disable-next-line no-param-reassign
+                    child.style.display = 'none';
+                    // eslint-disable-next-line no-param-reassign
+                    target.innerText = 'Show Players';
+                  }
+                });
+              }}
+            >
+              Show Players
+            </button>
           </Box>
         </Grid>
         <Grid
