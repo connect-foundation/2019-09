@@ -13,11 +13,11 @@ const setRoom = (roomId, obj) => {
 
 const removePlayerFromRoom = (player, room) => {
   delete room.players[player.socketId];
+
   if (room.streamerCandidates) {
-    room.streamerCandidates.forEach(candidates => {
-      if (candidates[player.socketId]) {
-        delete candidates[player.socketId];
-      }
+    room.streamerCandidates.map(round => {
+      round = round.filter(set => set.socketId !== player.socketId);
+      return round;
     });
   }
   if (room.streamer && room.streamer.socketId === player.socketId) {

@@ -2,13 +2,13 @@ const { INITIAL_PLAYER_STATUS } = require('../../config');
 const roomController = require('./roomController');
 /**
  * 비어있는 player객체 생성
- * obj에 key값과 value를 넣으면 player에 그 값을 넣습니다.
+ * status에 key값과 value를 넣으면 player에 그 값을 넣습니다.
  */
-const createPlayer = obj => {
+const createPlayer = status => {
   const player = { ...INITIAL_PLAYER_STATUS };
-  const keys = Object.keys(obj);
+  const keys = Object.keys(status);
   keys.forEach(key => {
-    player[key] = obj[key];
+    player[key] = status[key];
   });
   return player;
 };
@@ -22,13 +22,13 @@ const getPlayerBySocket = socket => {
  * 플레이어의 속성을 설정합니다. 첫번째 매개변수로 변경할 플레이어를,
  * 두번째 매개변수로 변경할 속성의 key값과 변경될 value를 넣어줍니다.
  * @param {player} player
- * @param {keyAndValue} param1
+ * @param {status} status
  */
-const setPlayer = (player, obj) => {
-  const keys = Object.keys(obj);
+const setPlayerStatus = (player, status) => {
+  const keys = Object.keys(status);
   keys.forEach(key => {
-    player[key] = obj[key];
+    player[key] = status[key];
   });
 };
 
-module.exports = { createPlayer, getPlayerBySocket, setPlayer };
+module.exports = { createPlayer, getPlayerBySocket, setPlayerStatus };

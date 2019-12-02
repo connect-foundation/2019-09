@@ -17,7 +17,7 @@ module.exports = {
   INITIAL_ROOM_STATUS: {
     players: {},
     status: 'waiting',
-    streamerCandidates: {},
+    streamerCandidates: [],
     streamer: {},
     quiz: '',
     currentRound: 0,

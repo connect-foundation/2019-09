@@ -1,5 +1,5 @@
 const io = require('../io');
-const { setPlayer } = require('./playerController');
+const playerController = require('./playerController');
 const {
   INITIAL_ROUND,
   MIN_USER_COUNT,
@@ -64,30 +64,28 @@ const getViewers = room => {
   return viewers;
 };
 
-const prepareRound = room => {
+const initGame = room => {
   room.currentRound++;
   const { players } = room;
   const socketIds = Object.keys(players);
   room.streamerCandidates = [];
 
-  let candidates;
   for (let i = 0; i < INITIAL_ROUND; i++) {
-    candidates = socketIds.reduce((accum, socketId) => {
-      accum[socketId] = players[socketId];
-      return accum;
-    }, {});
+    const candidates = socketIds.reduce((accum, socketId) => {
+      return [...accum, players[socketId]];
+    }, []);
     room.streamerCandidates.push(candidates);
   }
 };
 
 const prepareSet = room => {
   room.currentSet++;
-  const streamerCandidates = room.streamerCandidates[0];
-  const targetSocketId = Object.keys(streamerCandidates)[0];
-  delete room.streamerCandidates[targetSocketId];
+  const round = room.streamerCandidates[room.currentRound - 1];
+  const streamer = round.shift();
+  const player = playerController.getPlayerBySocket(streamer.socketId);
 
-  setPlayer(room.players[targetSocketId], { type: 'streamer' });
-  room.streamer = room.players[targetSocketId];
+  playerController.setPlayerStatus(player, { type: 'streamer' });
+  room.streamer = player;
 };
 
 const resetGameProgress = room => {
@@ -102,7 +100,7 @@ module.exports = {
   assignViewer,
   getNextStep,
   getViewers,
-  prepareRound,
+  initGame,
   prepareSet,
   resetGameProgress,
 };

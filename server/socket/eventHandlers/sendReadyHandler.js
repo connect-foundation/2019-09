@@ -18,12 +18,12 @@ const isRoomReady = room => {
 const sendReadyHandler = (socket, { isReady }) => {
   const room = roomController.getRoomByRoomId(socket.roomId);
   const player = playerController.getPlayerBySocket(socket);
-  const { status } = room;
-  if (status === 'playing') {
-    return;
-  }
+  const { players, status } = room;
+  const playerCount = Object.keys(players).length;
 
-  playerController.setPlayer(player, { isReady });
+  if (status === 'playing') return;
+
+  playerController.setPlayerStatus(player, { isReady });
 
   emitReadyToRoom({
     roomId: socket.roomId,
@@ -31,9 +31,9 @@ const sendReadyHandler = (socket, { isReady }) => {
     socketId: player.socketId,
   });
 
-  if (isRoomReady(room)) {
+  if (isRoomReady(room) && playerCount >= 2) {
     gameController.resetGameProgress(room);
-    gameController.prepareRound(room);
+    gameController.initGame(room);
     gameController.prepareSet(room);
 
     gameController.assignStreamer(room.streamer);
