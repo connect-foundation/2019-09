@@ -3,7 +3,7 @@ const {
   sendReadyHandler,
   sendChattingMessageHandler,
   disconnectingHandler,
-} = require('./handlers');
+} = require('./eventHandlers');
 const io = require('./io');
 
 io.on('connection', socket => {

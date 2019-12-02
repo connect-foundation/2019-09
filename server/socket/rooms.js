@@ -1,232 +1,243 @@
-const short = require('short-uuid');
 const io = require('./io');
-const {
-  INITIAL_PLAYER_STATUS,
-  MIN_USER_COUNT,
-  INITIAL_GAME_STATUS,
-  MAX_USER_COUNT,
-} = require('../config');
-const colorGenerator = require('../utils/colorGenerator');
 
 const { rooms } = io.sockets.adapter;
 
-const getAllrooms = () => {
-  return rooms;
-};
+module.exports = rooms;
 
-const setRoomStatusByRoomId = (roomId, status) => {
-  try {
-    const room = rooms[roomId];
-    room.status = status;
-  } catch (e) {
-    console.error(e);
-  }
-};
+// const short = require('short-uuid');
+// const io = require('./io');
+// const {
+//   INITIAL_PLAYER_STATUS,
+//   MIN_USER_COUNT,
+//   INITIAL_GAME_STATUS,
+//   MAX_USER_COUNT,
+// } = require('../config');
+// const colorGenerator = require('../utils/colorGenerator');
 
-const getRoomStatusByRoomId = roomId => {
-  try {
-    const room = rooms[roomId];
-    return room.status;
-  } catch (error) {
-    return 'error';
-  }
-};
+// const { rooms } = io.sockets.adapter;
 
-const joinRoom = (roomId, socket) => {
-  const { players } = rooms[roomId];
-  const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
-  initialPlayerStatus.nickname = socket.nickname;
-  socket.roomId = roomId;
-  socket.nicknameColor = colorGenerator.getRandomColor();
-  socket.join(roomId);
-  players[socket.id] = initialPlayerStatus;
-};
+// const getAllrooms = () => {
+//   return rooms;
+// };
 
-const initializeRoom = (roomId, socket) => {
-  const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
-  initialPlayerStatus.nickname = socket.nickname;
-  socket.roomId = roomId;
-  socket.nicknameColor = colorGenerator.getRandomColor();
-  socket.join(roomId);
-  rooms[roomId].players = { [socket.id]: initialPlayerStatus };
-  setRoomStatusByRoomId(roomId, 'waiting');
-};
+// const setRoomStatusByRoomId = (roomId, status) => {
+//   try {
+//     const room = rooms[roomId];
+//     room.status = status;
+//   } catch (e) {
+//     console.error(e);
+//   }
+// };
 
-const isRoomAvailable = room => {
-  const { players } = room;
-  const isRoomFull = Object.keys(players).length >= MAX_USER_COUNT;
-  const isRoomPlaying = room.status === 'playing';
-  return !isRoomFull && !isRoomPlaying;
-};
+// const getRoomStatusByRoomId = roomId => {
+//   try {
+//     const room = rooms[roomId];
+//     return room.status;
+//   } catch (error) {
+//     return 'error';
+//   }
+// };
 
-const getAvailableRoomIds = () => {
-  const roomIds = Object.keys(rooms);
-  if (!roomIds) {
-    return [];
-  }
-  const availableRoomIds = roomIds.filter(roomId => {
-    const room = rooms[roomId];
-    return room.players ? isRoomAvailable(room) : false;
-  });
-  return availableRoomIds;
-};
+// const joinRoom = (roomId, socket) => {
+//   const { players } = rooms[roomId];
+//   const initialPlayerStatus = { ...INITIAL_PLAYER_STATUS };
+//   initialPlayerStatus.nickname = socket.nickname;
+//   socket.roomId = roomId;
+//   socket.nicknameColor = colorGenerator.getRandomColor();
+//   socket.join(roomId);
+//   players[socket.id] = initialPlayerStatus;
+// };
 
-const getAvailableRoomId = () => {
-  const availableRoomIds = getAvailableRoomIds();
-  if (availableRoomIds) {
-    return availableRoomIds[0];
-  }
-  return undefined;
-};
+// const initializeRoom = (roomId, socket) => {
+//   const initialPlayerStatus = {
+//     ...INITIAL_PLAYER_STATUS,
+//     nickname: socket.nickname,
+//     nicknameColor: socket.nicknameColor,
+//   };
+//   socket.roomId = roomId;
+//   socket.join(roomId);
+//   rooms[roomId].players = { [socket.id]: initialPlayerStatus };
+//   setRoomStatusByRoomId(roomId, 'waiting');
+// };
 
-const createRoomId = () => {
-  let roomId = short.uuid();
-  while (rooms[roomId]) {
-    roomId = short.uuid();
-  }
-  return roomId;
-};
+// const isRoomAvailable = room => {
+//   const { players } = room;
+//   const isRoomFull = Object.keys(players).length >= MAX_USER_COUNT;
+//   const isRoomPlaying = room.status === 'playing';
+//   return !isRoomFull && !isRoomPlaying;
+// };
 
-const getSocketIds = roomId => {
-  const { sockets } = rooms[roomId];
-  const socketIds = Object.keys(sockets);
-  return socketIds;
-};
+// const getAvailableRoomIds = () => {
+//   const roomIds = Object.keys(rooms);
+//   if (!roomIds) {
+//     return [];
+//   }
+//   const availableRoomIds = roomIds.filter(roomId => {
+//     const room = rooms[roomId];
+//     return room.players ? isRoomAvailable(room) : false;
+//   });
+//   return availableRoomIds;
+// };
 
-const getPlayersByRoomId = roomId => {
-  const { players } = rooms[roomId];
-  return players;
-};
+// const getAvailableRoomId = () => {
+//   const availableRoomIds = getAvailableRoomIds();
+//   if (availableRoomIds) {
+//     return availableRoomIds[0];
+//   }
+//   return undefined;
+// };
 
-const getOtherPlayers = (roomId, targetSocketId) => {
-  const players = getPlayersByRoomId(roomId);
-  const socketIds = Object.keys(players);
-  const otherPlayers = socketIds.reduce((accumulate, socketId) => {
-    if (socketId !== targetSocketId) {
-      return { ...accumulate, [socketId]: players[socketId] };
-    }
-    return accumulate;
-  }, {});
-  return otherPlayers;
-};
+// const createRoomId = () => {
+//   let roomId = short.uuid();
+//   while (rooms[roomId]) {
+//     roomId = short.uuid();
+//   }
+//   return roomId;
+// };
 
-const getOtherSocketIds = (roomId, targetSocketId) => {
-  const socketIds = getSocketIds(roomId);
-  const otherSocketIds = socketIds.filter(
-    socketId => targetSocketId !== socketId,
-  );
-  return otherSocketIds;
-};
+// const getSocketIds = roomId => {
+//   const { sockets } = rooms[roomId];
+//   const socketIds = Object.keys(sockets);
+//   return socketIds;
+// };
 
-const findRoomBySocket = socket => {
-  return rooms[socket.roomId];
-};
+// const getPlayersByRoomId = roomId => {
+//   const { players } = rooms[roomId];
+//   return players;
+// };
 
-const isRoomReady = roomId => {
-  const { players } = rooms[roomId];
+// const getOtherPlayers = (roomId, targetSocketId) => {
+//   const players = getPlayersByRoomId(roomId);
+//   const socketIds = Object.keys(players);
+//   const otherPlayers = socketIds.reduce((accumulate, socketId) => {
+//     if (socketId !== targetSocketId) {
+//       return { ...accumulate, [socketId]: players[socketId] };
+//     }
+//     return accumulate;
+//   }, {});
+//   return otherPlayers;
+// };
 
-  const socketIds = Object.keys(players);
-  if (socketIds.length < MIN_USER_COUNT) {
-    return false;
-  }
+// const getOtherSocketIds = (roomId, targetSocketId) => {
+//   const socketIds = getSocketIds(roomId);
+//   const otherSocketIds = socketIds.filter(
+//     socketId => targetSocketId !== socketId,
+//   );
+//   return otherSocketIds;
+// };
 
-  return socketIds.every(socketId => {
-    return players[socketId].isReady;
-  });
-};
+// const findRoomBySocket = socket => {
+//   return rooms[socket.roomId];
+// };
 
-const getRoomByRoomId = roomId => {
-  return rooms[roomId];
-};
+// const isRoomReady = roomId => {
+//   const { players } = rooms[roomId];
 
-const resetGameProgress = roomId => {
-  Object.keys(INITIAL_GAME_STATUS).forEach(key => {
-    rooms[roomId][key] = INITIAL_GAME_STATUS[key];
-  });
-};
+//   const socketIds = Object.keys(players);
+//   if (socketIds.length < MIN_USER_COUNT) {
+//     return false;
+//   }
 
-const setRound = roomId => {
-  const room = rooms[roomId];
+//   return socketIds.every(socketId => {
+//     return players[socketId].isReady;
+//   });
+// };
 
-  room.currentRound++;
-  const { players } = room;
-  room.streamers = { ...players };
-};
+// const getRoomByRoomId = roomId => {
+//   return rooms[roomId];
+// };
 
-const setSet = roomId => {
-  const room = rooms[roomId];
+// const resetGameProgress = roomId => {
+//   Object.keys(INITIAL_GAME_STATUS).forEach(key => {
+//     rooms[roomId][key] = INITIAL_GAME_STATUS[key];
+//   });
+// };
 
-  room.currentSet++;
-  const { streamers } = room;
-  const targetSocketId = Object.keys(streamers)[0];
+// const setRound = roomId => {
+//   const room = rooms[roomId];
 
-  if (!targetSocketId) return;
-  room.players[targetSocketId].type = 'streamer';
-  room.streamerSocketId = targetSocketId;
-  delete streamers[targetSocketId];
-};
+//   room.currentRound++;
+//   const { players } = room;
+//   room.streamers = { ...players };
+// };
 
-const removePlayerBySocket = socket => {
-  try {
-    delete rooms[socket.roomId].players[socket.id];
-  } catch (e) {
-    console.error('ERROR:\tremovePlayerBySocket\n', e);
-  }
-};
+// const setSet = roomId => {
+//   const room = rooms[roomId];
 
-const isSocketStreamerCandidate = socket => {
-  try {
-    return rooms[socket.roomId].streamers[socket.id];
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-};
+//   room.currentSet++;
+//   const { streamers } = room;
+//   const targetSocketId = Object.keys(streamers)[0];
 
-const removeStreamerBySocket = socket => {
-  try {
-    const room = rooms[socket.roomId];
-    delete room.streamers[socket.id];
-  } catch (e) {
-    console.log(e);
-  }
-};
+//   if (!targetSocketId) return;
+//   room.players[targetSocketId].type = 'streamer';
+//   room.streamerSocketId = targetSocketId;
+//   delete streamers[targetSocketId];
+// };
 
-const resetRoomPlayersBySocket = socket => {
-  try {
-    const room = findRoomBySocket(socket);
-    const socketIds = Object.keys(room.players);
-    const keys = Object.keys(INITIAL_PLAYER_STATUS);
-    socketIds.forEach(socketId => {
-      keys.forEach(key => {
-        room.players[socketId][key] = INITIAL_PLAYER_STATUS[key];
-      });
-    });
-  } catch (e) {
-    console.error(e);
-  }
-};
+// const removePlayerBySocket = socket => {
+//   try {
+//     delete rooms[socket.roomId].players[socket.id];
+//   } catch (e) {
+//     console.error('ERROR:\tremovePlayerBySocket\n', e);
+//   }
+// };
 
-module.exports = {
-  getAllrooms,
-  getPlayersByRoomId,
-  joinRoom,
-  getAvailableRoomId,
-  createRoomId,
-  getSocketIds,
-  getOtherSocketIds,
-  getOtherPlayers,
-  findRoomBySocket,
-  isRoomReady,
-  getRoomByRoomId,
-  resetGameProgress,
-  initializeRoom,
-  setRound,
-  setSet,
-  removePlayerBySocket,
-  setRoomStatusByRoomId,
-  getRoomStatusByRoomId,
-  isSocketStreamerCandidate,
-  removeStreamerBySocket,
-  resetRoomPlayersBySocket,
-};
+// const isSocketStreamerCandidate = socket => {
+//   try {
+//     if (rooms[socket.roomId].streamers[socket.id]) {
+//       return true;
+//     }
+//   } catch (e) {
+//     console.error(e);
+//     return false;
+//   }
+//   return false;
+// };
+
+// const removeStreamerBySocket = socket => {
+//   try {
+//     const room = rooms[socket.roomId];
+//     delete room.streamers[socket.id];
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+// const resetRoomPlayersBySocket = socket => {
+//   try {
+//     const room = findRoomBySocket(socket);
+//     const socketIds = Object.keys(room.players);
+//     const keys = Object.keys(INITIAL_PLAYER_STATUS);
+//     socketIds.forEach(socketId => {
+//       keys.forEach(key => {
+//         room.players[socketId][key] = INITIAL_PLAYER_STATUS[key];
+//       });
+//     });
+//   } catch (e) {
+//     console.error(e);
+//   }
+// };
+
+// module.exports = {
+//   getAllrooms,
+//   getPlayersByRoomId,
+//   joinRoom,
+//   getAvailableRoomId,
+//   createRoomId,
+//   getSocketIds,
+//   getOtherSocketIds,
+//   getOtherPlayers,
+//   findRoomBySocket,
+//   isRoomReady,
+//   getRoomByRoomId,
+//   resetGameProgress,
+//   initializeRoom,
+//   setRound,
+//   setSet,
+//   removePlayerBySocket,
+//   setRoomStatusByRoomId,
+//   getRoomStatusByRoomId,
+//   isSocketStreamerCandidate,
+//   removeStreamerBySocket,
+//   resetRoomPlayersBySocket,
+// };

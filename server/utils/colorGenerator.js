@@ -10,7 +10,7 @@ const getRandomColor = () => {
     '#ff9f1a',
     '#7158e2',
   ];
-  return colorList[Math.round(Math.random() * colorList.length)];
+  return colorList[Math.round(Math.random() * (colorList.length - 1))];
 };
 
 module.exports = { getRandomColor };

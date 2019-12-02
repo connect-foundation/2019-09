@@ -6,14 +6,30 @@ module.exports = {
   MAX_ROUND_NUMBER: 3,
 
   INITIAL_PLAYER_STATUS: {
-    isReady: false,
     type: 'viewer',
+    nickname: '',
+    isReady: false,
     score: 0,
+    socketId: '',
+    nicknameColor: '',
+  },
+
+  INITIAL_ROOM_STATUS: {
+    players: {},
+    status: 'waiting',
+    streamerCandidates: {},
+    streamer: {},
+    quiz: '',
+    currentRound: 0,
+    currentSet: 0,
   },
 
   INITIAL_GAME_STATUS: {
+    status: 'playing',
+    streamerCandidates: [],
+    streamer: {},
+    quiz: '',
     currentRound: 0,
     currentSet: 0,
-    streamerSocketId: '',
   },
 };
