@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyles = makeStyles({
   PlayerProfile: props => ({
@@ -12,11 +13,14 @@ const useStyles = makeStyles({
     padding: '1rem',
     display: 'flex',
     fontSize: '1.6rem',
-    backgroundColor: '#f4f4f4',
+    color: STYLE_COLORS.BASE_BLACK_COLOR,
+    backgroundColor: STYLE_COLORS.BASE_WHITE_COLOR,
+    boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.6)',
+    borderRadius: '0.3rem',
     border: (() => {
+      if (props.isReady) return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
       if (props.type === 'streamer') return '0.2rem solid #e74c3c';
-      if (props.isReady) return '0.2rem solid #5A96FF';
-      return '0.2rem solid #f4f4f4';
+      return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
     })(),
   }),
   playerOrder: {

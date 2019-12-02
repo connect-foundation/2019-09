@@ -7,14 +7,15 @@ import {
   MainIntroductionDescription,
   MainSlogan,
 } from '../../config';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
   menu: {
-    background: '#F3F4FE',
+    backgroundColor: '#FFFFFF',
     width: '100%',
     height: 220,
-    padding: '2rem',
-    border: '1px solid #cccccc',
+    padding: '20px',
+    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
