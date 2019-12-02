@@ -26,9 +26,16 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: STYLE_COLORS.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
   },
-  vidoeBox: {
+  videoBox: {
     padding: theme.spacing(2),
     height: '100%',
+  },
+  leftGridContent: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      position: 'absolute',
+      zIndex: '1',
+    },
   },
   readyButtonContainer: {
     // position: 'absolute',
@@ -37,6 +44,14 @@ const useStyles = makeStyles(theme => ({
     // right: '2rem',
     [theme.breakpoints.down('xs')]: {
       display: 'none',
+    },
+  },
+  playerPanelButton: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+      position: 'relative',
+      top: '11rem',
     },
   },
   exitButtonGrid: {
@@ -129,9 +144,14 @@ const Game = () => {
         <Grid
           item
           xs={2}
-          className={[classes.bottomGridContent, classes.readyButtonContainer]}
+          className={(classes.bottomGridContent, classes.leftGridContent)}
         >
-          <PlayerPanel clientManager={clientManager} />
+          <Box className={classes.readyButtonContainer}>
+            <PlayerPanel clientManager={clientManager} />
+          </Box>
+          <Box className={classes.playerPanelButton}>
+            <button>Show Players</button>
+          </Box>
         </Grid>
         <Grid
           item
