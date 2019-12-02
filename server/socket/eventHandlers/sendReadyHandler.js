@@ -1,14 +1,7 @@
 const io = require('../io');
-const { /* setRoom, */ getRoomByRoomId } = require('../room');
-const {
-  prepareSet,
-  prepareRound,
-  assignStreamer,
-  assignViewer,
-  resetGameProgress,
-  getViewers,
-} = require('../game');
-const { setPlayer, getPlayerBySocket } = require('../player');
+const roomController = require('../controllers/roomController');
+const gameController = require('../controllers/gameController');
+const playerController = require('../controllers/playerController');
 
 const emitReadyToRoom = ({ roomId, isReady, socketId }) => {
   io.in(roomId).emit('sendReady', { socketId, isReady });
@@ -23,14 +16,14 @@ const isRoomReady = room => {
 };
 
 const sendReadyHandler = (socket, { isReady }) => {
-  const room = getRoomByRoomId(socket.roomId);
-  const player = getPlayerBySocket(socket);
+  const room = roomController.getRoomByRoomId(socket.roomId);
+  const player = playerController.getPlayerBySocket(socket);
   const { status } = room;
   if (status === 'playing') {
     return;
   }
 
-  setPlayer(player, { isReady });
+  playerController.setPlayer(player, { isReady });
 
   emitReadyToRoom({
     roomId: socket.roomId,
@@ -39,15 +32,15 @@ const sendReadyHandler = (socket, { isReady }) => {
   });
 
   if (isRoomReady(room)) {
-    resetGameProgress(room);
-    prepareRound(room);
-    prepareSet(room);
+    gameController.resetGameProgress(room);
+    gameController.prepareRound(room);
+    gameController.prepareSet(room);
 
-    assignStreamer(room.streamer);
-    const viewers = getViewers(room);
+    gameController.assignStreamer(room.streamer);
+    const viewers = gameController.getViewers(room);
     const keys = Object.keys(viewers);
     keys.forEach(key => {
-      assignViewer(viewers[key], room.streamer);
+      gameController.assignViewer(viewers[key], room.streamer);
     });
   }
 };

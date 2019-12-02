@@ -1,6 +1,6 @@
 const io = require('../io');
-const { getPlayerBySocket } = require('../player');
-const { removePlayerFromRoom, getRoomByRoomId } = require('../room');
+const playerController = require('../controllers/playerController');
+const roomController = require('../controllers/roomController');
 const { MIN_USER_COUNT } = require('../../config');
 
 const isGameContinueable = room => {
@@ -12,10 +12,10 @@ const isGameContinueable = room => {
 };
 
 const disconnectingHandler = socket => {
-  const room = getRoomByRoomId(socket.roomId);
+  const room = roomController.getRoomByRoomId(socket.roomId);
   const { roomId } = socket;
-  const player = getPlayerBySocket(socket);
-  removePlayerFromRoom(player, room);
+  const player = playerController.getPlayerBySocket(socket);
+  roomController.removePlayerFromRoom(player, room);
   socket.leave(roomId);
 
   io.to(roomId).emit('sendLeftPlayer', { socketId: socket.id });

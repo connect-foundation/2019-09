@@ -1,11 +1,5 @@
-const { createPlayer } = require('../player');
-const {
-  generateRoomId,
-  getJoinableRoomId,
-  initializeRoom,
-  joinRoom,
-  getRoomByRoomId,
-} = require('../room');
+const playerController = require('../controllers/playerController');
+const roomController = require('../controllers/roomController');
 const { getRandomColor } = require('../../utils/colorGenerator');
 
 const emitEventsAfterJoin = (socket, roomId) => {
@@ -14,7 +8,7 @@ const emitEventsAfterJoin = (socket, roomId) => {
 };
 
 const getOtherPlayers = (roomId, player) => {
-  const room = getRoomByRoomId(roomId);
+  const room = roomController.getRoomByRoomId(roomId);
   const socketIds = Object.keys(room.players);
   const otherPlayers = socketIds.reduce((accum, socketId) => {
     if (socketId !== player.socketId) {
@@ -27,7 +21,7 @@ const getOtherPlayers = (roomId, player) => {
 };
 
 const joinExistingRoom = ({ socket, roomId, player }) => {
-  joinRoom({ socket, roomId, player });
+  roomController.joinRoom({ socket, roomId, player });
 
   emitEventsAfterJoin(socket, roomId);
 
@@ -38,19 +32,19 @@ const joinExistingRoom = ({ socket, roomId, player }) => {
 };
 
 const createRoom = (socket, player) => {
-  const roomId = generateRoomId();
-  initializeRoom({ socket, roomId, player });
+  const roomId = roomController.generateRoomId();
+  roomController.initializeRoom({ socket, roomId, player });
   emitEventsAfterJoin(socket, roomId);
 };
 
 const matchHandler = (socket, { nickname }) => {
-  const player = createPlayer({
+  const player = playerController.createPlayer({
     nickname,
     socketId: socket.id,
     nicknameColor: getRandomColor(),
   });
 
-  const joinableRoomId = getJoinableRoomId();
+  const joinableRoomId = roomController.getJoinableRoomId();
   if (joinableRoomId) {
     return joinExistingRoom({ socket, roomId: joinableRoomId, player });
   }

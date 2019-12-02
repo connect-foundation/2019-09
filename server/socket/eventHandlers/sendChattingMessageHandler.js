@@ -1,5 +1,5 @@
 const io = require('../io');
-const { getPlayerBySocket } = require('../player');
+const playerController = require('../controllers/playerController');
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
   /**
@@ -10,7 +10,7 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
   io.in(socket.roomId).emit('sendChattingMessage', {
     nickname,
     message,
-    nicknameColor: getPlayerBySocket(socket).nicknameColor,
+    nicknameColor: playerController.getPlayerBySocket(socket).nicknameColor,
   });
 };
 
