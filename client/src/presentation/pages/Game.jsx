@@ -31,10 +31,13 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
   },
   readyButtonContainer: {
-    position: 'absolute',
-    bottom: '0',
-    left: '2rem',
-    right: '2rem',
+    // position: 'absolute',
+    // bottom: '0',
+    // left: '2rem',
+    // right: '2rem',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   exitButtonGrid: {
     display: 'flex',
@@ -44,9 +47,27 @@ const useStyles = makeStyles(theme => ({
   },
   bottomGrid: {
     height: 'auto',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+    },
   },
   bottomGridContent: {
     padding: '1rem',
+  },
+  mobileFullWidth: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      maxWidth: 'none',
+    },
+  },
+  chattingContainer: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      maxWidth: 'none',
+      position: 'fixed',
+      height: 'auto',
+      bottom: '0',
+    },
   },
 }));
 
@@ -103,14 +124,31 @@ const Game = () => {
           </Box>
         </Grid>
       </Grid>
+
       <Grid container spacing={0} className={classes.bottomGrid}>
-        <Grid item xs={2} className={classes.bottomGridContent}>
+        <Grid
+          item
+          xs={2}
+          className={[classes.bottomGridContent, classes.readyButtonContainer]}
+        >
           <PlayerPanel clientManager={clientManager} />
         </Grid>
-        <Grid item xs={7} className={classes.bottomGridContent}>
-          <StreamingPanel words={candidateWords} isVisible={false} />
+        <Grid
+          item
+          xs={7}
+          className={[classes.bottomGridContent, classes.mobileFullWidth]}
+        >
+          <StreamingPanel
+            words={candidateWords}
+            isVisible={false}
+            className={classes.mobileFullWidth}
+          />
         </Grid>
-        <Grid item xs={3} className={classes.bottomGridContent}>
+        <Grid
+          item
+          xs={3}
+          className={[classes.bottomGridContent, classes.chattingContainer]}
+        >
           <ChattingPanel clientManager={clientManager} />
         </Grid>
       </Grid>
