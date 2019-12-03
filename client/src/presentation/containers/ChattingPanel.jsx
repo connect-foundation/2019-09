@@ -19,6 +19,8 @@ const useStyle = makeStyles(theme => ({
   },
   chattingWindow: {
     height: '90%',
+    overflow: 'auto',
+    wordWrap: 'break-word',
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },

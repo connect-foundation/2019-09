@@ -108,10 +108,10 @@ const useStyles = makeStyles(theme => ({
   },
   mobileChattingPanel: {
     position: 'absolute',
-    height: '100%',
     top: '0',
+    bottom: '0',
     right: '0',
-    overflow: 'scroll',
+    overflow: 'auto',
   },
   mobileReadyButtonContainer: {
     width: '8rem',

@@ -9,6 +9,7 @@ const useStyle = makeStyles(() => ({
     height: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     border: 'none',
+    wordWrap: 'break-word',
   },
   mobileChattingWindow: {
     height: '100%',
