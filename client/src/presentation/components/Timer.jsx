@@ -8,7 +8,6 @@ const Timer = ({ currentSeconds }) => {
       fontSize: '3rem',
       fontWeight: 'bold',
       color: '#ffffff',
-      textAlign: 'left',
     },
   }));
 

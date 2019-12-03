@@ -17,6 +17,9 @@ const useStyle = makeStyles(theme => ({
     borderRadius: '0.3rem',
     [theme.breakpoints.down('xs')]: {
       height: 'auto',
+      backgroundColor: 'rgba(255,255,255,0.5)',
+      boxShadow: 'none',
+      borderRadius: '0.5rem',
     },
   },
   readyButtonWrapper: {

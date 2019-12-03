@@ -6,11 +6,12 @@ import { STYLE_COLORS } from '../../utils';
 
 const useStyles = makeStyles({
   PlayerProfile: props => ({
+    minWidth: '6rem',
     width: '100%',
     boxSizing: 'border-box',
-    height: '6rem',
-    marginBottom: '1rem',
-    padding: '1rem',
+    height: 'auto',
+    marginBottom: '0.5rem',
+    padding: '0.5rem 1rem',
     display: 'flex',
     fontSize: '1.6rem',
     color: STYLE_COLORS.BASE_BLACK_COLOR,
@@ -23,54 +24,46 @@ const useStyles = makeStyles({
       return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
     })(),
   }),
-  playerOrder: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1.5,
-    fontSize: '1.5rem',
-  },
   playerInformation: {
     display: 'flex',
     flexDirection: 'column',
     flex: 4,
   },
-  playerNickname: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
+  playerNicknameConatainer: {
+    // display: 'flex',
+    // alignItems: 'center',
+    // flex: 1,
     fontWeight: '600',
+    display: 'table',
+    tableLayout: 'fixed',
+    width: '100%',
   },
-  playerScore: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
+  playerNickname: {
+    display: 'table-cell',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflowX: 'hidden',
+    lineHeight: '2rem',
   },
+  playerScore: {},
 });
 
-const PlayerProfile = ({
-  order,
-  nickname,
-  score,
-  isReady,
-  type,
-  isLocalPlayer,
-}) => {
+const PlayerProfile = ({ nickname, score, isReady, type, isLocalPlayer }) => {
   const classes = useStyles({ isReady, type, isLocalPlayer });
   return (
     <Box className={classes.PlayerProfile}>
-      <Box className={classes.playerOrder}>{`# ${order}`}</Box>
       <Box className={classes.playerInformation}>
-        <Box className={classes.playerNickname}>
-          {`${nickname} ${isLocalPlayer ? '(You)' : ''}`}
+        <Box className={classes.playerNicknameConatainer}>
+          <Box className={classes.playerNickname}>{nickname}</Box>
+          {isLocalPlayer && <span>(Me)</span>}
         </Box>
-        <Box className={classes.playerScore}>{`Score : ${score}`}</Box>
+        <Box className={classes.playerScore}>{`${score} p`}</Box>
       </Box>
     </Box>
   );
 };
 
 PlayerProfile.propTypes = {
-  order: PropTypes.number.isRequired,
   nickname: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   isReady: PropTypes.bool.isRequired,

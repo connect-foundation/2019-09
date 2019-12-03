@@ -26,9 +26,12 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
   },
   timerBox: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
+    padding: '1rem 2rem',
+    textAlign: 'left',
     color: theme.palette.text.secondary,
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+    },
   },
   gameHeader: {
     backgroundColor: STYLE_COLORS.THEME_COLOR,
@@ -64,11 +67,13 @@ const useStyles = makeStyles(theme => ({
   mobileViewHide: {
     display: 'none',
   },
-  exitButtonGrid: {
+  topRightGrid: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    padding: theme.spacing(2),
+  },
+  exitButtonContainer: {
+    padding: '0.5rem 2rem',
   },
   bottomGrid: {
     height: 'auto',
@@ -217,10 +222,10 @@ const Game = () => {
             <QuizDisplay word={quizWord} isSecret />
           </Box>
         </Grid>
-        <Grid item xs className={classes.exitButtonGrid}>
-          <Box className={classes.paper}>
+        <Grid item xs className={classes.topRightGrid}>
+          <Box className={classes.exitButtonContainer}>
             <Link to="/" onClick={exitButtonHandler}>
-              <ExitButton>Exit</ExitButton>
+              <ExitButton />
             </Link>
           </Box>
         </Grid>
