@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay, ExitButton } from '../components';
 import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
 import ClientManager from '../../service/ClientManager';
-import { browserLocalStorage } from '../../utils';
+import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     width: '100%',
     height: '100%',
-    background: '#E5F1FF',
+    background: STYLE_COLORS.BACKGROUND_COLOR,
     overflow: 'auto',
   },
   timerBox: {
@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
   },
   gameHeader: {
-    backgroundColor: '#5a96ff',
+    backgroundColor: STYLE_COLORS.THEME_COLOR,
+    boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
   },
   vidoeBox: {
     padding: theme.spacing(2),

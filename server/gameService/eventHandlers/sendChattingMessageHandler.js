@@ -1,3 +1,4 @@
+const short = require('short-uuid');
 const { io } = require('../io');
 const roomController = require('../roomController');
 
@@ -13,6 +14,7 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
     nickname,
     message,
     nicknameColor: player.getNicknameColor(),
+    id: short.generate(),
   });
 };
 

@@ -10,10 +10,6 @@ const useStyle = makeStyles({
     padding: '1rem',
     height: '90%',
     boxSizing: 'border-box',
-    '& > *': {
-      marginTop: '1rem',
-      marginBottom: '1rem',
-    },
   },
 });
 
@@ -25,19 +21,19 @@ const ChattingWindow = ({ chattingList }) => {
   };
 
   useEffect(scrollToButtom, [chattingList]);
+  const chattingRowList = chattingList.map(chatting => {
+    return (
+      <ChattingRow
+        key={chatting.id}
+        nickname={chatting.nickname}
+        nicknameColor={chatting.nicknameColor}
+        message={chatting.message}
+      />
+    );
+  });
   return (
     <Box className={classes.chattingWindow}>
-      {chattingList.map((chatting, index) => {
-        const key = `${index}${chatting.nickname}`;
-        return (
-          <ChattingRow
-            key={key}
-            nickname={chatting.nickname}
-            nicknameColor={chatting.nicknameColor}
-            message={chatting.message}
-          />
-        );
-      })}
+      <ul>{chattingRowList}</ul>
       <div ref={messageEndRef} />
     </Box>
   );

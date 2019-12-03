@@ -3,15 +3,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
-import { browserLocalStorage, CONSTANT_VALUES } from '../../utils';
+import {
+  browserLocalStorage,
+  CONSTANT_VALUES,
+  STYLE_COLORS,
+} from '../../utils';
 
 const useStyle = makeStyles({
   menu: {
-    background: '#F3F4FE',
+    backgroundColor: '#FFFFFF',
     width: '100%',
     height: 'auto',
     padding: '2rem',
-    border: '0.1rem solid #cccccc',
+    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
