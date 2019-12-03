@@ -124,16 +124,23 @@ const Game = () => {
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
   let previousWindowOuterWidth = window.outerWidth;
 
+  const changeDesktopToMobile = currentIsMobile => {
+    return currentIsMobile && previousWindowOuterWidth > MOBILE_VIEW_BREAKPOINT;
+  };
+
+  const changeMobileToDesktop = currentIsMobile => {
+    return (
+      !currentIsMobile && previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
+    );
+  };
+
   const resizeHandler = event => {
     const currentIsMobile = event.target.outerWidth < MOBILE_VIEW_BREAKPOINT;
-    if (currentIsMobile && previousWindowOuterWidth > MOBILE_VIEW_BREAKPOINT) {
+
+    if (changeDesktopToMobile(currentIsMobile)) {
       setIsPlayerListVisible(false);
       previousWindowOuterWidth = event.target.outerWidth;
-    }
-    if (
-      !currentIsMobile &&
-      previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
-    ) {
+    } else if (changeMobileToDesktop(currentIsMobile)) {
       setIsPlayerListVisible(true);
       previousWindowOuterWidth = event.target.outerWidth;
     }
