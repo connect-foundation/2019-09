@@ -1,28 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import buttonStyle from './style';
+import styled from 'styled-components';
+import exitImageSource from '../../../assets/exit.png';
 
-const useStyles = makeStyles({
-  button: {
-    ...buttonStyle,
-    width: '5rem',
-    height: '3.2rem',
-  },
-});
+const StyledExitButton = styled.button`
+  width: 3rem;
+  padding: 0;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  img {
+    width: 100%;
+  }
+`;
 
-const ExitButton = ({ onClick, children }) => {
-  const classes = useStyles();
+const ExitButton = ({ onClick }) => {
   return (
-    <Button onClick={onClick} variant="contained" className={classes.button}>
-      {children}
-    </Button>
+    <StyledExitButton type="button" onClick={onClick}>
+      <img alt="exit" src={exitImageSource} />
+    </StyledExitButton>
   );
 };
 
 ExitButton.propTypes = {
-  children: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
