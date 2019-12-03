@@ -5,7 +5,12 @@ import Box from '@material-ui/core/Box';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Timer, QuizDisplay, ExitButton } from '../components';
-import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
+import {
+  StreamingPanel,
+  ChattingPanel,
+  PlayerPanel,
+  MobileChattingPanel,
+} from '../containers';
 import ClientManager from '../../service/ClientManager';
 import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 import { MOBILE_VIEW_BREAKPOINT } from '../../config';
@@ -68,6 +73,7 @@ const useStyles = makeStyles(theme => ({
     height: 'auto',
     [theme.breakpoints.down('xs')]: {
       display: 'block',
+      position: 'relative',
     },
   },
   bottomGridContent: {
@@ -87,6 +93,19 @@ const useStyles = makeStyles(theme => ({
       height: 'auto',
       bottom: '0',
     },
+  },
+  desktopViewHide: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+    },
+  },
+  mobileChattingPanel: {
+    position: 'absolute',
+    height: '100%',
+    top: '0',
+    right: '0',
+    overflow: 'scroll',
   },
 }));
 
@@ -214,6 +233,17 @@ const Game = () => {
             isVisible={false}
             className={classes.mobileFullWidth}
           />
+        </Grid>
+        <Grid
+          item
+          xs={4}
+          className={[
+            classes.bottomGridContent,
+            classes.desktopViewHide,
+            classes.mobileChattingPanel,
+          ]}
+        >
+          <MobileChattingPanel clientManager={clientManager} />
         </Grid>
         <Grid
           item
