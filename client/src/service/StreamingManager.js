@@ -106,10 +106,9 @@ class StreamingManager {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   trackHandler(stream) {
     /** @todo 추후 view의 dispatch 연결 */
-    // eslint-disable-next-line
-    console.log(this.dispatch);
     if (document.querySelector('video')) {
       document.querySelector('video').srcObject = stream;
     }

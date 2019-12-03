@@ -1,3 +1,5 @@
 const io = require('socket.io')();
 
-module.exports = io;
+const { rooms } = io.sockets.adapter;
+
+module.exports = { io, rooms };

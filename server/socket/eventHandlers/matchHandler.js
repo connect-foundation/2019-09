@@ -1,44 +1,18 @@
-const playerController = require('../controllers/playerController');
+const Player = require('../controllers/Player');
 const roomController = require('../controllers/roomController');
 const { getRandomColor } = require('../../utils/colorGenerator');
 
-const emitEventsAfterJoin = (socket, roomId) => {
-  socket.emit('sendRoomId', { roomId });
+const emitEventsAfterJoin = socket => {
   socket.emit('startChatting');
-};
 
-const getOtherPlayers = (roomId, player) => {
-  const room = roomController.getRoomByRoomId(roomId);
-  const socketIds = Object.keys(room.players);
-  const otherPlayers = socketIds.reduce((accum, socketId) => {
-    if (socketId !== player.socketId) {
-      accum[socketId] = room.players[socketId];
-      return accum;
-    }
-    return accum;
-  }, {});
-  return otherPlayers;
-};
-
-const joinExistingRoom = ({ socket, roomId, player }) => {
-  roomController.joinRoom({ socket, roomId, player });
-
-  emitEventsAfterJoin(socket, roomId);
-
-  socket.broadcast.to(roomId).emit('sendNewPlayer', player);
-
-  const otherPlayers = getOtherPlayers(roomId, player);
-  socket.emit('sendPlayers', { players: otherPlayers });
-};
-
-const createRoom = (socket, player) => {
-  const roomId = roomController.generateRoomId();
-  roomController.initializeRoom({ socket, roomId, player });
-  emitEventsAfterJoin(socket, roomId);
+  /**
+   * sendRoodId : url 기능 추가를 위한 이벤트. 아직 사용하지 않음
+   */
+  socket.emit('sendRoomId', { roomId: socket.roomId });
 };
 
 const matchHandler = (socket, { nickname }) => {
-  const player = playerController.createPlayer({
+  const player = new Player({
     nickname,
     socketId: socket.id,
     nicknameColor: getRandomColor(),
@@ -46,9 +20,20 @@ const matchHandler = (socket, { nickname }) => {
 
   const joinableRoomId = roomController.getJoinableRoomId();
   if (joinableRoomId) {
-    return joinExistingRoom({ socket, roomId: joinableRoomId, player });
+    roomController.joinRoom({ socket, roomId: joinableRoomId, player });
+    /**
+     * 새로운 플레이어는 기존 플레이어의 정보들을 전달받고
+     * 기존의 플레이어들은 새로운 플레이어의 정보를 전달받는다.
+     */
+    const room = roomController.getRoomByRoomId(joinableRoomId);
+    const otherPlayers = room.gameManager.getOtherPlayers(player.socketId);
+
+    socket.broadcast.to(joinableRoomId).emit('sendNewPlayer', player);
+    socket.emit('sendPlayers', { players: otherPlayers });
+  } else {
+    roomController.createRoom({ socket, roomId: socket.roomId, player });
   }
-  return createRoom(socket, player);
+  emitEventsAfterJoin(socket);
 };
 
 module.exports = matchHandler;

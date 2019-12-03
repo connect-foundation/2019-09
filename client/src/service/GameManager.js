@@ -31,9 +31,8 @@ class GameManager {
   }
 
   sendPlayersHandler({ players }) {
-    const socketIds = Object.keys(players);
-    socketIds.forEach(socketId => {
-      this.remotePlayers[socketId] = players[socketId];
+    players.forEach(player => {
+      this.remotePlayers[player.socketId] = player;
     });
     this.makeAndDispatchViewPlayerList();
   }

@@ -1,15 +1,15 @@
 const io = require('../io');
-const playerController = require('./playerController');
+// const playerController = require('./playerController');
 const {
   INITIAL_ROUND,
   MIN_USER_COUNT,
   INITIAL_GAME_STATUS,
 } = require('../../config');
-
+// done
 const assignStreamer = streamer => {
   io.to(streamer.socketId).emit('assignStreamer');
 };
-
+// done
 const assignViewer = (viewer, streamer) => {
   io.to(viewer.socketId).emit('assignViewer', {
     streamerSocketId: streamer.socketId,
@@ -63,7 +63,7 @@ const getViewers = room => {
 
   return viewers;
 };
-
+// done
 const initGame = room => {
   room.currentRound++;
   const { players } = room;
