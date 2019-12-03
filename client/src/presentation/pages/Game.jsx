@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link, useHistory } from 'react-router-dom';
@@ -50,7 +51,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       display: 'block',
       position: 'relative',
-      top: '11rem',
+      top: '1rem',
+      left: '1rem',
     },
   },
   mobileViewHide: {
@@ -187,15 +189,19 @@ const Game = () => {
         <Grid
           item
           xs={2}
-          className={(classes.bottomGridContent, classes.leftGridContent)}
+          className={[classes.bottomGridContent, classes.leftGridContent]}
         >
           <Box className={readyButtonContainerClasses()}>
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
-            <button type="button" onClick={showPlayersButtonHandler}>
-              Show Players
-            </button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={showPlayersButtonHandler}
+            >
+              Players
+            </Button>
           </Box>
         </Grid>
         <Grid
