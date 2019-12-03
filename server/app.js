@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const io = require('./socket');
+const gameService = require('./gameService');
 
 const app = express();
 
@@ -22,6 +22,6 @@ app.use((req, res) => {
   res.redirect('/');
 });
 
-app.io = io;
+app.gameService = gameService;
 
 module.exports = app;

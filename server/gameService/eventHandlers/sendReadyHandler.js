@@ -1,6 +1,6 @@
 const { io } = require('../io');
 
-const roomController = require('../controllers/roomController');
+const roomController = require('../roomController');
 const { MIN_PLAYER_COUNT } = require('../../config');
 
 const assignStreamer = streamer => {
@@ -13,7 +13,6 @@ const assignViewer = (viewer, streamer) => {
   });
 };
 const sendReady = ({ roomId, socketId, isReady }) => {
-  console.log('sendReadyHandler : ', roomId, socketId, isReady);
   io.in(roomId).emit('sendReady', { socketId, isReady });
 };
 

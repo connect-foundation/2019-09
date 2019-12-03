@@ -2,7 +2,7 @@ const {
   matchHandler,
   sendReadyHandler,
   sendChattingMessageHandler,
-  disconnectingHandler,
+  // disconnectingHandler,
   sendDescriptionHandler,
   sendCandidateHandler,
   askSocketIdHandler,

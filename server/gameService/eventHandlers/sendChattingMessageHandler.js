@@ -1,5 +1,5 @@
 const { io } = require('../io');
-const roomController = require('../controllers/roomController');
+const roomController = require('../roomController');
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
   /**

@@ -1,5 +1,5 @@
-const Player = require('../controllers/Player');
-const roomController = require('../controllers/roomController');
+const Player = require('../Player');
+const roomController = require('../roomController');
 const { getRandomColor } = require('../../utils/colorGenerator');
 
 const emitEventsAfterJoin = socket => {
