@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
     // bottom: '0',
     // left: '2rem',
     // right: '2rem',
+    display: 'block',
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
@@ -159,7 +160,7 @@ const Game = () => {
                 children.forEach(child => {
                   console.log(child);
                   if (child !== target.parentElement) {
-                    if (child.style.display === 'none') {
+                    if (getComputedStyle(child).display === 'none') {
                       // eslint-disable-next-line no-param-reassign
                       child.style.display = 'block';
                       // eslint-disable-next-line no-param-reassign
