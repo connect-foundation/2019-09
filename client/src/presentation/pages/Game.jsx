@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Timer, QuizDisplay, ExitButton } from '../components';
+import { Timer, QuizDisplay, ExitButton, ReadyButton } from '../components';
 import {
   StreamingPanel,
   ChattingPanel,
@@ -14,6 +14,7 @@ import {
 import ClientManager from '../../service/ClientManager';
 import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 import { MOBILE_VIEW_BREAKPOINT } from '../../config';
+import { GlobalContext } from '../../contexts';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -107,6 +108,12 @@ const useStyles = makeStyles(theme => ({
     right: '0',
     overflow: 'scroll',
   },
+  mobileReadyButtonContainer: {
+    width: '8rem',
+    position: 'absolute',
+    bottom: '2rem',
+    left: '2rem',
+  },
 }));
 
 const checkStoredNickname = () => {
@@ -182,6 +189,9 @@ const Game = () => {
     setIsPlayerListVisible(!isPlayerListVisible);
   };
 
+  const { viewPlayerList } = useContext(GlobalContext);
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+
   return (
     <div className={classes.root}>
       <Grid container spacing={0} className={classes.gameHeader}>
@@ -223,6 +233,7 @@ const Game = () => {
             </Button>
           </Box>
         </Grid>
+
         <Grid
           item
           xs={7}
@@ -233,6 +244,20 @@ const Game = () => {
             isVisible={false}
             className={classes.mobileFullWidth}
           />
+          <Box
+            className={[
+              classes.mobileReadyButtonContainer,
+              classes.desktopViewHide,
+            ]}
+          >
+            <ReadyButton
+              onClick={() => {
+                clientManager.toggleReady();
+              }}
+            >
+              {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
+            </ReadyButton>
+          </Box>
         </Grid>
         <Grid
           item
