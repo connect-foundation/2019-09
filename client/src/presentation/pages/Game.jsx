@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
       zIndex: '1',
     },
   },
-  readyButtonContainer: {
+  playerPanelContainer: {
     // position: 'absolute',
     // bottom: '0',
     // left: '2rem',
@@ -114,6 +114,9 @@ const useStyles = makeStyles(theme => ({
     bottom: '2rem',
     left: '2rem',
   },
+  gameStartHide: {
+    display: 'none',
+  },
 }));
 
 const checkStoredNickname = () => {
@@ -127,6 +130,8 @@ let clientManager;
 
 const Game = () => {
   checkStoredNickname();
+
+  const { gameProgress } = useContext(GlobalContext);
 
   if (!flag) {
     clientManager = new ClientManager();
@@ -178,11 +183,18 @@ const Game = () => {
     window.addEventListener('resize', resizeHandler);
   }, []);
 
-  const readyButtonContainerClasses = () => {
+  const playerPanelContainerClasses = () => {
     if (isPlayerListVisible) {
-      return classes.readyButtonContainer;
+      return classes.playerPanelContainer;
     }
-    return [classes.readyButtonContainer, classes.mobileViewHide];
+    return [classes.playerPanelContainer, classes.mobileViewHide];
+  };
+
+  const readyButtonContainerClasses = () => {
+    if (gameProgress === 'waiting') {
+      return [classes.mobileReadyButtonContainer, classes.desktopViewHide];
+    }
+    return classes.gameStartHide;
   };
 
   const showPlayersButtonHandler = () => {
@@ -220,7 +232,7 @@ const Game = () => {
           xs={2}
           className={[classes.bottomGridContent, classes.leftGridContent]}
         >
-          <Box className={readyButtonContainerClasses()}>
+          <Box className={playerPanelContainerClasses()}>
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
@@ -244,12 +256,7 @@ const Game = () => {
             isVisible={false}
             className={classes.mobileFullWidth}
           />
-          <Box
-            className={[
-              classes.mobileReadyButtonContainer,
-              classes.desktopViewHide,
-            ]}
-          >
+          <Box className={readyButtonContainerClasses()}>
             <ReadyButton
               onClick={() => {
                 clientManager.toggleReady();
