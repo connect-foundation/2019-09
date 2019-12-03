@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link, useHistory } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Timer, QuizDisplay, ExitButton } from '../components';
 import { StreamingPanel, ChattingPanel, PlayerPanel } from '../containers';
 import ClientManager from '../../service/ClientManager';
 import { browserLocalStorage, STYLE_COLORS } from '../../utils';
+import { MOBILE_VIEW_BREAKPOINT } from '../../config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,9 +44,6 @@ const useStyles = makeStyles(theme => ({
     // left: '2rem',
     // right: '2rem',
     display: 'block',
-    [theme.breakpoints.down('xs')]: {
-      display: 'none',
-    },
   },
   playerPanelButton: {
     display: 'none',
@@ -54,6 +52,9 @@ const useStyles = makeStyles(theme => ({
       position: 'relative',
       top: '11rem',
     },
+  },
+  mobileViewHide: {
+    display: 'none',
   },
   exitButtonGrid: {
     display: 'flex',
@@ -119,6 +120,40 @@ const Game = () => {
     };
   }, []);
 
+  const isMobile = window.outerWidth < MOBILE_VIEW_BREAKPOINT;
+  const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
+  let previousWindowOuterWidth = window.outerWidth;
+
+  const resizeHandler = event => {
+    const currentIsMobile = event.target.outerWidth < MOBILE_VIEW_BREAKPOINT;
+    if (currentIsMobile && previousWindowOuterWidth > MOBILE_VIEW_BREAKPOINT) {
+      setIsPlayerListVisible(false);
+      previousWindowOuterWidth = event.target.outerWidth;
+    }
+    if (
+      !currentIsMobile &&
+      previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
+    ) {
+      setIsPlayerListVisible(true);
+      previousWindowOuterWidth = event.target.outerWidth;
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeHandler);
+  }, []);
+
+  const readyButtonContainerClasses = () => {
+    if (isPlayerListVisible) {
+      return classes.readyButtonContainer;
+    }
+    return [classes.readyButtonContainer, classes.mobileViewHide];
+  };
+
+  const showPlayersButtonHandler = () => {
+    setIsPlayerListVisible(!isPlayerListVisible);
+  };
+
   return (
     <div className={classes.root}>
       <Grid container spacing={0} className={classes.gameHeader}>
@@ -147,34 +182,11 @@ const Game = () => {
           xs={2}
           className={(classes.bottomGridContent, classes.leftGridContent)}
         >
-          <Box className={classes.readyButtonContainer}>
+          <Box className={readyButtonContainerClasses()}>
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
-            <button
-              type="button"
-              onClick={event => {
-                const { target } = event;
-                const grandParent = target.parentElement.parentElement;
-                const children = grandParent.childNodes;
-                children.forEach(child => {
-                  console.log(child);
-                  if (child !== target.parentElement) {
-                    if (getComputedStyle(child).display === 'none') {
-                      // eslint-disable-next-line no-param-reassign
-                      child.style.display = 'block';
-                      // eslint-disable-next-line no-param-reassign
-                      target.innerText = 'Hide Players';
-                      return;
-                    }
-                    // eslint-disable-next-line no-param-reassign
-                    child.style.display = 'none';
-                    // eslint-disable-next-line no-param-reassign
-                    target.innerText = 'Show Players';
-                  }
-                });
-              }}
-            >
+            <button type="button" onClick={showPlayersButtonHandler}>
               Show Players
             </button>
           </Box>

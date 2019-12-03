@@ -5,4 +5,12 @@ const MainIntroductionDescription = `Try Catch는 "몸으로 말해요"의 웹 �
 Try Catch에서 당신의 창의력을 마음껏 뽐내보세요!
 `;
 const MainSlogan = `"Talk is cheap. Show me the move."`;
-export { MainIntroductionDescription, MainIntroductionTitle, MainSlogan };
+
+const MOBILE_VIEW_BREAKPOINT = 600;
+
+export {
+  MainIntroductionDescription,
+  MainIntroductionTitle,
+  MainSlogan,
+  MOBILE_VIEW_BREAKPOINT,
+};
