@@ -8,21 +8,28 @@ const getRoomByRoomId = roomId => {
   return room;
 };
 
+/**
+ * player가 room에 join하기 위한 함수
+ * 새로운 room일 경우 GameManager생성 및 room.gameManager에 할당
+ * @param {object} param0
+ */
 const joinRoom = ({ socket, roomId, player }) => {
   socket.join(roomId);
   socket.roomId = roomId;
   const room = getRoomByRoomId(roomId);
 
+  if (!room.gameManager) {
+    room.gameManager = new GameManager();
+  }
   room.gameManager.addPlayer(player);
 };
 
-const createRoom = ({ socket, roomId, player }) => {
-  socket.join(roomId);
-  socket.roomId = roomId;
-  const room = getRoomByRoomId(roomId);
-
-  room.gameManager = new GameManager();
-  room.gameManager.addPlayer(player);
+const generateRoomId = () => {
+  let roomId = short.uuid();
+  while (rooms[roomId]) {
+    roomId = short.uuid();
+  }
+  return roomId;
 };
 
 const isRoomJoinable = gameManager => {
@@ -36,7 +43,15 @@ const isRoomJoinable = gameManager => {
   return !isRoomFull && !isRoomPlaying;
 };
 
-const getJoinableRoomId = () => {
+/**
+ * join할 방의 정보를 반환해주는 함수
+ * @return {object} { roomId, isExistingRoom }
+ */
+const getRoomInformantionToJoin = () => {
+  const roomInformation = {
+    isExistingRoom: false,
+    roomId: '',
+  };
   const roomIds = Object.keys(rooms);
   /**
    * starvation 방지 로직 필요!
@@ -46,21 +61,14 @@ const getJoinableRoomId = () => {
     return isRoomJoinable(room.gameManager);
   });
 
-  return joinableRoomId;
-};
-
-const generateRoomId = () => {
-  let roomId = short.uuid();
-  while (rooms[roomId]) {
-    roomId = short.uuid();
-  }
-  return roomId;
+  roomInformation.isExistingRoom = !!joinableRoomId;
+  roomInformation.roomId = joinableRoomId || generateRoomId();
+  return roomInformation;
 };
 
 module.exports = {
   joinRoom,
-  createRoom,
   generateRoomId,
   getRoomByRoomId,
-  getJoinableRoomId,
+  getRoomInformantionToJoin,
 };

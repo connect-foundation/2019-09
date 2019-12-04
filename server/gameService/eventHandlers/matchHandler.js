@@ -18,20 +18,19 @@ const matchHandler = (socket, { nickname }) => {
     nicknameColor: getRandomColor(),
   });
 
-  const joinableRoomId = roomController.getJoinableRoomId();
-  if (joinableRoomId) {
-    roomController.joinRoom({ socket, roomId: joinableRoomId, player });
+  const { isExistingRoom, roomId } = roomController.getRoomInformantionToJoin();
+  roomController.joinRoom({ socket, roomId, player });
+
+  if (isExistingRoom) {
     /**
      * 새로운 플레이어는 기존 플레이어의 정보들을 전달받고
      * 기존의 플레이어들은 새로운 플레이어의 정보를 전달받는다.
      */
-    const room = roomController.getRoomByRoomId(joinableRoomId);
+    const room = roomController.getRoomByRoomId(roomId);
     const otherPlayers = room.gameManager.getOtherPlayers(player.socketId);
 
-    socket.broadcast.to(joinableRoomId).emit('sendNewPlayer', player);
+    socket.broadcast.to(roomId).emit('sendNewPlayer', player);
     socket.emit('sendPlayers', { players: otherPlayers });
-  } else {
-    roomController.createRoom({ socket, roomId: socket.roomId, player });
   }
   emitEventsAfterJoin(socket);
 };
