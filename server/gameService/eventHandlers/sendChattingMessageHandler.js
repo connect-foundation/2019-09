@@ -1,5 +1,6 @@
 const short = require('short-uuid');
-const io = require('../io');
+const { io } = require('../io');
+const roomController = require('../roomController');
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
   /**
@@ -7,10 +8,12 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
    * room.quiz === message
    *  emit('정답!')
    */
+  const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
+  const player = gameManager.getPlayerBySocketId(socket.id);
   io.in(socket.roomId).emit('sendChattingMessage', {
     nickname,
     message,
-    nicknameColor: socket.nicknameColor,
+    nicknameColor: player.getNicknameColor(),
     id: short.generate(),
   });
 };
