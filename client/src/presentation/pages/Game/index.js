@@ -10,6 +10,15 @@ import useStyles from './style';
 let isClientManagerInitialized = false;
 let clientManager;
 
+const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
+const currentSeconds = '120'; // Demo Purpose
+const quizWord = 'hello'; // Demo Purpose
+
+const exitButtonHandler = () => {
+  isClientManagerInitialized = false;
+  clientManager.exitRoom();
+};
+
 const Game = () => {
   if (!browserLocalStorage.getNickname()) {
     const history = useHistory();
@@ -23,12 +32,9 @@ const Game = () => {
   }
 
   const classes = useStyles();
-  const { gameStatus } = useContext(GlobalContext);
-  const { viewPlayerList } = useContext(GlobalContext);
+
+  const { gameStatus, viewPlayerList } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-  const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
-  const currentSeconds = '120'; // Demo Purpose
-  const quizWord = 'hello'; // Demo Purpose
   const isMobile = window.outerWidth < MOBILE_VIEW_BREAKPOINT;
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
   let previousWindowOuterWidth = window.outerWidth;
@@ -53,11 +59,6 @@ const Game = () => {
     return (
       !currentIsMobile && previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
     );
-  };
-
-  const exitButtonHandler = () => {
-    isClientManagerInitialized = false;
-    clientManager.exitRoom();
   };
 
   const resizeHandler = event => {
