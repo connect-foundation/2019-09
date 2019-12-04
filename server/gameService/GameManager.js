@@ -58,6 +58,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
+    this.status = 'playing';
   }
 
   prepareSet() {
