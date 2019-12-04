@@ -74,7 +74,13 @@ const Menu = () => {
         <MenuButton>PLAY</MenuButton>
       </Link>
 
-      <MenuButton>RANK</MenuButton>
+      <Link
+        to="/ranking"
+        className={classes.fullAnchor}
+        onClick={playButtonClickHandler}
+      >
+        <MenuButton>RANK</MenuButton>
+      </Link>
     </Container>
   );
 };

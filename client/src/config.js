@@ -8,9 +8,12 @@ const MainSlogan = `"Talk is cheap. Show me the move."`;
 
 const MOBILE_VIEW_BREAKPOINT = 600;
 
+const TOP_RANKS = ['1', '2', '3'];
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
   MainSlogan,
   MOBILE_VIEW_BREAKPOINT,
+  TOP_RANKS,
 };
