@@ -4,6 +4,7 @@ const {
   sendChattingMessageHandler,
   // disconnectingHandler,
   askSocketIdHandler,
+  connectPeerHandler,
 } = require('./eventHandlers');
 
 module.exports = socket => {
@@ -13,7 +14,7 @@ module.exports = socket => {
   socket.on('askSocketId', askSocketIdHandler.bind(null, socket));
   socket.on('match', matchHandler.bind(null, socket));
   socket.on('sendReady', sendReadyHandler.bind(null, socket));
-  // socket.on('connectPeer', connectPeerHandler.bind(null, socket));
+  socket.on('connectPeer', connectPeerHandler.bind(null, socket));
   /**
    * 게임로직 필요
    * ....

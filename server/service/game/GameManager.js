@@ -1,14 +1,19 @@
-const { MAX_ROUND_NUMBER } = require('../../config');
+const {
+  MAX_ROUND_NUMBER,
+  MAX_PEER_CONNECTION_WAITING_TIME,
+} = require('../../config');
 
 class GameManager {
-  constructor() {
-    this.players = [];
+  constructor(roomId) {
+    this.roomId = roomId;
     this.status = 'waiting';
-    this.streamerCandidates = [];
-    this.streamer = null;
     this.quiz = '';
+    this.players = [];
+    this.streamerCandidates = [];
     this.currentRound = 0;
     this.currentSet = 0;
+    this.streamer = null;
+    this.peerConnectCheckTimer = null;
   }
 
   addPlayer(player) {
@@ -122,6 +127,29 @@ class GameManager {
 
   removePlayer(socketId) {
     this.players = this.players.filter(player => player.socketId !== socketId);
+  }
+
+  getPlayersUnconnectedToStreamer() {
+    return this.players.filter(player => !player.getIsConnectedToStreamer());
+  }
+
+  startPeerConnectCheckTimer(disconnectPlayersAndStartGame) {
+    this.peerConnectCheckTimer = setTimeout(() => {
+      const playersToDisconnect = this.getPlayersUnconnectedToStreamer();
+
+      disconnectPlayersAndStartGame(playersToDisconnect, this.roomId);
+      this.clearPeerConnectCheckTimer();
+    }, MAX_PEER_CONNECTION_WAITING_TIME);
+  }
+
+  clearPeerConnectCheckTimer() {
+    clearTimeout(this.peerConnectCheckTimer);
+    this.peerConnectCheckTimer = null;
+  }
+
+  checkAllConnectionsToStreamer() {
+    const viewers = this.getOtherPlayers(this.streamer.getSocketId());
+    return viewers.every(player => player.getIsConnectedToStreamer());
   }
 }
 

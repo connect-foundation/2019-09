@@ -31,6 +31,16 @@ const assignPlayerType = gameManager => {
   });
 };
 
+const disconnectPlayersAndStartGame = (players, roomId) => {
+  players.forEach(player => {
+    const socket = io.sockets.connected[player.getSocketId()];
+    socket.disconnect();
+    // disconnectingHandler에서 gameManager의 player를 지워줘야함
+  });
+
+  io.in(roomId).emit('startGame');
+};
+
 const sendReadyHandler = (socket, { isReady }) => {
   const room = roomController.getRoomByRoomId(socket.roomId);
   const { gameManager } = room;
@@ -46,6 +56,7 @@ const sendReadyHandler = (socket, { isReady }) => {
   if (isRoomReady(room.gameManager) && playerCount >= MIN_PLAYER_COUNT) {
     gameManager.prepareGame();
     gameManager.prepareSet();
+    gameManager.startPeerConnectCheckTimer(disconnectPlayersAndStartGame);
     assignPlayerType(gameManager);
   }
 };

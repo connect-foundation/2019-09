@@ -19,7 +19,7 @@ const joinRoom = ({ socket, roomId, player }) => {
   const room = getRoomByRoomId(roomId);
 
   if (!room.gameManager) {
-    room.gameManager = new GameManager();
+    room.gameManager = new GameManager(roomId);
   }
   room.gameManager.addPlayer(player);
 };

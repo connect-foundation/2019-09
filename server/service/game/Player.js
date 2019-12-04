@@ -5,10 +5,8 @@ class Player {
     this.score = 0;
     this.nickname = nickname;
     this.nicknameColor = nicknameColor;
-    /**
-     * Player 클래스를 포함하는 클래스에 있을수도있음
-     */
     this.socketId = socketId;
+    this.isConnectedToStreamer = false;
   }
 
   getNickname() {
@@ -31,6 +29,14 @@ class Player {
     return this.isReady;
   }
 
+  getSocketId() {
+    return this.socketId;
+  }
+
+  getIsConnectedToStreamer() {
+    return this.isConnectedToStreamer;
+  }
+
   setIsReady(isReady) {
     this.isReady = isReady;
   }
@@ -41,6 +47,10 @@ class Player {
 
   setScore(score) {
     this.score = score;
+  }
+
+  setIsConnectedToStreamer(isConnectedToStreamer) {
+    this.isConnectedToStreamer = isConnectedToStreamer;
   }
 }
 module.exports = Player;
