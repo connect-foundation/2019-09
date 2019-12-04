@@ -100,6 +100,7 @@ const Game = () => {
     currentSeconds,
     classes,
     readyButtonHandler,
+    isMobile,
   };
 
   return <GamePresentation gameProps={gameProps} />;
