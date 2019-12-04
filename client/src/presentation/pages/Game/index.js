@@ -23,7 +23,7 @@ const Game = () => {
   }
 
   const classes = useStyles();
-  const { gameProgress } = useContext(GlobalContext);
+  const { gameStatus } = useContext(GlobalContext);
   const { viewPlayerList } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
@@ -40,7 +40,7 @@ const Game = () => {
   })();
 
   const readyButtonContainerClasses = (() => {
-    return gameProgress === 'waiting'
+    return gameStatus === 'waiting'
       ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
   })();

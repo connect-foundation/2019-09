@@ -1,7 +1,7 @@
 const initialState = {
   chattingList: [],
   viewPlayerList: [],
-  gameProgress: 'waiting',
+  gameStatus: 'waiting',
 };
 
 export default initialState;
