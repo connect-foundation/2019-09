@@ -26,3 +26,19 @@ services:
     restart: always
     env_file:
       - ./.env
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_USER: '${MYSQL_USER_NAME}'
+      MYSQL_PASSWORD: '${MYSQL_USER_PASSWORD}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+    expose:
+      - "3306"
