@@ -6,15 +6,26 @@ import { ChattingWindow, InputWindow } from '../components';
 import { GlobalContext } from '../../contexts';
 import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles(theme => ({
   chattingPanel: {
     height: '48rem',
     position: 'relative',
     backgroundColor: STYLE_COLORS.PANEL_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.5)',
     borderRadius: '0.3rem',
+    [theme.breakpoints.down('xs')]: {
+      height: 'auto',
+    },
   },
-});
+  chattingWindow: {
+    height: '90%',
+    overflow: 'auto',
+    wordWrap: 'break-word',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
+}));
 
 const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
@@ -23,7 +34,9 @@ const ChattingPanel = ({ clientManager }) => {
 
   return (
     <Box className={classes.chattingPanel}>
-      <ChattingWindow chattingList={chattingList} />
+      <Box className={classes.chattingWindow}>
+        <ChattingWindow chattingList={chattingList} />
+      </Box>
       <InputWindow clientManager={clientManager} nickname={nickname} />
     </Box>
   );

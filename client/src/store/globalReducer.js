@@ -15,6 +15,11 @@ const reducer = (state, action) => {
         ...state,
         viewPlayerList: [...action.payload.viewPlayerList],
       };
+    case 'setGameProgress':
+      return {
+        ...state,
+        gameProgress: action.payload.gameProgress,
+      };
     default:
       throw new Error();
   }

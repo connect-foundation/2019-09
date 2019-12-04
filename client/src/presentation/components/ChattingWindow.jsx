@@ -8,7 +8,7 @@ const useStyle = makeStyles({
   chattingWindow: {
     overflowY: 'auto',
     padding: '1rem',
-    height: '90%',
+    height: '100%',
     boxSizing: 'border-box',
   },
 });

@@ -28,6 +28,14 @@ class GameManager {
     this.socket.on('sendPlayers', this.sendPlayersHandler.bind(this));
     this.socket.on('sendNewPlayer', this.sendNewPlayerHandler.bind(this));
     this.socket.on('sendReady', this.sendReadyHandler.bind(this));
+    this.socket.on('startGame', this.startGameHandler.bind(this));
+  }
+
+  startGameHandler() {
+    this.dispatch({
+      type: 'setGameProgress',
+      payload: { gameProgress: 'playing' },
+    });
   }
 
   sendPlayersHandler({ players }) {
