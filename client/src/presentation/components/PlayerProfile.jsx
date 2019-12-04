@@ -18,8 +18,8 @@ const useStyles = makeStyles({
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.6)',
     borderRadius: '0.3rem',
     border: (() => {
-      if (props.isReady) return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
       if (props.type === 'streamer') return '0.2rem solid #e74c3c';
+      if (props.isReady) return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
       return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
     })(),
   }),
