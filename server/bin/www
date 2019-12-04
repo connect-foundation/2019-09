@@ -81,7 +81,7 @@ function onListening() {
  * Listen on provided port, on all network interfaces.
  */
 
-app.gameService.attach(server);
+app.service.attach(server);
 
 server.listen(port);
 server.on('error', onError);

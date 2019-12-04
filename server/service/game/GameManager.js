@@ -1,4 +1,4 @@
-const { MAX_ROUND_NUMBER } = require('../config');
+const { MAX_ROUND_NUMBER } = require('../../config');
 
 class GameManager {
   constructor() {

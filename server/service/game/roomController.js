@@ -1,6 +1,6 @@
 const short = require('short-uuid');
-const { rooms } = require('./io');
-const { MAX_PLAYER_COUNT } = require('../config');
+const { rooms } = require('../io');
+const { MAX_PLAYER_COUNT } = require('../../config');
 const GameManager = require('./GameManager');
 
 const getRoomByRoomId = roomId => {

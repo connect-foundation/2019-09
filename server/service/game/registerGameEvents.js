@@ -3,13 +3,10 @@ const {
   sendReadyHandler,
   sendChattingMessageHandler,
   // disconnectingHandler,
-  sendDescriptionHandler,
-  sendCandidateHandler,
   askSocketIdHandler,
 } = require('./eventHandlers');
-const { io } = require('./io');
 
-io.on('connection', socket => {
+module.exports = socket => {
   /**
    * 게임 전
    */
@@ -34,8 +31,4 @@ io.on('connection', socket => {
    * socket disconnect 관리
    */
   // socket.on('disconnecting', disconnectingHandler.bind(null, socket));
-  socket.on('sendDescription', sendDescriptionHandler.bind(null, socket));
-  socket.on('sendCandidate', sendCandidateHandler.bind(null, socket));
-});
-
-module.exports = io;
+};

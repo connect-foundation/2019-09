@@ -1,7 +1,7 @@
-const { io } = require('../io');
+const { io } = require('../../io');
 
 const roomController = require('../roomController');
-const { MIN_PLAYER_COUNT } = require('../../config');
+const { MIN_PLAYER_COUNT } = require('../../../config');
 
 const assignStreamer = streamer => {
   io.to(streamer.socketId).emit('assignStreamer');
