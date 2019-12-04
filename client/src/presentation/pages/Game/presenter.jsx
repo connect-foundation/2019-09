@@ -24,6 +24,7 @@ const GamePresentation = ({ gameProps }) => {
     localPlayer,
     currentSeconds,
     classes,
+    readyButtonHandler,
   } = gameProps;
 
   return (
@@ -54,7 +55,7 @@ const GamePresentation = ({ gameProps }) => {
           xs={2}
           className={[classes.bottomGridContent, classes.leftGridContent]}
         >
-          <Box className={playerPanelContainerClasses()}>
+          <Box className={playerPanelContainerClasses}>
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
@@ -78,12 +79,8 @@ const GamePresentation = ({ gameProps }) => {
             isVisible={false}
             className={classes.mobileFullWidth}
           />
-          <Box className={readyButtonContainerClasses()}>
-            <ReadyButton
-              onClick={() => {
-                clientManager.toggleReady();
-              }}
-            >
+          <Box className={readyButtonContainerClasses}>
+            <ReadyButton onClick={readyButtonHandler}>
               {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
             </ReadyButton>
           </Box>

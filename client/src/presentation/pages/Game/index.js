@@ -7,90 +7,86 @@ import { GlobalContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
 
-const checkStoredNickname = () => {
-  const nickname = browserLocalStorage.getNickname();
-  const history = useHistory();
-  if (!nickname) history.push('/');
-};
-
-let flag = false;
+let isClientManagerInitialized = false;
 let clientManager;
 
 const Game = () => {
-  const classes = useStyles();
-  checkStoredNickname();
+  if (!browserLocalStorage.getNickname()) {
+    const history = useHistory();
+    history.push('/');
+  }
 
-  const { gameProgress } = useContext(GlobalContext);
-
-  if (!flag) {
+  if (!isClientManagerInitialized) {
     clientManager = new ClientManager();
     clientManager.init();
-    flag = true;
+    isClientManagerInitialized = true;
   }
+
+  const classes = useStyles();
+  const { gameProgress } = useContext(GlobalContext);
+  const { viewPlayerList } = useContext(GlobalContext);
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
   const currentSeconds = '120'; // Demo Purpose
   const quizWord = 'hello'; // Demo Purpose
-  const exitButtonHandler = () => {
-    flag = false;
-    clientManager.exitRoom();
-  };
-
-  useEffect(() => {
-    window.onpopstate = () => {
-      exitButtonHandler();
-    };
-  }, []);
-
   const isMobile = window.outerWidth < MOBILE_VIEW_BREAKPOINT;
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
   let previousWindowOuterWidth = window.outerWidth;
 
-  const changeDesktopToMobile = currentIsMobile => {
+  const playerPanelContainerClasses = (() => {
+    return isPlayerListVisible
+      ? classes.playerPanelContainer
+      : [classes.playerPanelContainer, classes.mobileViewHide];
+  })();
+
+  const readyButtonContainerClasses = (() => {
+    return gameProgress === 'waiting'
+      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
+      : classes.gameStartHide;
+  })();
+
+  const isShiftingToMobileView = currentIsMobile => {
     return currentIsMobile && previousWindowOuterWidth > MOBILE_VIEW_BREAKPOINT;
   };
 
-  const changeMobileToDesktop = currentIsMobile => {
+  const isShiftingToDesktopView = currentIsMobile => {
     return (
       !currentIsMobile && previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
     );
   };
 
+  const exitButtonHandler = () => {
+    isClientManagerInitialized = false;
+    clientManager.exitRoom();
+  };
+
   const resizeHandler = event => {
     const currentIsMobile = event.target.outerWidth < MOBILE_VIEW_BREAKPOINT;
-
-    if (changeDesktopToMobile(currentIsMobile)) {
+    if (isShiftingToMobileView(currentIsMobile)) {
       setIsPlayerListVisible(false);
       previousWindowOuterWidth = event.target.outerWidth;
-    } else if (changeMobileToDesktop(currentIsMobile)) {
+      return;
+    }
+    if (isShiftingToDesktopView(currentIsMobile)) {
       setIsPlayerListVisible(true);
       previousWindowOuterWidth = event.target.outerWidth;
     }
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', resizeHandler);
-  }, []);
-
-  const playerPanelContainerClasses = () => {
-    if (isPlayerListVisible) {
-      return classes.playerPanelContainer;
-    }
-    return [classes.playerPanelContainer, classes.mobileViewHide];
-  };
-
-  const readyButtonContainerClasses = () => {
-    if (gameProgress === 'waiting') {
-      return [classes.mobileReadyButtonContainer, classes.desktopViewHide];
-    }
-    return classes.gameStartHide;
   };
 
   const showPlayersButtonHandler = () => {
     setIsPlayerListVisible(!isPlayerListVisible);
   };
 
-  const { viewPlayerList } = useContext(GlobalContext);
-  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+  const readyButtonHandler = () => {
+    clientManager.toggleReady();
+  };
+
+  useEffect(() => {
+    window.onpopstate = () => {
+      exitButtonHandler();
+    };
+    window.addEventListener('resize', resizeHandler);
+  }, []);
 
   const gameProps = {
     quizWord,
@@ -103,6 +99,7 @@ const Game = () => {
     localPlayer,
     currentSeconds,
     classes,
+    readyButtonHandler,
   };
 
   return <GamePresentation gameProps={gameProps} />;
