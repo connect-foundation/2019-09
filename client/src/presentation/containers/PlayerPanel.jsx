@@ -38,11 +38,11 @@ const useStyle = makeStyles(theme => ({
 
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { viewPlayerList, gameProgress } = useContext(GlobalContext);
+  const { viewPlayerList, gameStatus } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const readyButtonContainerClasses = () => {
-    if (gameProgress === 'waiting') {
+    if (gameStatus === 'waiting') {
       return classes.readyButtonWrapper;
     }
     return classes.gameStartHide;
