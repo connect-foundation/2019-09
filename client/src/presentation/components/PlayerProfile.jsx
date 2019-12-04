@@ -30,9 +30,6 @@ const useStyles = makeStyles({
     flex: 4,
   },
   playerNicknameConatainer: {
-    // display: 'flex',
-    // alignItems: 'center',
-    // flex: 1,
     fontWeight: '600',
     display: 'table',
     tableLayout: 'fixed',
