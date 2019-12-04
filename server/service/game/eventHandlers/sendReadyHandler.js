@@ -44,7 +44,6 @@ const sendReadyHandler = (socket, { isReady }) => {
   sendReady({ roomId: socket.roomId, socketId: player.socketId, isReady });
 
   if (isRoomReady(room.gameManager) && playerCount >= MIN_PLAYER_COUNT) {
-    gameManager.reset();
     gameManager.prepareGame();
     gameManager.prepareSet();
     assignPlayerType(gameManager);
