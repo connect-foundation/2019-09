@@ -113,6 +113,8 @@ class StreamingManager {
       document.querySelector('video').srcObject = stream;
     }
     // this.dispatch({ type: 'setStream', payload: { stream } });
+
+    this.socket.emit('connectPeer');
   }
 
   closeConnection(socketId) {
