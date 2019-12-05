@@ -23,11 +23,14 @@ const Game = () => {
   }
 
   const classes = useStyles();
-  const { gameProgress, viewPlayerList, currentSeconds } = useContext(
-    GlobalContext,
-  );
+  const {
+    gameProgress,
+    viewPlayerList,
+    currentSeconds,
+    quiz,
+    quizLength,
+  } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-  const quizWord = 'hello'; // Demo Purpose
   const isMobile = window.outerWidth < MOBILE_VIEW_BREAKPOINT;
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
   let previousWindowOuterWidth = window.outerWidth;
@@ -88,7 +91,8 @@ const Game = () => {
   }, []);
 
   const gameProps = {
-    quizWord,
+    quiz,
+    quizLength,
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
