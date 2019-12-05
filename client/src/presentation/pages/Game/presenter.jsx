@@ -18,7 +18,6 @@ const GamePresentation = ({ gameProps }) => {
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    candidateWords,
     playerPanelContainerClasses,
     readyButtonContainerClasses,
     localPlayer,
@@ -74,11 +73,7 @@ const GamePresentation = ({ gameProps }) => {
           xs={7}
           className={[classes.bottomGridContent, classes.mobileFullWidth]}
         >
-          <StreamingPanel
-            words={candidateWords}
-            isVisible={false}
-            className={classes.mobileFullWidth}
-          />
+          <StreamingPanel className={classes.mobileFullWidth} />
           <Box className={readyButtonContainerClasses}>
             <ReadyButton onClick={readyButtonHandler}>
               {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}

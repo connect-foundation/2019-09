@@ -4,8 +4,20 @@ const initialState = {
   gameProgress: 'waiting',
   currentRound: 0,
   currentSet: 0,
-  quizCandidates: [],
   currentSeconds: 0,
+  messageNotice: {
+    isVisible: false,
+    message: '',
+  },
+  quizCandidatesNotice: {
+    isVisible: false,
+    quizCandidates: [],
+  },
+  scoreNotice: {
+    isVisible: false,
+    message: '',
+    scoreList: [],
+  },
 };
 
 export default initialState;

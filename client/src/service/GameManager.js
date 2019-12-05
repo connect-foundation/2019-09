@@ -37,12 +37,6 @@ class GameManager {
   }
 
   prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
-    console.log(
-      'prepareSetHandler : ',
-      currentRound,
-      currentSet,
-      quizCandidates,
-    );
     this.dispatch({
       type: 'setCurrentRound',
       payload: { currentRound },
@@ -51,10 +45,24 @@ class GameManager {
       type: 'setCurrentSet',
       payload: { currentSet },
     });
-    this.dispatch({
-      type: 'setQuizCandidates',
-      payload: { quizCandidates },
-    });
+
+    if (quizCandidates.length === 0) {
+      this.dispatch({
+        type: 'setMessageNotice',
+        payload: {
+          isVisible: true,
+          message: '출제자가 단어를 선택 중입니다.',
+        },
+      });
+    } else {
+      this.dispatch({
+        type: 'setQuizCandidatesNotice',
+        payload: {
+          isVisible: true,
+          quizCandidates,
+        },
+      });
+    }
   }
 
   sendCurrentSecondsHandler({ currentSeconds }) {

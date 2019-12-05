@@ -40,6 +40,31 @@ const reducer = (state, action) => {
         ...state,
         currentSeconds: action.payload.currentSeconds,
       };
+    case 'setMessageNotice':
+      return {
+        ...state,
+        messageNotice: {
+          isVisible: action.payload.isVisible,
+          message: action.payload.message,
+        },
+      };
+    case 'setQuizCandidatesNotice':
+      return {
+        ...state,
+        quizCandidatesNotice: {
+          isVisible: action.payload.isVisible,
+          quizCandidates: action.payload.quizCandidates,
+        },
+      };
+    case 'setScoreNotice':
+      return {
+        ...state,
+        scoreNotice: {
+          isVisible: action.payload.isVisible,
+          message: action.payload.message,
+          scoreList: action.payload.scoreList,
+        },
+      };
     default:
       throw new Error();
   }
