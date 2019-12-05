@@ -1,4 +1,5 @@
-const { MAX_RANKING_COUNT } = require('../config');
+const Sequelize = require('sequelize');
+const { MAX_RANKING_COUNT, QUIZ_CANDIDATES_COUNT } = require('../config');
 
 class DatabaseManager {
   constructor({ Quiz, Ranking }) {
@@ -42,6 +43,20 @@ class DatabaseManager {
         limit: MAX_RANKING_COUNT,
       });
       const convertedData = this.convertMysqlData(highRankers);
+      return convertedData;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async castQuizCandidates() {
+    try {
+      const quizCandidates = await this.Quiz.findAll({
+        order: Sequelize.literal('rand()'),
+        limit: QUIZ_CANDIDATES_COUNT,
+      });
+      const convertedData = this.convertMysqlData(quizCandidates);
       return convertedData;
     } catch (error) {
       console.error(error);
