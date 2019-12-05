@@ -25,6 +25,10 @@ class GameManager {
     this.players.push(player);
   }
 
+  getQuiz() {
+    return this.quiz;
+  }
+
   getCurrentRound() {
     return this.currentRound;
   }

@@ -9,6 +9,7 @@ const initialState = {
   quizLength: 0,
   stream: null,
   isVideoVisible: false,
+  isChattingDisabled: false,
   messageNotice: {
     isVisible: false,
     message: '',

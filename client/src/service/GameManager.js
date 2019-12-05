@@ -27,7 +27,17 @@ class GameManager {
       this.sendCurrentSecondsHandler.bind(this),
     );
     this.socket.on('startSet', this.startSetHandler.bind(this));
+    this.socket.on('correctAnswer', this.correctAnswerHandler.bind(this));
     // this.socket.on('endSet', this.endSetHandler.bind(this));
+  }
+
+  correctAnswerHandler() {
+    this.dispatch({
+      type: 'setIsChattingDisabled',
+      payload: {
+        isChattingDisabled: true,
+      },
+    });
   }
 
   startSetHandler({ quiz, quizLength }) {

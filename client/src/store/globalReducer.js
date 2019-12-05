@@ -81,6 +81,11 @@ const reducer = (state, action) => {
         ...state,
         isVideoVisible: action.payload.isVideoVisible,
       };
+    case 'setIsChattingDisabled':
+      return {
+        ...state,
+        isChattingDisabled: action.payload.isChattingDisabled,
+      };
     default:
       throw new Error();
   }

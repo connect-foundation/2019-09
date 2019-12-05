@@ -10,12 +10,27 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
    */
   const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
   const player = gameManager.getPlayerBySocketId(socket.id);
-  io.in(socket.roomId).emit('sendChattingMessage', {
-    nickname,
-    message,
-    nicknameColor: player.getNicknameColor(),
-    id: short.generate(),
-  });
+
+  if (
+    gameManager.getStatus() === 'playing' &&
+    gameManager.getQuiz() === message &&
+    !gameManager.isStreamer(socket.id)
+  ) {
+    io.in(socket.roomId).emit('sendChattingMessage', {
+      nickname: '안내',
+      message: `${nickname}님이 정답을 맞췄습니다!`,
+      nicknameColor: '#000000',
+      id: short.generate(),
+    });
+    io.to(socket.id).emit('correctAnswer');
+  } else {
+    io.in(socket.roomId).emit('sendChattingMessage', {
+      nickname,
+      message,
+      nicknameColor: player.getNicknameColor(),
+      id: short.generate(),
+    });
+  }
 };
 
 module.exports = sendChattingMessageHandler;
