@@ -37,6 +37,10 @@ const useStyle = makeStyles({
 const textInpuStyles = {
   width: '100%',
 };
+/**
+ * 고정값 필요 rem 사용금지
+ */
+const menuButtonFontSize = '20px';
 
 const Menu = () => {
   const [nickname, setNickname] = useState(browserLocalStorage.getNickname());
@@ -71,10 +75,10 @@ const Menu = () => {
         className={classes.fullAnchor}
         onClick={playButtonClickHandler}
       >
-        <MenuButton>PLAY</MenuButton>
+        <MenuButton fontSize={menuButtonFontSize}>PLAY</MenuButton>
       </Link>
 
-      <MenuButton>RANK</MenuButton>
+      <MenuButton fontSize={menuButtonFontSize}>RANK</MenuButton>
     </Container>
   );
 };
