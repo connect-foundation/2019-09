@@ -28,7 +28,6 @@ const useStyle = makeStyles({
       marginBottom: '0.7rem',
     },
   },
-
   fullAnchor: {
     width: '100%',
   },
@@ -47,6 +46,13 @@ const Menu = () => {
   const classes = useStyle();
   const history = useHistory();
 
+  const nicknameInputKeypressHandler = event => {
+    if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
+    if (!nickname) return;
+    browserLocalStorage.setNickname(nickname);
+    history.push('/game');
+  };
+
   const playButtonClickHandler = event => {
     if (!nickname) {
       event.preventDefault();
@@ -62,12 +68,7 @@ const Menu = () => {
         style={textInpuStyles}
         value={nickname}
         textChangeHandler={setNickname}
-        onKeyPress={event => {
-          if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
-          if (!nickname) return;
-          browserLocalStorage.setNickname(nickname);
-          history.push('/game');
-        }}
+        onKeyPress={nicknameInputKeypressHandler}
       />
 
       <Link
