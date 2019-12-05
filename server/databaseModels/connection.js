@@ -1,4 +1,4 @@
-const Sequelize = require('./node_modules/sequelize');
+const Sequelize = require('sequelize');
 
 const { env } = process;
 

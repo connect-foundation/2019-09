@@ -1,5 +1,5 @@
 const fs = require('fs');
-const csv = require('./node_modules/csv-parser');
+const csv = require('csv-parser');
 const { Quiz } = require('../');
 
 const initializeQuizzes = async () => {
