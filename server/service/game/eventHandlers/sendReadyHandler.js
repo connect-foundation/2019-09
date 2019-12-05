@@ -12,8 +12,12 @@ const assignViewer = (viewer, streamer) => {
     streamerSocketId: streamer.socketId,
   });
 };
-const sendReady = ({ roomId, socketId, isReady }) => {
-  io.in(roomId).emit('sendReady', { socketId, isReady });
+const sendReady = (roomId, player) => {
+  console.log('sendReady', player);
+  io.in(roomId).emit('sendReady', {
+    socketId: player.getSocketId(),
+    isReady: player.getIsReady(),
+  });
 };
 
 const isRoomReady = gameManager => {
@@ -30,6 +34,8 @@ const assignPlayerType = gameManager => {
     assignViewer(viewer, streamer);
   });
 };
+
+// const emit
 
 const disconnectPlayersAndStartGame = (players, gameManager) => {
   players.forEach(player => {
@@ -62,17 +68,17 @@ const sendReadyHandler = (socket, { isReady }) => {
   const player = gameManager.getPlayerBySocketId(socket.id);
   player.setIsReady(isReady);
 
-  sendReady({
-    roomId: gameManager.getRoomId(),
-    socketId: player.socketId,
-    isReady,
-  });
+  sendReady(gameManager.getRoomId(), player);
 
   if (isRoomReady(gameManager) && playerCount >= MIN_PLAYER_COUNT) {
+    gameManager.cancelReadyAllPlayers();
+    gameManager
+      .getPlayers()
+      .forEach(sendReady.bind(null, gameManager.getRoomId()));
+
     gameManager.prepareGame();
     io.in(gameManager.getRoomId()).emit('startGame');
 
-    // 세트마다 해줘야함
     // '연결준비'
     gameManager.prepareSet();
     assignPlayerType(gameManager);

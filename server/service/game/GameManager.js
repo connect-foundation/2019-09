@@ -184,6 +184,12 @@ class GameManager {
     const viewers = this.getOtherPlayers(this.streamer.getSocketId());
     return viewers.every(player => player.getIsConnectedToStreamer());
   }
+
+  cancelReadyAllPlayers() {
+    this.players.forEach(player => {
+      player.setIsReady(false);
+    });
+  }
 }
 
 module.exports = GameManager;
