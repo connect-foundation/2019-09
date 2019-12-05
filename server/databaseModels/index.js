@@ -1,9 +1,9 @@
 const connection = require('./connection');
-const Player = require('./Player');
+const Ranking = require('./Ranking');
 const Quiz = require('./Quiz');
 
 module.exports = {
   connection,
-  Player,
+  Ranking,
   Quiz,
 };

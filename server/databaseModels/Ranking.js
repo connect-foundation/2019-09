@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 const connection = require('./connection');
 
-class Player extends Sequelize.Model {}
+class Ranking extends Sequelize.Model {}
 
-Player.init(
+Ranking.init(
   {
     nickname: {
       type: Sequelize.STRING,
@@ -14,6 +14,11 @@ Player.init(
       defaultValue: 0,
       allowNull: false,
     },
+    season: {
+      type: Sequelize.INTEGER,
+      defaultValue: 1,
+      allowNull: false,
+    },
   },
   {
     sequelize: connection,
@@ -21,4 +26,4 @@ Player.init(
   },
 );
 
-module.exports = Player;
+module.exports = Ranking;

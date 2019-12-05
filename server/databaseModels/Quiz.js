@@ -8,7 +8,15 @@ Quiz.init(
     word: {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: '커피',
+      defaultValue: '',
+    },
+    selected: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
+    hits: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
     },
   },
   {
