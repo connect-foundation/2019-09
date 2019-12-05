@@ -6,6 +6,7 @@
 require('dotenv').config();
 const debug = require('debug')('server:server');
 const http = require('http');
+const { initializeQuizzes } = require('../databaseModels/seeder');
 const app = require('../app');
 
 /**
@@ -82,6 +83,7 @@ function onListening() {
  */
 (async () => {
   await connection.sync();
+  await initializeQuizzes();
 
   app.gameService.attach(server);
   server.listen(port);
