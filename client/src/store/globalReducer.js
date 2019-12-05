@@ -65,6 +65,12 @@ const reducer = (state, action) => {
           scoreList: action.payload.scoreList,
         },
       };
+    case 'setQuiz':
+      return {
+        ...state,
+        quiz: action.payload.quiz,
+        quizLength: action.payload.quizLength,
+      };
     default:
       throw new Error();
   }

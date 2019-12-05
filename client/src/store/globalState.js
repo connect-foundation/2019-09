@@ -5,6 +5,8 @@ const initialState = {
   currentRound: 0,
   currentSet: 0,
   currentSeconds: 0,
+  quiz: '',
+  quizLength: 0,
   messageNotice: {
     isVisible: false,
     message: '',
