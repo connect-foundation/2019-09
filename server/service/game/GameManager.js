@@ -1,6 +1,8 @@
 const {
   MAX_ROUND_NUMBER,
   MAX_PEER_CONNECTION_WAITING_TIME,
+  MAX_QUIZ_SELECTION_WAITING_TIME,
+  ONE_SECOND,
 } = require('../../config');
 
 class GameManager {
@@ -14,10 +16,23 @@ class GameManager {
     this.currentSet = 0;
     this.streamer = null;
     this.peerConnectCheckTimer = null;
+    this.quizSelectTimer = null;
   }
 
   addPlayer(player) {
     this.players.push(player);
+  }
+
+  getCurrentRound() {
+    return this.currentRound;
+  }
+
+  getCurrentSet() {
+    return this.currentSet;
+  }
+
+  getRoomId() {
+    return this.roomId;
   }
 
   getStreamer() {
@@ -145,6 +160,24 @@ class GameManager {
   clearPeerConnectCheckTimer() {
     clearTimeout(this.peerConnectCheckTimer);
     this.peerConnectCheckTimer = null;
+  }
+
+  startQuizSelectTimer(emitSendCurrentSeconds) {
+    let iterationCount = 0;
+    const updateTimer = () => {
+      if (++iterationCount > MAX_QUIZ_SELECTION_WAITING_TIME) {
+        this.clearQuizSelectTimer();
+        return;
+      }
+      emitSendCurrentSeconds(iterationCount);
+      this.quizSelectTimer = setTimeout(updateTimer, ONE_SECOND);
+    };
+    this.quizSelectTimer = setTimeout(updateTimer);
+  }
+
+  clearQuizSelectTimer() {
+    clearTimeout(this.quizSelectTimer);
+    this.quizSelectTimer = null;
   }
 
   checkAllConnectionsToStreamer() {

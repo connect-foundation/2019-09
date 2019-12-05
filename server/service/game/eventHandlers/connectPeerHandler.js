@@ -7,8 +7,22 @@ const connectPeerHandler = socket => {
   player.setIsConnectedToStreamer(true);
 
   if (gameManager.checkAllConnectionsToStreamer()) {
+    /**
+     * 연결준비 후 정상 시작
+     */
     gameManager.clearPeerConnectCheckTimer();
-    io.in(gameManager.roomId).emit('startGame');
+
+    io.in(gameManager.getRoomId()).emit('prepareSet', {
+      currentRound: gameManager.getCurrentRound(),
+      currentSet: gameManager.getCurrentSet(),
+      quizCandidates: ['문어', '고양이', '부스트캠퍼'], // getQuizCandidates()
+    });
+
+    gameManager.startQuizSelectTimer(currentSeconds => {
+      io.in(gameManager.getRoomId()).emit('sendCurrentSeconds', {
+        currentSeconds,
+      });
+    });
   }
 };
 
