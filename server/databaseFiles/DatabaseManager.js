@@ -17,7 +17,7 @@ class DatabaseManager {
 
   convertMysqlData(mysqlData) {
     if (Array.isArray(mysqlData)) {
-      return this.converArrayMysqlData(mysqlData);
+      return this.convertArrayMysqlData(mysqlData);
     }
     return this.convertSingleMysqlData(mysqlData);
   }
@@ -26,7 +26,7 @@ class DatabaseManager {
     return mysqlData.dataValues;
   }
 
-  converArrayMysqlData(mysqlDatas) {
+  convertArrayMysqlData(mysqlDatas) {
     const convertedData = mysqlDatas.map(mysqlData => {
       return this.convertMysqlData(mysqlData);
     });
