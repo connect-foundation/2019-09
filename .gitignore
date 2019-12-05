@@ -190,6 +190,9 @@ build/
 # production
 /build
 
+# develop
+demoData.js
+
 # misc
 .DS_Store
 .env.local
