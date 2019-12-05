@@ -13,4 +13,5 @@ export {
   MainIntroductionTitle,
   MainSlogan,
   MOBILE_VIEW_BREAKPOINT,
+  TOP_RANKS,
 };

@@ -9,6 +9,8 @@ export { default as ChattingWindow } from './ChattingWindow';
 export { default as InputWindow } from './InputWindow';
 export { default as PlayerProfile } from './PlayerProfile';
 export { default as Slogan } from './Slogan';
+export { default as RankingRow } from './RankingRow';
+export { default as RankPodium } from './RankPodium';
 export {
   MenuButton,
   SendButton,

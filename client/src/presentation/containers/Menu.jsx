@@ -78,8 +78,9 @@ const Menu = () => {
       >
         <MenuButton fontSize={menuButtonFontSize}>PLAY</MenuButton>
       </Link>
-
-      <MenuButton fontSize={menuButtonFontSize}>RANK</MenuButton>
+      <Link to="/ranking" className={classes.fullAnchor}>
+        <MenuButton>RANK</MenuButton>
+      </Link>
     </Container>
   );
 };
