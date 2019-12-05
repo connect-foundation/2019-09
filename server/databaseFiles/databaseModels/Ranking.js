@@ -9,7 +9,7 @@ Ranking.init(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    points: {
+    score: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
       allowNull: false,
