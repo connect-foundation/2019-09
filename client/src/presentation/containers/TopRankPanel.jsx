@@ -4,12 +4,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
 import { RankPodium } from '../components';
 
-const useStyle = makeStyles(() => ({
+const useStyle = makeStyles(theme => ({
   topRankContainer: {
     height: '50rem',
     display: 'flex',
-    width: '30%',
+    width: '50rem',
     marginBottom: '2.5rem',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
 }));
 

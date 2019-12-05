@@ -18,6 +18,9 @@ const RankPodiumBar = styled.div`
   background-color: ${STYLE_COLORS.PURE_WHITE_COLOR};
   color: ${STYLE_COLORS.THEME_COLOR};
   font-weight: bold;
+  @media (max-width: 600px) {
+    font-size: 9rem;
+  }
 `;
 
 const RankPodiumWrapper = styled.div`
@@ -40,6 +43,9 @@ const RankerInformation = styled.div`
 const RankerDescription = styled.div`
   font-size: 2.5rem;
   text-align: center;
+  @media (max-width: 600px) {
+    font-size: 4rem;
+  }
 `;
 
 const RankPodium = ({ rank, rankerScore, rankerNickname }) => {

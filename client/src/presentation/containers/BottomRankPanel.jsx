@@ -4,9 +4,13 @@ import PropTypes from 'prop-types';
 import { Container } from '@material-ui/core';
 import { RankingRow } from '../components';
 
-const useStyle = makeStyles(() => ({
+const useStyle = makeStyles(theme => ({
   bottomRankContainer: {
-    width: '30%',
+    width: '50rem',
+    marginBottom: '3rem',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
 }));
 
