@@ -6,7 +6,7 @@
 require('dotenv').config();
 const debug = require('debug')('server:server');
 const http = require('http');
-const { connection } = require('../databaseFiles/databaseModels');
+const connection = require('../databaseFiles/connection');
 const { initializeQuizzes } = require('../databaseFiles/databaseModels/seeder');
 const app = require('../app');
 

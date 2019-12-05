@@ -1,4 +1,4 @@
-const connection = require('./connection');
+const connection = require('../connection');
 const Ranking = require('./Ranking');
 const Quiz = require('./Quiz');
 

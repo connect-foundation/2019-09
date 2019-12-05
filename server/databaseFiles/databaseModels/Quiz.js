@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const connection = require('./connection');
+const connection = require('../connection');
 
 class Quiz extends Sequelize.Model {}
 
