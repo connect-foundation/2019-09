@@ -12,7 +12,7 @@ const RankPodiumBar = styled.div`
   border: 2px solid ${STYLE_COLORS.THEME_COLOR};
   display: flex;
   font-size: 5rem;
-  flex-direction: colun;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: ${STYLE_COLORS.PURE_WHITE_COLOR};
