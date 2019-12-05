@@ -13,7 +13,6 @@ const assignViewer = (viewer, streamer) => {
   });
 };
 const sendReady = (roomId, player) => {
-  console.log('sendReady', player);
   io.in(roomId).emit('sendReady', {
     socketId: player.getSocketId(),
     isReady: player.getIsReady(),
@@ -46,10 +45,16 @@ const disconnectPlayersAndStartGame = (players, gameManager) => {
   /**
    * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
    */
-  io.in(gameManager.roomId).emit('prepareSet', {
-    currentRound: gameManager.getCurrentRound(),
-    currentSet: gameManager.getCurrentSet(),
-    quizCandidates: ['문어', '고양이', '부스트캠퍼'], // getQuizCandidates()
+  gameManager.getPlayers().forEach(player => {
+    const socketId = player.getSocketId();
+
+    io.to(socketId).emit('prepareSet', {
+      currentRound: gameManager.getCurrentRound(),
+      currentSet: gameManager.getCurrentSet(),
+      quizCandidates: gameManager.isStreamer(socketId)
+        ? ['문어', '고양이', '부스트캠퍼']
+        : [], // getQuizCandidates()
+    });
   });
 
   gameManager.startQuizSelectTimer(currentSeconds => {
@@ -63,7 +68,7 @@ const sendReadyHandler = (socket, { isReady }) => {
   const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
   const playerCount = gameManager.getPlayers().length;
 
-  if (gameManager.status === 'playing') return;
+  // if (gameManager.status === 'playing') return;
 
   const player = gameManager.getPlayerBySocketId(socket.id);
   player.setIsReady(isReady);
