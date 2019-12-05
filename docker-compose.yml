@@ -34,11 +34,5 @@ services:
     restart: always
     env_file:
       - ./.env
-
-    environment:
-      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
-      MYSQL_USER: '${MYSQL_USER_NAME}'
-      MYSQL_PASSWORD: '${MYSQL_USER_PASSWORD}'
-      MYSQL_DATABASE: '${MYSQL_DATABASE}'
     ports:
       - '3306:3306'

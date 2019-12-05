@@ -4,8 +4,8 @@ const { env } = process;
 
 const connection = new Sequelize.Sequelize(
   env.MYSQL_DATABASE,
-  env.MYSQL_USER_NAME,
-  env.MYSQL_USER_PASSWORD,
+  env.MYSQL_USER,
+  env.MYSQL_PASSWORD,
   {
     host: env.DATABASE_HOST,
     dialect: env.DATABASE_DIALECT,
