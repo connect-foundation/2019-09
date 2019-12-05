@@ -3,20 +3,12 @@ import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
 
 class GameManager {
-  /**
-   * playerList { player }
-   * player {
-   *  name
-   *  score
-   *  isReady
-   *  isStreamer
-   * }
-   */
   constructor(socket, localPlayer, remotePlayers) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
+    this.quizSelectTimer = null;
   }
 
   findMatch(nickname) {
@@ -34,6 +26,18 @@ class GameManager {
       'sendCurrentSeconds',
       this.sendCurrentSecondsHandler.bind(this),
     );
+    this.socket.on('startSet', this.startSetHandler.bind(this));
+    // this.socket.on('endSet', this.endSetHandler.bind(this));
+  }
+
+  startSetHandler({ quiz, quizLength }) {
+    this.dispatch({
+      type: 'setQuiz',
+      payload: {
+        quiz,
+        quizLength,
+      },
+    });
   }
 
   prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
@@ -62,6 +66,15 @@ class GameManager {
           quizCandidates,
         },
       });
+
+      this.quizSelectTimer = setTimeout(() => {
+        const randomIndex = Math.round(
+          Math.random() * (quizCandidates.length - 1),
+        );
+
+        const quiz = quizCandidates[randomIndex];
+        this.selectQuiz(quiz);
+      }, 10000);
     }
   }
 
@@ -113,6 +126,12 @@ class GameManager {
       this.remotePlayers,
     );
     this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+  }
+
+  selectQuiz(quiz) {
+    this.socket.emit('selectQuiz', { quiz });
+    clearTimeout(this.quizSelectTimer);
+    this.quizSelectTimer = null;
   }
 }
 
