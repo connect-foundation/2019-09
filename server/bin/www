@@ -3,9 +3,11 @@
 /**
  * Module dependencies.
  */
-
+require('dotenv').config();
 const debug = require('debug')('server:server');
 const http = require('http');
+const connection = require('../databaseFiles/connection');
+const { initializeQuizzes } = require('../databaseFiles/databaseModels/seeder');
 const app = require('../app');
 
 /**
@@ -80,9 +82,12 @@ function onListening() {
 /**
  * Listen on provided port, on all network interfaces.
  */
+(async () => {
+  await connection.sync();
+  await initializeQuizzes();
 
-app.gameService.attach(server);
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  app.gameService.attach(server);
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+})();
