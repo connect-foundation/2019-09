@@ -16,8 +16,6 @@ const selectQuizHandler = (socket, { quiz }) => {
   gameManager.clearQuizSelectTimer();
   gameManager.setQuiz(quiz);
   gameManager.setStatus('playing');
-  io.in(gameManager.getRoomId()).emit('startSet', { quiz });
-
   gameManager.getPlayers().forEach(player => {
     const socketId = player.getSocketId();
 
