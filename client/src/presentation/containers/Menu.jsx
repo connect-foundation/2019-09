@@ -74,11 +74,7 @@ const Menu = () => {
         <MenuButton>PLAY</MenuButton>
       </Link>
 
-      <Link
-        to="/ranking"
-        className={classes.fullAnchor}
-        onClick={playButtonClickHandler}
-      >
+      <Link to="/ranking" className={classes.fullAnchor}>
         <MenuButton>RANK</MenuButton>
       </Link>
     </Container>
