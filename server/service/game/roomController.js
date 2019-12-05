@@ -39,8 +39,8 @@ const isRoomJoinable = gameManager => {
   if (players.length === 0) return false;
 
   const isRoomFull = players.length >= MAX_PLAYER_COUNT;
-  const isRoomPlaying = gameManager.getStatus() === 'playing';
-  return !isRoomFull && !isRoomPlaying;
+  const isRoomWaiting = gameManager.getStatus() === 'waiting';
+  return !isRoomFull && isRoomWaiting;
 };
 
 /**

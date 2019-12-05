@@ -3,6 +3,7 @@ const {
   MAX_PEER_CONNECTION_WAITING_TIME,
   MAX_QUIZ_SELECTION_WAITING_TIME,
   ONE_SECOND,
+  ONE_SET_SECONDS,
 } = require('../../config');
 
 class GameManager {
@@ -17,6 +18,7 @@ class GameManager {
     this.streamer = null;
     this.peerConnectCheckTimer = null;
     this.quizSelectTimer = null;
+    this.playingTimer = null;
   }
 
   addPlayer(player) {
@@ -51,6 +53,14 @@ class GameManager {
     return this.status;
   }
 
+  setQuiz(quiz) {
+    this.quiz = quiz;
+  }
+
+  setStatus(status) {
+    this.status = status;
+  }
+
   /**
    * 인자로 받는 socket id를 제외한 나머지 player를 배열로 반환해주는 함수
    * @param {string} socketId
@@ -78,7 +88,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = 'playing';
+    this.status = 'initializing';
   }
 
   prepareSet() {
@@ -121,7 +131,7 @@ class GameManager {
   leaveRoom(socketId) {
     this.removePlayer(socketId);
 
-    if (this.status !== 'playing') return;
+    if (this.status === 'waiting') return;
 
     this.removeStreamerCandidate(socketId);
 
@@ -178,6 +188,25 @@ class GameManager {
   clearQuizSelectTimer() {
     clearTimeout(this.quizSelectTimer);
     this.quizSelectTimer = null;
+  }
+
+  startPlayingTimer(emitSendCurrentSeconds, emitEndSet) {
+    let iterationCount = ONE_SET_SECONDS;
+    const updateTimer = () => {
+      if (--iterationCount < 0) {
+        this.clearPlayingTimer();
+        emitEndSet(this.roomId);
+        return;
+      }
+      emitSendCurrentSeconds(iterationCount, this.roomId);
+      this.playingTimer = setTimeout(updateTimer, ONE_SECOND);
+    };
+    this.playingTimer = setTimeout(updateTimer);
+  }
+
+  clearPlayingTimer() {
+    clearTimeout(this.playingTimer);
+    this.playingTimer = null;
   }
 
   checkAllConnectionsToStreamer() {
