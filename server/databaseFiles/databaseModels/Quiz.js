@@ -10,7 +10,7 @@ Quiz.init(
       allowNull: false,
       defaultValue: '',
     },
-    selected: {
+    selected_count: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
     },
