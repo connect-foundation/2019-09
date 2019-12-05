@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const Sequelize = require('./node_modules/sequelize');
 const connection = require('./connection');
 
 class Ranking extends Sequelize.Model {}
@@ -9,7 +9,7 @@ Ranking.init(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    points: {
+    score: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
       allowNull: false,
