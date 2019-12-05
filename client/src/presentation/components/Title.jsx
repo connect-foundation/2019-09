@@ -4,13 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyle = makeStyles({
-  title: {
+  title: props => ({
     margin: '0.5rem 0',
-  },
+    fontSize: props.fontSize || '2rem',
+  }),
 });
 
-const Title = ({ content }) => {
-  const classes = useStyle();
+const Title = ({ content, fontSize }) => {
+  const classes = useStyle({ fontSize });
   return (
     <Typography className={classes.title} variant="h2" gutterBottom>
       {content}
@@ -20,6 +21,7 @@ const Title = ({ content }) => {
 
 Title.propTypes = {
   content: PropTypes.string.isRequired,
+  fontSize: PropTypes.string.isRequired,
 };
 
 export default Title;
