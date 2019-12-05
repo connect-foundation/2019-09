@@ -163,9 +163,9 @@ class GameManager {
   }
 
   startQuizSelectTimer(emitSendCurrentSeconds) {
-    let iterationCount = 0;
+    let iterationCount = MAX_QUIZ_SELECTION_WAITING_TIME;
     const updateTimer = () => {
-      if (++iterationCount > MAX_QUIZ_SELECTION_WAITING_TIME) {
+      if (--iterationCount < 0) {
         this.clearQuizSelectTimer();
         return;
       }
