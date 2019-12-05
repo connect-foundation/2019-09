@@ -4,15 +4,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyle = makeStyles({
-  description: {
+  description: props => ({
     margin: '0 0.2rem',
-    fontSize: '1.2rem',
+    fontSize: props.fontSize || '1rem',
     whiteSpace: 'pre-line',
-  },
+  }),
 });
 
-const Description = ({ content }) => {
-  const classes = useStyle();
+const Description = ({ content, fontSize }) => {
+  const classes = useStyle({ fontSize });
   return (
     <Typography className={classes.description} variant="body1" gutterBottom>
       {content}
@@ -22,6 +22,7 @@ const Description = ({ content }) => {
 
 Description.propTypes = {
   content: PropTypes.string.isRequired,
+  fontSize: PropTypes.string.isRequired,
 };
 
 export default Description;
