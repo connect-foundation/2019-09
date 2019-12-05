@@ -3,20 +3,15 @@ import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { TopRankPanel, BottomRankPanel } from '../../containers';
 import { ExitButton } from '../../components';
-import { TOP_RANKS } from '../../../config';
 import { rankingList } from '../../../demoData';
 import useStyle from './style';
 
 const getTopRankingList = totalRankingList => {
-  return totalRankingList.filter(ranking => {
-    return TOP_RANKS.includes(ranking.rank);
-  });
+  return totalRankingList.slice(0, 3);
 };
 
 const getBottomRankingList = totalRankingList => {
-  return totalRankingList.filter(ranking => {
-    return !TOP_RANKS.includes(ranking.rank);
-  });
+  return totalRankingList.slice(3);
 };
 
 const Ranking = () => {
