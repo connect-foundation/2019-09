@@ -29,6 +29,40 @@ class GameManager {
     this.socket.on('sendNewPlayer', this.sendNewPlayerHandler.bind(this));
     this.socket.on('sendReady', this.sendReadyHandler.bind(this));
     this.socket.on('startGame', this.startGameHandler.bind(this));
+    this.socket.on('prepareSet', this.prepareSetHandler.bind(this));
+    this.socket.on(
+      'sendCurrentSeconds',
+      this.sendCurrentSecondsHandler.bind(this),
+    );
+  }
+
+  prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
+    console.log(
+      'prepareSetHandler : ',
+      currentRound,
+      currentSet,
+      quizCandidates,
+    );
+    this.dispatch({
+      type: 'setCurrentRound',
+      payload: { currentRound },
+    });
+    this.dispatch({
+      type: 'setCurrentSet',
+      payload: { currentSet },
+    });
+    this.dispatch({
+      type: 'setQuizCandidates',
+      payload: { quizCandidates },
+    });
+  }
+
+  sendCurrentSecondsHandler({ currentSeconds }) {
+    console.log('sendCurrentSecondsHandler', currentSeconds);
+    this.dispatch({
+      type: 'setCurrentSeconds',
+      payload: { currentSeconds },
+    });
   }
 
   startGameHandler() {

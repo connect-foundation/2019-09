@@ -20,6 +20,26 @@ const reducer = (state, action) => {
         ...state,
         gameProgress: action.payload.gameProgress,
       };
+    case 'setCurrentRound':
+      return {
+        ...state,
+        currentRound: action.payload.currentRound,
+      };
+    case 'setCurrentSet':
+      return {
+        ...state,
+        currentSet: action.payload.currentSet,
+      };
+    case 'setQuizCandidates':
+      return {
+        ...state,
+        quizCandidates: action.payload.quizCandidates,
+      };
+    case 'setCurrentSeconds':
+      return {
+        ...state,
+        currentSeconds: action.payload.currentSeconds,
+      };
     default:
       throw new Error();
   }
