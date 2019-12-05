@@ -4,7 +4,7 @@ const { Quiz } = require('../');
 
 const initializeQuizzes = async () => {
   const quizzes = [];
-  fs.createReadStream('./databaseModels/seeder/quizzes.csv')
+  fs.createReadStream('./databaseFiles/databaseModels/seeder/quizzes.csv')
     .pipe(csv())
     .on('data', data => {
       quizzes.push(data);
