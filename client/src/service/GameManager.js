@@ -129,6 +129,13 @@ class GameManager {
   }
 
   selectQuiz(quiz) {
+    this.dispatch({
+      type: 'setQuizCandidatesNotice',
+      payload: {
+        isVisible: false,
+        quizCandidates: [],
+      },
+    });
     this.socket.emit('selectQuiz', { quiz });
     clearTimeout(this.quizSelectTimer);
     this.quizSelectTimer = null;
