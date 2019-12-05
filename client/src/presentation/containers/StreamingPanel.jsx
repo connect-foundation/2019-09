@@ -19,7 +19,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const StreamingPanel = ({ clientManager }) => {
-  const { quizCandidatesNotice } = useContext(GlobalContext);
+  const { quizCandidatesNotice, stream, isVideoVisible } = useContext(
+    GlobalContext,
+  );
   const { isVisible, quizCandidates } = quizCandidatesNotice;
 
   const classes = useStyles();
@@ -30,7 +32,7 @@ const StreamingPanel = ({ clientManager }) => {
 
   return (
     <Container className={classes.container}>
-      <StreamerVideo />
+      {isVideoVisible ? <StreamerVideo stream={stream} /> : ''}
       {isVisible ? (
         <WordCandidates
           words={quizCandidates}

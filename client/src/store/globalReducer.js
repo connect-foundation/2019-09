@@ -71,6 +71,16 @@ const reducer = (state, action) => {
         quiz: action.payload.quiz,
         quizLength: action.payload.quizLength,
       };
+    case 'setStream':
+      return {
+        ...state,
+        stream: action.payload.stream,
+      };
+    case 'setIsVideoVisible':
+      return {
+        ...state,
+        isVideoVisible: action.payload.isVideoVisible,
+      };
     default:
       throw new Error();
   }

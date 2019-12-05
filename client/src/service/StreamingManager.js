@@ -58,7 +58,7 @@ class StreamingManager {
       });
     });
     const stream = webRTCManager.getStream();
-    document.querySelector('video').srcObject = stream;
+    this.dispatch({ type: 'setStream', payload: { stream } });
   }
 
   async assignViewerHandler({ streamerSocketId }) {
@@ -108,12 +108,7 @@ class StreamingManager {
 
   // eslint-disable-next-line class-methods-use-this
   trackHandler(stream) {
-    /** @todo 추후 view의 dispatch 연결 */
-    if (document.querySelector('video')) {
-      document.querySelector('video').srcObject = stream;
-    }
-    // this.dispatch({ type: 'setStream', payload: { stream } });
-
+    this.dispatch({ type: 'setStream', payload: { stream } });
     this.socket.emit('connectPeer');
   }
 
@@ -128,9 +123,6 @@ class StreamingManager {
   resetWebRTC() {
     this.webRTCManager.closeAllConnections();
     this.webRTCManager.removeTracks();
-    if (document.querySelector('video')) {
-      document.querySelector('video').srcObject = null;
-    }
     this.webRTCManager = new WebRTCManager();
   }
 }

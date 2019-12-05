@@ -7,6 +7,8 @@ const initialState = {
   currentSeconds: 0,
   quiz: '',
   quizLength: 0,
+  stream: null,
+  isVideoVisible: false,
   messageNotice: {
     isVisible: false,
     message: '',

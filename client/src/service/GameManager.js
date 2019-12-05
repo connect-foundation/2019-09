@@ -38,6 +38,12 @@ class GameManager {
         quizLength,
       },
     });
+    this.dispatch({
+      type: 'setIsVideoVisible',
+      payload: {
+        isVideoVisible: true,
+      },
+    });
   }
 
   prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
