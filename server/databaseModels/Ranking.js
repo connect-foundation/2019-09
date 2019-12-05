@@ -22,7 +22,7 @@ Ranking.init(
   },
   {
     sequelize: connection,
-    modelName: 'player',
+    modelName: 'ranking',
   },
 );
 
