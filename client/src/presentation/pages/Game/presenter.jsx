@@ -73,7 +73,11 @@ const GamePresentation = ({ gameProps }) => {
         <Grid
           item
           xs={7}
-          className={[classes.bottomGridContent, classes.mobileFullWidth]}
+          className={[
+            classes.bottomGridContent,
+            classes.mobileFullWidth,
+            classes.streamingPanelGrid,
+          ]}
         >
           <StreamingPanel
             className={classes.mobileFullWidth}
