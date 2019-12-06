@@ -1,3 +1,5 @@
+import initialState from './globalState';
+
 const reducer = (state, action) => {
   switch (action.type) {
     case 'addChatting':
@@ -85,6 +87,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         isChattingDisabled: action.payload.isChattingDisabled,
+      };
+    case 'reset':
+      return {
+        ...initialState,
       };
     default:
       throw new Error();

@@ -23,6 +23,18 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
       id: short.generate(),
     });
     io.to(socket.id).emit('correctAnswer');
+    const score = gameManager.getRemainingPlayingTime() + 50;
+    player.setScore(score);
+    player.setIsCorrectPlayer(true);
+
+    if (gameManager.checkAllPlayersAreCorrect()) {
+      io.in(gameManager.getRoomId()).emit('endSet', {
+        scoreList: gameManager.getScoreList(),
+      });
+      gameManager.reset();
+      gameManager.clearPlayingTimer();
+      gameManager.resetAllPlayers();
+    }
   } else {
     io.in(socket.roomId).emit('sendChattingMessage', {
       nickname,

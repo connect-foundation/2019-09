@@ -7,8 +7,13 @@ const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
   });
 };
 
-const endSetHandler = roomId => {
-  io.in(roomId).emit('endSet');
+const endSetHandler = gameManager => {
+  io.in(gameManager.getRoomId()).emit('endSet', {
+    scoreList: gameManager.getScoreList(),
+  });
+  gameManager.reset();
+  gameManager.clearPlayingTimer();
+  gameManager.resetAllPlayers();
 };
 
 const selectQuizHandler = (socket, { quiz }) => {
