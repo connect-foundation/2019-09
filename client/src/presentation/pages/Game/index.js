@@ -10,10 +10,6 @@ import useStyles from './style';
 let isClientManagerInitialized = false;
 let clientManager;
 
-const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
-const currentSeconds = '120'; // Demo Purpose
-const quizWord = 'hello'; // Demo Purpose
-
 const exitButtonHandler = () => {
   isClientManagerInitialized = false;
   clientManager.exitRoom();

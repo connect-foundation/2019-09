@@ -1,5 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
@@ -35,7 +33,7 @@ const WordCandidates = ({ words, onClick }) => {
 };
 
 WordCandidates.propTypes = {
-  words: PropTypes.array.isRequired,
+  words: PropTypes.arrayOf.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

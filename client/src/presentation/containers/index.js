@@ -7,3 +7,5 @@ export { default as PlayerPanel } from './PlayerPanel';
 export { default as MobileChattingPanel } from './MobileChattingPanel';
 export { default as TopRankPanel } from './TopRankPanel';
 export { default as BottomRankPanel } from './BottomRankPanel';
+// eslint-disable-next-line import/no-unresolved
+export { default as ScoreBoard } from './ScoreBoard';

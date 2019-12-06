@@ -8,9 +8,15 @@ const MainSlogan = `"Talk is cheap. Show me the move."`;
 
 const MOBILE_VIEW_BREAKPOINT = 600;
 
+const DEFAULT_SCOREBOARD_TITLE = 'Final Score';
+
+const STREAMER_LOADING_MESSAGE = 'Waiting for streamer...';
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
   MainSlogan,
   MOBILE_VIEW_BREAKPOINT,
+  DEFAULT_SCOREBOARD_TITLE,
+  STREAMER_LOADING_MESSAGE,
 };

@@ -2,15 +2,15 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
-const Timer = ({ currentSeconds }) => {
-  const useStyles = makeStyles(() => ({
-    timer: {
-      fontSize: '3rem',
-      fontWeight: 'bold',
-      color: '#ffffff',
-    },
-  }));
+const useStyles = makeStyles(() => ({
+  timer: {
+    fontSize: '3rem',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+}));
 
+const Timer = ({ currentSeconds }) => {
   const classes = useStyles();
 
   return (
