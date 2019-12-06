@@ -171,7 +171,7 @@ class GameManager {
     this.peerConnectCheckTimer = setTimeout(() => {
       const playersToDisconnect = this.getPlayersUnconnectedToStreamer();
 
-      disconnectPlayersAndStartGame(playersToDisconnect, this.roomId);
+      disconnectPlayersAndStartGame(playersToDisconnect, this);
       this.clearPeerConnectCheckTimer();
     }, MAX_PEER_CONNECTION_WAITING_TIME);
   }
