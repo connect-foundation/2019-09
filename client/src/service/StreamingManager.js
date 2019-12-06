@@ -15,7 +15,7 @@ class StreamingManager {
   registerSocketEvents() {
     this.socket.on('assignStreamer', this.assignStreamerHandler.bind(this));
     this.socket.on('assignViewer', this.assignViewerHandler.bind(this));
-    this.socket.on('sendCandidate', this.sendCandidateHandler.bind(this));
+    this.socket.on('sendIceCandidate', this.sendIceCandidateHandler.bind(this));
     this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
   }
 
@@ -58,7 +58,7 @@ class StreamingManager {
       });
     });
     const stream = webRTCManager.getStream();
-    document.querySelector('video').srcObject = stream;
+    this.dispatch({ type: 'setStream', payload: { stream } });
   }
 
   async assignViewerHandler({ streamerSocketId }) {
@@ -85,8 +85,8 @@ class StreamingManager {
     webRTCManager.registerTrack(streamerSocketId, trackHandler.bind(this));
   }
 
-  async sendCandidateHandler({ target, candidate }) {
-    await this.webRTCManager.addIceCandidate(target, candidate);
+  async sendIceCandidateHandler({ target, iceCandidate }) {
+    await this.webRTCManager.addIceCandidate(target, iceCandidate);
   }
 
   async sendDescriptionHandler({ target, description }) {
@@ -100,19 +100,16 @@ class StreamingManager {
 
   iceCandidateHandler(socketId, event) {
     if (!event.candidate) return;
-    this.socket.emit('sendCandidate', {
+    this.socket.emit('sendIceCandidate', {
       target: socketId,
-      candidate: event.candidate,
+      iceCandidate: event.candidate,
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
   trackHandler(stream) {
-    /** @todo 추후 view의 dispatch 연결 */
-    if (document.querySelector('video')) {
-      document.querySelector('video').srcObject = stream;
-    }
-    // this.dispatch({ type: 'setStream', payload: { stream } });
+    this.dispatch({ type: 'setStream', payload: { stream } });
+    this.socket.emit('connectPeer');
   }
 
   closeConnection(socketId) {
@@ -126,9 +123,6 @@ class StreamingManager {
   resetWebRTC() {
     this.webRTCManager.closeAllConnections();
     this.webRTCManager.removeTracks();
-    if (document.querySelector('video')) {
-      document.querySelector('video').srcObject = null;
-    }
     this.webRTCManager = new WebRTCManager();
   }
 }

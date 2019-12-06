@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { GlobalContext } from '../../../contexts';
 import WordCandidates from '../WordCandidates';
 import { CenterTimer } from '../../components';
 import walkingCatImageSource from '../../../assets/cat.gif';
@@ -14,6 +15,7 @@ const makeGameMessageContent = ({
   words,
   loadingImageSource,
   loadingMessage,
+  quizCandidateButtonHandler,
 }) => {
   if (messageType === 'streamerLoading') {
     return {
@@ -21,30 +23,46 @@ const makeGameMessageContent = ({
       bottom: <p>{loadingMessage}</p>,
     };
   }
-  if (messageType === 'centerTimer') {
+  if (messageType === 'quizSelection') {
     return {
       center: <CenterTimer currentSeconds={currentSeconds} />,
-      bottom: <WordCandidates words={words} />,
+      bottom: (
+        <WordCandidates words={words} onClick={quizCandidateButtonHandler} />
+      ),
     };
   }
   return [];
 };
 
-const StreamingPanel = ({
-  words,
-  showScoreBoard,
-  showGameMessageBox,
-  messageType,
-  currentSeconds,
-}) => {
+const StreamingPanel = ({ showScoreBoard, clientManager }) => {
+  const {
+    quizCandidatesNotice,
+    stream,
+    isVideoVisible,
+    currentSeconds,
+  } = useContext(GlobalContext);
+
+  let showGameMessageBox = false;
+  let messageType;
+  const { isVisible, quizCandidates } = quizCandidatesNotice;
+  const quizCandidateButtonHandler = quiz => {
+    clientManager.selectQuiz(quiz);
+  };
+
+  if (isVisible) {
+    messageType = 'quizSelection';
+    showGameMessageBox = true;
+  }
+
   let gameMessageContent;
   if (showGameMessageBox) {
     gameMessageContent = makeGameMessageContent({
       messageType,
       currentSeconds,
-      words,
       loadingImageSource: walkingCatImageSource,
       loadingMessage: STREAMER_LOADING_MESSAGE,
+      words: quizCandidates,
+      quizCandidateButtonHandler,
     });
   }
 
@@ -53,6 +71,8 @@ const StreamingPanel = ({
     showScoreBoard,
     showGameMessageBox,
     gameMessageContent,
+    stream,
+    isVideoVisible,
   };
 
   return (
@@ -61,11 +81,8 @@ const StreamingPanel = ({
 };
 
 StreamingPanel.propTypes = {
-  words: PropTypes.array.isRequired,
-  messageType: PropTypes.string.isRequired,
-  currentSeconds: PropTypes.number.isRequired,
+  clientManager: PropTypes.shape.isRequired,
   showScoreBoard: PropTypes.bool.isRequired,
-  showGameMessageBox: PropTypes.bool.isRequired,
 };
 
 export default StreamingPanel;

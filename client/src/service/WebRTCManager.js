@@ -179,10 +179,10 @@ class WebRTCManager {
    * socket을 통해 전송받은 ice candidate를 connection에 등록한다.
    *
    * @param {string} key
-   * @param {candidate} candidate
+   * @param {iceCandidate} iceCandidate
    */
-  async addIceCandidate(key, candidate) {
-    const rtcIceCandidate = new RTCIceCandidate(candidate);
+  async addIceCandidate(key, iceCandidate) {
+    const rtcIceCandidate = new RTCIceCandidate(iceCandidate);
     const peerConnection = this.peerConnections[key];
     await peerConnection.addIceCandidate(rtcIceCandidate);
   }

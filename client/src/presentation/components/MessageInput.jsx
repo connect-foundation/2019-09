@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     flex: 8,
   },
 });
-const MessageInput = ({ value, onChange, onKeyPress }) => {
+const MessageInput = ({ value, onChange, onKeyPress, isChattingDisabled }) => {
   const classes = useStyles();
   return (
     <Input
@@ -23,6 +23,7 @@ const MessageInput = ({ value, onChange, onKeyPress }) => {
       inputProps={{
         'aria-label': 'description',
       }}
+      disabled={isChattingDisabled}
     />
   );
 };
@@ -31,6 +32,7 @@ MessageInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onKeyPress: PropTypes.func.isRequired,
+  isChattingDisabled: PropTypes.bool.isRequired,
 };
 
 export default MessageInput;

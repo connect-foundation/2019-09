@@ -11,12 +11,22 @@ const StreamingPanelPresentation = ({ streamingPanelProps }) => {
     showScoreBoard,
     showGameMessageBox,
     gameMessageContent,
+    stream,
+    isVideoVisible,
+    // quizCandidates,
+    // quizCandidateButtonHandler,
   } = streamingPanelProps;
   return (
     <Box className={classes.container}>
-      <StreamerVideo />
+      {isVideoVisible ? <StreamerVideo stream={stream} /> : ''}
       {showScoreBoard && <ScoreBoard scoreRows={scoreRows} />}
-      {showGameMessageBox && <GameMessageBox content={gameMessageContent} />}
+      {showGameMessageBox && (
+        <GameMessageBox
+          content={gameMessageContent}
+          // quizCandidates={quizCandidates}
+          // quizCandidateButtonHandler={quizCandidateButtonHandler}
+        />
+      )}
     </Box>
   );
 };
@@ -27,6 +37,10 @@ StreamingPanelPresentation.propTypes = {
   showScoreBoard: PropTypes.bool.isRequired,
   showGameMessageBox: PropTypes.bool.isRequired,
   gameMessageContent: PropTypes.shape.isRequired,
+  stream: PropTypes.shape.isRequired,
+  isVideoVisible: PropTypes.bool.isRequired,
+  // quizCandidates: PropTypes.arrayOf.isRequired,
+  // quizCandidateButtonHandler: PropTypes.func.isRequired,
 };
 
 export default StreamingPanelPresentation;

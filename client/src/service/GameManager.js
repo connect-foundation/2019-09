@@ -3,20 +3,12 @@ import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
 
 class GameManager {
-  /**
-   * playerList { player }
-   * player {
-   *  name
-   *  score
-   *  isReady
-   *  isStreamer
-   * }
-   */
   constructor(socket, localPlayer, remotePlayers) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
+    this.quizSelectTimer = null;
   }
 
   findMatch(nickname) {
@@ -29,6 +21,85 @@ class GameManager {
     this.socket.on('sendNewPlayer', this.sendNewPlayerHandler.bind(this));
     this.socket.on('sendReady', this.sendReadyHandler.bind(this));
     this.socket.on('startGame', this.startGameHandler.bind(this));
+    this.socket.on('prepareSet', this.prepareSetHandler.bind(this));
+    this.socket.on(
+      'sendCurrentSeconds',
+      this.sendCurrentSecondsHandler.bind(this),
+    );
+    this.socket.on('startSet', this.startSetHandler.bind(this));
+    this.socket.on('correctAnswer', this.correctAnswerHandler.bind(this));
+    // this.socket.on('endSet', this.endSetHandler.bind(this));
+  }
+
+  correctAnswerHandler() {
+    this.dispatch({
+      type: 'setIsChattingDisabled',
+      payload: {
+        isChattingDisabled: true,
+      },
+    });
+  }
+
+  startSetHandler({ quiz, quizLength }) {
+    this.dispatch({
+      type: 'setQuiz',
+      payload: {
+        quiz,
+        quizLength,
+      },
+    });
+    this.dispatch({
+      type: 'setIsVideoVisible',
+      payload: {
+        isVideoVisible: true,
+      },
+    });
+  }
+
+  prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
+    this.dispatch({
+      type: 'setCurrentRound',
+      payload: { currentRound },
+    });
+    this.dispatch({
+      type: 'setCurrentSet',
+      payload: { currentSet },
+    });
+
+    if (quizCandidates.length === 0) {
+      this.dispatch({
+        type: 'setMessageNotice',
+        payload: {
+          isVisible: true,
+          message: '출제자가 단어를 선택 중입니다.',
+        },
+      });
+    } else {
+      this.dispatch({
+        type: 'setQuizCandidatesNotice',
+        payload: {
+          isVisible: true,
+          quizCandidates,
+        },
+      });
+
+      this.quizSelectTimer = setTimeout(() => {
+        const randomIndex = Math.round(
+          Math.random() * (quizCandidates.length - 1),
+        );
+
+        const quiz = quizCandidates[randomIndex];
+        this.selectQuiz(quiz);
+      }, 10000);
+    }
+  }
+
+  sendCurrentSecondsHandler({ currentSeconds }) {
+    console.log('sendCurrentSecondsHandler', currentSeconds);
+    this.dispatch({
+      type: 'setCurrentSeconds',
+      payload: { currentSeconds },
+    });
   }
 
   startGameHandler() {
@@ -71,6 +142,19 @@ class GameManager {
       this.remotePlayers,
     );
     this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+  }
+
+  selectQuiz(quiz) {
+    this.dispatch({
+      type: 'setQuizCandidatesNotice',
+      payload: {
+        isVisible: false,
+        quizCandidates: [],
+      },
+    });
+    this.socket.emit('selectQuiz', { quiz });
+    clearTimeout(this.quizSelectTimer);
+    this.quizSelectTimer = null;
   }
 }
 

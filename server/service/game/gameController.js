@@ -2,13 +2,13 @@
  * 사용하지 않지만 로직 참고를 위해 남겨놓음
  */
 
-const io = require('./io');
+const io = require('../io');
 // const playerController = require('./playerController');
 const {
   INITIAL_ROUND,
   MIN_USER_COUNT,
   INITIAL_GAME_STATUS,
-} = require('../config');
+} = require('../../config');
 // done
 const assignStreamer = streamer => {
   io.to(streamer.socketId).emit('assignStreamer');

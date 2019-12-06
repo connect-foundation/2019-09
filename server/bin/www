@@ -3,9 +3,14 @@
 /**
  * Module dependencies.
  */
-
+/**
+ * @todo 추후 DB 용
+ */
+// require('dotenv').config();
 const debug = require('debug')('server:server');
 const http = require('http');
+// const connection = require('../databaseFiles/connection');
+// const { initializeQuizzes } = require('../databaseFiles/databaseModels/seeder');
 const app = require('../app');
 
 /**
@@ -81,8 +86,15 @@ function onListening() {
  * Listen on provided port, on all network interfaces.
  */
 
-app.gameService.attach(server);
+// (async () => {
+/**
+ * @todo 추후 DB 용
+ */
+// await connection.sync();
+// await initializeQuizzes();
 
+app.service.attach(server);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+// })();

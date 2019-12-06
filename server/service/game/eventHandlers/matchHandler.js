@@ -1,6 +1,6 @@
 const Player = require('../Player');
 const roomController = require('../roomController');
-const { getRandomColor } = require('../../utils/colorGenerator');
+const { getRandomColor } = require('../../../utils/colorGenerator');
 
 const emitEventsAfterJoin = socket => {
   socket.emit('startChatting');
