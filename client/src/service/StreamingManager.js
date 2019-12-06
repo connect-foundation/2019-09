@@ -41,8 +41,7 @@ class StreamingManager {
     const socketIds = Object.keys(remotePlayers);
     webRTCManager.closeAllConnections();
     await webRTCManager.createStream();
-    // 자신의 로컬 스트림을 생성하면 View로 dispatch 추후 디스플레이여부는 View에서 관장
-    // dispatch({ type: 'setStream', payload: { stream: webRTCManager.stream } });
+
     webRTCManager.createConnections(socketIds);
     webRTCManager.registerIceCandidates(
       socketIds,
@@ -118,6 +117,10 @@ class StreamingManager {
 
   closeAllConnections() {
     this.webRTCManager.closeAllConnections();
+  }
+
+  async getMediaPermission() {
+    await this.webRTCManager.getMediaPermission();
   }
 
   resetWebRTC() {
