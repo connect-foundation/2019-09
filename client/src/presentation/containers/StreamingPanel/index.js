@@ -34,17 +34,21 @@ const makeGameMessageContent = ({
   return [];
 };
 
-const StreamingPanel = ({ showScoreBoard, clientManager }) => {
+const StreamingPanel = ({ clientManager }) => {
   const {
     quizCandidatesNotice,
     stream,
     isVideoVisible,
     currentSeconds,
+    scoreNotice,
   } = useContext(GlobalContext);
 
   let showGameMessageBox = false;
+  let showScoreBoard = false;
   let messageType;
   const { isVisible, quizCandidates } = quizCandidatesNotice;
+  const { message, scoreList } = scoreNotice;
+  const isScoreBoardVisible = scoreNotice.isVisible;
   const quizCandidateButtonHandler = quiz => {
     clientManager.selectQuiz(quiz);
   };
@@ -52,6 +56,11 @@ const StreamingPanel = ({ showScoreBoard, clientManager }) => {
   if (isVisible) {
     messageType = 'quizSelection';
     showGameMessageBox = true;
+  }
+
+  if (isScoreBoardVisible) {
+    messageType = 'scoreBoard';
+    showScoreBoard = true;
   }
 
   let gameMessageContent;
@@ -73,6 +82,8 @@ const StreamingPanel = ({ showScoreBoard, clientManager }) => {
     gameMessageContent,
     stream,
     isVideoVisible,
+    scoreList,
+    message,
   };
 
   return (
@@ -82,7 +93,6 @@ const StreamingPanel = ({ showScoreBoard, clientManager }) => {
 
 StreamingPanel.propTypes = {
   clientManager: PropTypes.shape.isRequired,
-  showScoreBoard: PropTypes.bool.isRequired,
 };
 
 export default StreamingPanel;

@@ -7,6 +7,15 @@ class Player {
     this.nicknameColor = nicknameColor;
     this.socketId = socketId;
     this.isConnectedToStreamer = false;
+    this.isCorrectPlayer = false;
+  }
+
+  reset() {
+    this.type = 'viewer';
+    this.isReady = false;
+    this.score = 0;
+    this.isConnectedToStreamer = false;
+    this.isCorrectPlayer = false;
   }
 
   getNickname() {
@@ -37,6 +46,10 @@ class Player {
     return this.isConnectedToStreamer;
   }
 
+  getIsCorrectPlayer() {
+    return this.isCorrectPlayer;
+  }
+
   setIsReady(isReady) {
     this.isReady = isReady;
   }
@@ -51,6 +64,10 @@ class Player {
 
   setIsConnectedToStreamer(isConnectedToStreamer) {
     this.isConnectedToStreamer = isConnectedToStreamer;
+  }
+
+  setIsCorrectPlayer(isCorrectPlayer) {
+    this.isCorrectPlayer = isCorrectPlayer;
   }
 }
 module.exports = Player;

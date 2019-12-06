@@ -19,6 +19,7 @@ class GameManager {
     this.peerConnectCheckTimer = null;
     this.quizSelectTimer = null;
     this.playingTimer = null;
+    this.remainingPlayingTime = 0;
   }
 
   addPlayer(player) {
@@ -55,6 +56,10 @@ class GameManager {
 
   getStatus() {
     return this.status;
+  }
+
+  getRemainingPlayingTime() {
+    return this.remainingPlayingTime;
   }
 
   setQuiz(quiz) {
@@ -195,14 +200,14 @@ class GameManager {
   }
 
   startPlayingTimer(emitSendCurrentSeconds, emitEndSet) {
-    let iterationCount = ONE_SET_SECONDS;
+    this.remainingPlayingTime = ONE_SET_SECONDS;
     const updateTimer = () => {
-      if (--iterationCount < 0) {
+      if (--this.remainingPlayingTime < 0) {
         this.clearPlayingTimer();
-        emitEndSet(this.roomId);
+        emitEndSet(this);
         return;
       }
-      emitSendCurrentSeconds(iterationCount, this.roomId);
+      emitSendCurrentSeconds(this.remainingPlayingTime, this.roomId);
       this.playingTimer = setTimeout(updateTimer, ONE_SECOND);
     };
     this.playingTimer = setTimeout(updateTimer);
@@ -215,13 +220,34 @@ class GameManager {
 
   checkAllConnectionsToStreamer() {
     const viewers = this.getOtherPlayers(this.streamer.getSocketId());
-    return viewers.every(player => player.getIsConnectedToStreamer());
+    return viewers.every(viewer => viewer.getIsConnectedToStreamer());
   }
 
   cancelReadyAllPlayers() {
     this.players.forEach(player => {
       player.setIsReady(false);
     });
+  }
+
+  checkAllPlayersAreCorrect() {
+    const viewers = this.getOtherPlayers(this.streamer.getSocketId());
+    return viewers.every(viewer => viewer.getIsCorrectPlayer());
+  }
+
+  resetAllPlayers() {
+    this.players.forEach(player => {
+      player.reset();
+    });
+  }
+
+  getScoreList() {
+    const scoreList = this.players.map(player => {
+      return {
+        nickname: player.getNickname(),
+        score: player.getScore(),
+      };
+    });
+    return scoreList;
   }
 }
 

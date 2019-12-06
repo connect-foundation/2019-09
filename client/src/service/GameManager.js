@@ -28,10 +28,52 @@ class GameManager {
     );
     this.socket.on('startSet', this.startSetHandler.bind(this));
     this.socket.on('correctAnswer', this.correctAnswerHandler.bind(this));
-    // this.socket.on('endSet', this.endSetHandler.bind(this));
+    this.socket.on('endSet', this.endSetHandler.bind(this));
+  }
+
+  endSetHandler({ scoreList }) {
+    this.dispatch({
+      type: 'setGameStatus',
+      payload: { gameStatus: 'scoreSharing' },
+    });
+    this.dispatch({
+      type: 'setCurrentSeconds',
+      payload: { currentSeconds: 0 },
+    });
+    this.dispatch({
+      type: 'setQuiz',
+      payload: {
+        quiz: '',
+        quizLength: 0,
+      },
+    });
+    this.dispatch({
+      type: 'setIsChattingDisabled',
+      payload: {
+        isChattingDisabled: false,
+      },
+    });
+    this.dispatch({
+      type: 'setScoreNotice',
+      payload: {
+        isVisible: true,
+        message: '최종 점수',
+        scoreList,
+      },
+    });
+    setTimeout(() => {
+      // eslint-disable-next-line no-restricted-globals
+      location.reload();
+    }, 5000);
   }
 
   correctAnswerHandler() {
+    this.dispatch({
+      type: 'setIsChattingDisabled',
+      payload: {
+        isChattingDisabled: true,
+      },
+    });
     this.dispatch({
       type: 'setIsChattingDisabled',
       payload: {
@@ -95,7 +137,6 @@ class GameManager {
   }
 
   sendCurrentSecondsHandler({ currentSeconds }) {
-    console.log('sendCurrentSecondsHandler', currentSeconds);
     this.dispatch({
       type: 'setCurrentSeconds',
       payload: { currentSeconds },

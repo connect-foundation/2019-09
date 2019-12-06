@@ -3,7 +3,6 @@ import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import { StreamerVideo, GameMessageBox } from '../../components';
 import ScoreBoard from '../ScoreBoard';
-import { scoreRows } from '../../../demoData';
 
 const StreamingPanelPresentation = ({ streamingPanelProps }) => {
   const {
@@ -13,13 +12,15 @@ const StreamingPanelPresentation = ({ streamingPanelProps }) => {
     gameMessageContent,
     stream,
     isVideoVisible,
+    scoreList,
+    message,
     // quizCandidates,
     // quizCandidateButtonHandler,
   } = streamingPanelProps;
   return (
     <Box className={classes.container}>
       {isVideoVisible ? <StreamerVideo stream={stream} /> : ''}
-      {showScoreBoard && <ScoreBoard scoreRows={scoreRows} />}
+      {showScoreBoard && <ScoreBoard scoreRows={scoreList} title={message} />}
       {showGameMessageBox && (
         <GameMessageBox
           content={gameMessageContent}
