@@ -1,7 +1,7 @@
 const initialState = {
   chattingList: [],
   viewPlayerList: [],
-  gameProgress: 'waiting',
+  gameStatus: 'waiting',
   currentRound: 0,
   currentSet: 0,
   currentSeconds: 0,

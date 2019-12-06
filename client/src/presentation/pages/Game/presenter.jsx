@@ -25,6 +25,7 @@ const GamePresentation = ({ gameProps }) => {
     currentSeconds,
     classes,
     readyButtonHandler,
+    isMobile,
   } = gameProps;
 
   return (
@@ -84,24 +85,35 @@ const GamePresentation = ({ gameProps }) => {
             </ReadyButton>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={4}
-          className={[
-            classes.bottomGridContent,
-            classes.desktopViewHide,
-            classes.mobileChattingPanel,
-          ]}
-        >
-          <MobileChattingPanel clientManager={clientManager} />
-        </Grid>
-        <Grid
-          item
-          xs={3}
-          className={[classes.bottomGridContent, classes.chattingContainer]}
-        >
-          <ChattingPanel clientManager={clientManager} />
-        </Grid>
+        {isMobile ? (
+          <>
+            <Grid
+              item
+              xs={4}
+              className={[
+                classes.bottomGridContent,
+                classes.mobileChattingPanel,
+              ]}
+            >
+              <MobileChattingPanel clientManager={clientManager} />
+            </Grid>
+            <Grid
+              item
+              xs={3}
+              className={[classes.bottomGridContent, classes.chattingContainer]}
+            >
+              <ChattingPanel clientManager={clientManager} />
+            </Grid>
+          </>
+        ) : (
+          <Grid
+            item
+            xs={3}
+            className={[classes.bottomGridContent, classes.chattingContainer]}
+          >
+            <ChattingPanel clientManager={clientManager} />
+          </Grid>
+        )}
       </Grid>
     </div>
   );

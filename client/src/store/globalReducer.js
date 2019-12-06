@@ -15,10 +15,10 @@ const reducer = (state, action) => {
         ...state,
         viewPlayerList: [...action.payload.viewPlayerList],
       };
-    case 'setGameProgress':
+    case 'setGameStatus':
       return {
         ...state,
-        gameProgress: action.payload.gameProgress,
+        gameStatus: action.payload.gameStatus,
       };
     case 'setCurrentRound':
       return {

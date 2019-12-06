@@ -104,8 +104,8 @@ class GameManager {
 
   startGameHandler() {
     this.dispatch({
-      type: 'setGameProgress',
-      payload: { gameProgress: 'playing' },
+      type: 'setGameStatus',
+      payload: { gameStatus: 'playing' },
     });
   }
 

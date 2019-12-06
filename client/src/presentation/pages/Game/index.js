@@ -10,6 +10,15 @@ import useStyles from './style';
 let isClientManagerInitialized = false;
 let clientManager;
 
+const candidateWords = ['airplane', 'coffee', 'cup']; // Demo Purpose
+const currentSeconds = '120'; // Demo Purpose
+const quizWord = 'hello'; // Demo Purpose
+
+const exitButtonHandler = () => {
+  isClientManagerInitialized = false;
+  clientManager.exitRoom();
+};
+
 const Game = () => {
   if (!browserLocalStorage.getNickname()) {
     const history = useHistory();
@@ -24,7 +33,7 @@ const Game = () => {
 
   const classes = useStyles();
   const {
-    gameProgress,
+    gameStatus,
     viewPlayerList,
     currentSeconds,
     quiz,
@@ -42,7 +51,7 @@ const Game = () => {
   })();
 
   const readyButtonContainerClasses = (() => {
-    return gameProgress === 'waiting'
+    return gameStatus === 'waiting'
       ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
   })();
@@ -55,11 +64,6 @@ const Game = () => {
     return (
       !currentIsMobile && previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
     );
-  };
-
-  const exitButtonHandler = () => {
-    isClientManagerInitialized = false;
-    clientManager.exitRoom();
   };
 
   const resizeHandler = event => {
@@ -102,6 +106,7 @@ const Game = () => {
     currentSeconds,
     classes,
     readyButtonHandler,
+    isMobile,
   };
 
   return <GamePresentation gameProps={gameProps} />;

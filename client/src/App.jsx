@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
-import { MainPage, Game } from './presentation/pages';
+import { MainPage, Game, Ranking } from './presentation/pages';
 import { GlobalContext, DispatchContext } from './contexts';
 import { globalState, globalReducer } from './store';
 
@@ -19,6 +19,7 @@ const App = () => {
           <Router>
             <Route exact path="/" component={MainPage} />
             <Route path="/game" component={Game} />
+            <Route path="/ranking" component={Ranking} />
           </Router>
         </DispatchContext.Provider>
       </GlobalContext.Provider>

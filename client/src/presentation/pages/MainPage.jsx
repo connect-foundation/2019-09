@@ -5,13 +5,16 @@ import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, Introduction } from '../containers';
 import { STYLE_COLORS } from '../../utils';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles(theme => ({
   mainPage: {
     width: '40rem',
     display: 'flex',
     flexDirection: 'column',
     '& > *': {
       marginBottom: '2rem',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
     },
   },
   mainPageWrapper: {
@@ -21,7 +24,7 @@ const useStyle = makeStyles({
     background: STYLE_COLORS.BACKGROUND_COLOR,
     overflow: 'auto',
   },
-});
+}));
 
 const MainPage = () => {
   const classes = useStyle();

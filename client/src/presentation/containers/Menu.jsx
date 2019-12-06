@@ -28,7 +28,6 @@ const useStyle = makeStyles({
       marginBottom: '0.7rem',
     },
   },
-
   fullAnchor: {
     width: '100%',
   },
@@ -37,11 +36,22 @@ const useStyle = makeStyles({
 const textInpuStyles = {
   width: '100%',
 };
+/**
+ * 고정값 필요 rem 사용금지
+ */
+const menuButtonFontSize = '20px';
 
 const Menu = () => {
   const [nickname, setNickname] = useState(browserLocalStorage.getNickname());
   const classes = useStyle();
   const history = useHistory();
+
+  const nicknameInputKeypressHandler = event => {
+    if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
+    if (!nickname) return;
+    browserLocalStorage.setNickname(nickname);
+    history.push('/game');
+  };
 
   const playButtonClickHandler = event => {
     if (!nickname) {
@@ -58,12 +68,7 @@ const Menu = () => {
         style={textInpuStyles}
         value={nickname}
         textChangeHandler={setNickname}
-        onKeyPress={event => {
-          if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
-          if (!nickname) return;
-          browserLocalStorage.setNickname(nickname);
-          history.push('/game');
-        }}
+        onKeyPress={nicknameInputKeypressHandler}
       />
 
       <Link
@@ -71,10 +76,11 @@ const Menu = () => {
         className={classes.fullAnchor}
         onClick={playButtonClickHandler}
       >
-        <MenuButton>PLAY</MenuButton>
+        <MenuButton fontSize={menuButtonFontSize}>PLAY</MenuButton>
       </Link>
-
-      <MenuButton>RANK</MenuButton>
+      <Link to="/ranking" className={classes.fullAnchor}>
+        <MenuButton>RANK</MenuButton>
+      </Link>
     </Container>
   );
 };
