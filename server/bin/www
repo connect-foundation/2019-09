@@ -82,11 +82,12 @@ function onListening() {
 /**
  * Listen on provided port, on all network interfaces.
  */
+
 (async () => {
   await connection.sync();
   await initializeQuizzes();
 
-  app.gameService.attach(server);
+  app.service.attach(server);
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);

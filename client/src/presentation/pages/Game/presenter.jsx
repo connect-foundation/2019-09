@@ -14,11 +14,11 @@ import {
 
 const GamePresentation = ({ gameProps }) => {
   const {
-    quizWord,
+    quiz,
+    quizLength,
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    candidateWords,
     playerPanelContainerClasses,
     readyButtonContainerClasses,
     localPlayer,
@@ -38,7 +38,7 @@ const GamePresentation = ({ gameProps }) => {
         </Grid>
         <Grid item xs justify="center" alignItems="center" container>
           <Box className={classes.paper}>
-            <QuizDisplay word={quizWord} isSecret />
+            <QuizDisplay quiz={quiz} quizLength={quizLength} />
           </Box>
         </Grid>
         <Grid item xs className={classes.topRightGrid}>
@@ -76,9 +76,8 @@ const GamePresentation = ({ gameProps }) => {
           className={[classes.bottomGridContent, classes.mobileFullWidth]}
         >
           <StreamingPanel
-            words={candidateWords}
-            isVisible={false}
             className={classes.mobileFullWidth}
+            clientManager={clientManager}
           />
           <Box className={readyButtonContainerClasses}>
             <ReadyButton onClick={readyButtonHandler}>

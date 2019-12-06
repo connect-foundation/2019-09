@@ -121,6 +121,10 @@ class ClientManager {
     this.localPlayer.isReady = false;
     this.streamingManager.resetWebRTC();
   }
+
+  selectQuiz(quiz) {
+    this.gameManager.selectQuiz(quiz);
+  }
 }
 
 export default ClientManager;

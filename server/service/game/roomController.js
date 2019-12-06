@@ -1,6 +1,6 @@
 const short = require('short-uuid');
-const { rooms } = require('./io');
-const { MAX_PLAYER_COUNT } = require('../config');
+const { rooms } = require('../io');
+const { MAX_PLAYER_COUNT } = require('../../config');
 const GameManager = require('./GameManager');
 
 const getRoomByRoomId = roomId => {
@@ -19,7 +19,7 @@ const joinRoom = ({ socket, roomId, player }) => {
   const room = getRoomByRoomId(roomId);
 
   if (!room.gameManager) {
-    room.gameManager = new GameManager();
+    room.gameManager = new GameManager(roomId);
   }
   room.gameManager.addPlayer(player);
 };
@@ -39,8 +39,8 @@ const isRoomJoinable = gameManager => {
   if (players.length === 0) return false;
 
   const isRoomFull = players.length >= MAX_PLAYER_COUNT;
-  const isRoomPlaying = gameManager.getStatus() === 'playing';
-  return !isRoomFull && !isRoomPlaying;
+  const isRoomWaiting = gameManager.getStatus() === 'waiting';
+  return !isRoomFull && isRoomWaiting;
 };
 
 /**

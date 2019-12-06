@@ -32,8 +32,13 @@ const Game = () => {
   }
 
   const classes = useStyles();
-
-  const { gameStatus, viewPlayerList } = useContext(GlobalContext);
+  const {
+    gameStatus,
+    viewPlayerList,
+    currentSeconds,
+    quiz,
+    quizLength,
+  } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isMobile = window.outerWidth < MOBILE_VIEW_BREAKPOINT;
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
@@ -90,11 +95,11 @@ const Game = () => {
   }, []);
 
   const gameProps = {
-    quizWord,
+    quiz,
+    quizLength,
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    candidateWords,
     playerPanelContainerClasses,
     readyButtonContainerClasses,
     localPlayer,

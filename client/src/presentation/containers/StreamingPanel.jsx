@@ -1,9 +1,8 @@
-/* eslint-disable react/forbid-prop-types */
-
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { GlobalContext } from '../../contexts';
 import WordCandidates from './WordCandidates';
 import { StreamerVideo } from '../components';
 import { STYLE_COLORS } from '../../utils';
@@ -19,19 +18,35 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const StreamingPanel = ({ words, isVisible }) => {
+const StreamingPanel = ({ clientManager }) => {
+  const { quizCandidatesNotice, stream, isVideoVisible } = useContext(
+    GlobalContext,
+  );
+  const { isVisible, quizCandidates } = quizCandidatesNotice;
+
   const classes = useStyles();
+
+  const quizCandidateButtonHandler = quiz => {
+    clientManager.selectQuiz(quiz);
+  };
+
   return (
     <Container className={classes.container}>
-      <StreamerVideo />
-      {isVisible ? <WordCandidates words={words} /> : ''}
+      {isVideoVisible ? <StreamerVideo stream={stream} /> : ''}
+      {isVisible ? (
+        <WordCandidates
+          words={quizCandidates}
+          onClick={quizCandidateButtonHandler}
+        />
+      ) : (
+        ''
+      )}
     </Container>
   );
 };
 
 StreamingPanel.propTypes = {
-  words: PropTypes.array.isRequired,
-  isVisible: PropTypes.bool.isRequired,
+  clientManager: PropTypes.shape.isRequired,
 };
 
 export default StreamingPanel;
