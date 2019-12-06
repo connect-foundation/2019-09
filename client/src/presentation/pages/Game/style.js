@@ -103,6 +103,9 @@ const useStyles = makeStyles(theme => ({
   gameStartHide: {
     display: 'none',
   },
+  streamingPanelGrid: {
+    minHeight: '20rem',
+  },
 }));
 
 export default useStyles;
