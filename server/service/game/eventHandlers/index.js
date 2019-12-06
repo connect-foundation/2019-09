@@ -4,7 +4,7 @@ const sendChattingMessageHandler = require('./sendChattingMessageHandler');
 const askSocketIdHandler = require('./askSocketIdHandler');
 const connectPeerHandler = require('./connectPeerHandler');
 const selectQuizHandler = require('./selectQuizHandler');
-// const disconnectingHandler = require('./disconnectingHandler');
+const disconnectingHandler = require('./disconnectingHandler');
 
 module.exports = {
   matchHandler,
@@ -13,5 +13,5 @@ module.exports = {
   askSocketIdHandler,
   connectPeerHandler,
   selectQuizHandler,
-  // disconnectingHandler,
+  disconnectingHandler,
 };

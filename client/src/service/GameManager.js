@@ -29,6 +29,11 @@ class GameManager {
     this.socket.on('startSet', this.startSetHandler.bind(this));
     this.socket.on('correctAnswer', this.correctAnswerHandler.bind(this));
     this.socket.on('endSet', this.endSetHandler.bind(this));
+    this.socket.on('disconnect', () => {
+      // 데모데이 중 서버의 지속적인 다운을 대처하기 위해 '임시'로 작성함
+      window.location.href = '/';
+      // this.dispatch({ type: 'reset' });
+    });
   }
 
   endSetHandler({ scoreList }) {
@@ -61,6 +66,7 @@ class GameManager {
         scoreList,
       },
     });
+
     setTimeout(() => {
       // eslint-disable-next-line no-restricted-globals
       location.reload();

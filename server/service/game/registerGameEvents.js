@@ -2,7 +2,7 @@ const {
   matchHandler,
   sendReadyHandler,
   sendChattingMessageHandler,
-  // disconnectingHandler,
+  disconnectingHandler,
   askSocketIdHandler,
   connectPeerHandler,
   selectQuizHandler,
@@ -31,5 +31,5 @@ module.exports = socket => {
   /**
    * socket disconnect 관리
    */
-  // socket.on('disconnecting', disconnectingHandler.bind(null, socket));
+  socket.on('disconnecting', disconnectingHandler.bind(null, socket));
 };

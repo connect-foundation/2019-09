@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import { TopRankPanel, BottomRankPanel } from '../../containers';
 import { ExitButton } from '../../components';
-import { rankingList } from '../../../demodata';
+import { rankingList } from '../../../damodata';
 import useStyle from './style';
 
 const getTopRankingList = totalRankingList => {

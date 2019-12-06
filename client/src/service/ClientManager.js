@@ -51,6 +51,7 @@ class ClientManager {
           viewPlayerList,
         },
       });
+      console.log('sendLeftPlayerHandler : ', socketId, viewPlayerList);
       this.streamingManager.closeConnection(socketId);
     } catch (e) {
       console.log(e);
@@ -91,7 +92,9 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
-    this.dispatch({ type: 'resetChattingList' });
+    // this.dispatch({ type: 'resetChattingList' });
+    this.dispatch({ type: 'reset' });
+    // 상태 초기화
   }
 
   endGameHandler() {

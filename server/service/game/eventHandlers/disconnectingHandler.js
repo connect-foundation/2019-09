@@ -1,26 +1,45 @@
-// const io = require('../io');
-// const playerController = require('../controllers/playerController');
-// const roomController = require('../controllers/roomController');
-// const { MIN_USER_COUNT } = require('../../config');
+const { io } = require('../../io');
+const roomController = require('../roomController');
+const { MIN_PLAYER_COUNT } = require('../../../config');
 
-// const isGameContinueable = room => {
-//   const socketIds = Object.keys(room.players);
-//   if (socketIds.length < MIN_USER_COUNT) {
-//     return false;
-//   }
-//   return true;
-// };
+const disconnectingHandler = socket => {
+  try {
+    const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
+    gameManager.leaveRoom(socket.id);
+    socket.leave(gameManager.getRoomId());
 
-// const disconnectingHandler = socket => {
-//   const room = roomController.getRoomByRoomId(socket.roomId);
-//   const { roomId } = socket;
-//   const player = playerController.getPlayerBySocket(socket);
-//   roomController.removePlayerFromRoom(player, room);
-//   socket.leave(roomId);
+    io.in(gameManager.getRoomId()).emit('sendLeftPlayer', {
+      socketId: socket.id,
+    });
 
-//   io.to(roomId).emit('sendLeftPlayer', { socketId: socket.id });
+    if (gameManager.getStatus() === 'waiting') return;
+    if (gameManager.getStatus() === 'initializing') {
+      if (
+        !gameManager.getStreamer() ||
+        gameManager.getPlayers().length < MIN_PLAYER_COUNT
+      ) {
+        io.in(gameManager.getRoomId()).emit('endSet', {
+          scoreList: gameManager.getScoreList(),
+        });
+        gameManager.clearQuizSelectTimer();
+        gameManager.reset();
+        gameManager.resetAllPlayers();
+      }
+    }
+    if (
+      (gameManager.getStatus() === 'playing' && !gameManager.getStreamer()) ||
+      gameManager.getPlayers().length < MIN_PLAYER_COUNT
+    ) {
+      io.in(gameManager.getRoomId()).emit('endSet', {
+        scoreList: gameManager.getScoreList(),
+      });
+      gameManager.reset();
+      gameManager.clearPlayingTimer();
+      gameManager.resetAllPlayers();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-//   io.to(roomId).emit('endGame');
-// };
-
-// module.exports = disconnectingHandler;
+module.exports = disconnectingHandler;
