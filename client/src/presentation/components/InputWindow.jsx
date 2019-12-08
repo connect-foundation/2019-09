@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
 import { SendButton } from './Buttons';
 import { CONSTANT_VALUES } from '../../utils';
+import { MAX_CHAT_LENGTH } from '../../config';
 
 const useStyles = makeStyles({
   InputWindow: {
@@ -29,7 +30,9 @@ const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
   };
 
   const messageInputOnChangeHandler = event => {
-    setValue(event.target.value);
+    if (event.target.value.length <= 40) {
+      setValue(event.target.value);
+    }
   };
 
   const messageInputOnKeyPressHandler = event => {
@@ -45,6 +48,7 @@ const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
         isChattingDisabled={isChattingDisabled}
         onChange={messageInputOnChangeHandler}
         onKeyPress={messageInputOnKeyPressHandler}
+        maxLength={MAX_CHAT_LENGTH}
       />
       <SendButton
         isChattingDisabled={isChattingDisabled}
