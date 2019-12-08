@@ -12,6 +12,10 @@ const DEFAULT_SCOREBOARD_TITLE = 'Final Score';
 
 const STREAMER_LOADING_MESSAGE = 'Waiting for streamer...';
 
+const DEFAULT_TEXT_INPUT_MAX_LENGTH = 100;
+
+const NICKNAME_LENGTH = 8;
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -19,4 +23,6 @@ export {
   MOBILE_VIEW_BREAKPOINT,
   DEFAULT_SCOREBOARD_TITLE,
   STREAMER_LOADING_MESSAGE,
+  DEFAULT_TEXT_INPUT_MAX_LENGTH,
+  NICKNAME_LENGTH,
 };

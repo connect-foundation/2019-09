@@ -2,8 +2,16 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
+import { DEFAULT_TEXT_INPUT_MAX_LENGTH } from '../../config';
 
-const TextInput = ({ label, style, value, textChangeHandler, onKeyPress }) => {
+const TextInput = ({
+  label,
+  style,
+  value,
+  textChangeHandler,
+  onKeyPress,
+  maxLength,
+}) => {
   const useStyles = makeStyles(theme => ({
     textField: {
       marginLeft: theme.spacing(1),
@@ -29,6 +37,9 @@ const TextInput = ({ label, style, value, textChangeHandler, onKeyPress }) => {
       className={classes.textField}
       variant="outlined"
       value={value}
+      inputProps={{
+        maxLength: maxLength || `${DEFAULT_TEXT_INPUT_MAX_LENGTH}`,
+      }}
     />
   );
 };
@@ -39,6 +50,7 @@ TextInput.propTypes = {
   value: PropTypes.string.isRequired,
   textChangeHandler: PropTypes.func.isRequired,
   onKeyPress: PropTypes.func.isRequired,
+  maxLength: PropTypes.string.isRequired,
 };
 
 export default TextInput;

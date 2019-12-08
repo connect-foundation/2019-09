@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
+import { NICKNAME_LENGTH } from '../../config';
+
 import {
   browserLocalStorage,
   CONSTANT_VALUES,
@@ -69,6 +71,7 @@ const Menu = () => {
         value={nickname}
         textChangeHandler={setNickname}
         onKeyPress={nicknameInputKeypressHandler}
+        maxLength={NICKNAME_LENGTH}
       />
 
       <Link
