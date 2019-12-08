@@ -88,8 +88,8 @@ const disconnectingHandler = socket => {
         gameManager.prepareSet();
         assignPlayerType(gameManager);
         gameManager.startPeerConnectCheckTimer(disconnectPlayersAndStartGame);
-        return;
       }
+      return;
     }
     if (gameManager.getStatus() === 'initializing') {
       if (
