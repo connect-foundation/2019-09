@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
+import { NICKNAME_LENGTH } from '../../config';
+
 import {
   browserLocalStorage,
   CONSTANT_VALUES,
@@ -46,11 +48,29 @@ const Menu = () => {
   const classes = useStyle();
   const history = useHistory();
 
+  const checkNicknameValidity = targetNickname => {
+    if (!targetNickname) return false;
+    return true;
+  };
+
+  const sliceNicknameLength = targetNickname => {
+    return targetNickname.slice(0, NICKNAME_LENGTH);
+  };
+
   const nicknameInputKeypressHandler = event => {
     if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
-    if (!nickname) return;
-    browserLocalStorage.setNickname(nickname);
-    history.push('/game');
+    const trimmedNickname = nickname.trim();
+    if (checkNicknameValidity(trimmedNickname)) {
+      const slicedNickname = sliceNicknameLength(trimmedNickname);
+      browserLocalStorage.setNickname(slicedNickname);
+      history.push('/game');
+    }
+  };
+
+  const nicknameInputTextChangeHandler = event => {
+    const trimmedNickname = event.target.value.trim();
+    const slicedNickname = sliceNicknameLength(trimmedNickname);
+    setNickname(slicedNickname);
   };
 
   const playButtonClickHandler = event => {
@@ -67,8 +87,9 @@ const Menu = () => {
         label="NICKNAME"
         style={textInpuStyles}
         value={nickname}
-        textChangeHandler={setNickname}
+        textChangeHandler={nicknameInputTextChangeHandler}
         onKeyPress={nicknameInputKeypressHandler}
+        maxLength={NICKNAME_LENGTH}
       />
 
       <Link
