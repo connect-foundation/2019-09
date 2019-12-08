@@ -1,6 +1,7 @@
 const short = require('short-uuid');
 const { io } = require('../../io');
 const roomController = require('../roomController');
+const { processChatWithSystemRule } = require('../../../utils/chatUtils');
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
   /**
@@ -36,12 +37,15 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
       gameManager.resetAllPlayers();
     }
   } else {
-    io.in(socket.roomId).emit('sendChattingMessage', {
-      nickname,
-      message,
-      nicknameColor: player.getNicknameColor(),
-      id: short.generate(),
-    });
+    const processedChat = processChatWithSystemRule(message);
+    if (processedChat) {
+      io.in(socket.roomId).emit('sendChattingMessage', {
+        nickname,
+        message: processedChat,
+        nicknameColor: player.getNicknameColor(),
+        id: short.generate(),
+      });
+    }
   }
 };
 
