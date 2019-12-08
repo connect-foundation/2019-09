@@ -18,6 +18,7 @@ const useStyles = makeStyles({
 const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
+
   const sendChattingMessageHandler = () => {
     if (!value) return;
     clientManager.sendChattingMessage({
@@ -26,19 +27,24 @@ const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
     });
     setValue('');
   };
+
+  const messageInputOnChangeHandler = event => {
+    setValue(event.target.value);
+  };
+
+  const messageInputOnKeyPressHandler = event => {
+    if (event.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
+      sendChattingMessageHandler();
+    }
+  };
+
   return (
     <Box className={classes.InputWindow}>
       <MessageInput
         value={value}
         isChattingDisabled={isChattingDisabled}
-        onChange={e => {
-          setValue(e.target.value);
-        }}
-        onKeyPress={e => {
-          if (e.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
-            sendChattingMessageHandler();
-          }
-        }}
+        onChange={messageInputOnChangeHandler}
+        onKeyPress={messageInputOnKeyPressHandler}
       />
       <SendButton
         isChattingDisabled={isChattingDisabled}
