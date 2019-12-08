@@ -125,6 +125,10 @@ class ClientManager {
     this.streamingManager.resetWebRTC();
   }
 
+  async getMediaPermission() {
+    await this.streamingManager.getMediaPermission();
+  }
+
   selectQuiz(quiz) {
     this.gameManager.selectQuiz(quiz);
   }

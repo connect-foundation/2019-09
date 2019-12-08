@@ -16,14 +16,18 @@ const exitButtonHandler = () => {
 };
 
 const Game = () => {
+  const history = useHistory();
   if (!browserLocalStorage.getNickname()) {
-    const history = useHistory();
     history.push('/');
   }
 
   if (!isClientManagerInitialized) {
     clientManager = new ClientManager();
     clientManager.init();
+    clientManager.getMediaPermission().catch(() => {
+      exitButtonHandler();
+      alert('카메라를 허용해주세요');
+    });
     isClientManagerInitialized = true;
   }
 
