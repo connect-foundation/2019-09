@@ -1,7 +1,8 @@
 const short = require('short-uuid');
-const { rooms } = require('../io');
-const { MAX_PLAYER_COUNT } = require('../../config');
-const GameManager = require('./GameManager');
+const { rooms } = require('../../io');
+const { MAX_PLAYER_COUNT } = require('../../../config');
+const GameManager = require('../models/GameManager');
+const Timer = require('../models/Timer');
 
 const getRoomByRoomId = roomId => {
   const room = rooms[roomId];
@@ -20,6 +21,7 @@ const joinRoom = ({ socket, roomId, player }) => {
 
   if (!room.gameManager) {
     room.gameManager = new GameManager(roomId);
+    room.timer = new Timer(roomId);
   }
   room.gameManager.addPlayer(player);
 };
