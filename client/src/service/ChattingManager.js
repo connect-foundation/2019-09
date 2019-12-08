@@ -10,23 +10,24 @@ class ChattingManager {
     this.isAvailableChatting = false;
   }
 
-  trimChattingMessage(chattingMessage) {
-    return { ...chattingMessage, message: chattingMessage.message.trim() };
+  sliceChattingMessage(chat) {
+    return chat.slice(0, MAX_CHAT_LENGTH);
   }
 
-  sliceChattingMessage(chattingMessage) {
-    return {
-      ...chattingMessage,
-      message: chattingMessage.message.slice(0, MAX_CHAT_LENGTH),
-    };
+  processChatWithSystemRule(chat) {
+    const trimmedChat = chat.trim();
+    if (!trimmedChat) return '';
+    return this.sliceChattingMessage(trimmedChat);
   }
 
-  sendChattingMessage(newChatting) {
+  sendChattingMessage(newChat) {
     if (!this.isAvailableChatting) return;
-    const trimmedChat = this.trimChattingMessage(newChatting);
-    if (!trimmedChat) return;
-    const slicedChat = this.sliceChattingMessage(trimmedChat);
-    this.socket.emit('sendChattingMessage', slicedChat);
+    const processedChat = this.processChatWithSystemRule(newChat.message);
+    if (!processedChat) return;
+    this.socket.emit('sendChattingMessage', {
+      ...newChat,
+      message: processedChat,
+    });
   }
 
   registerSocketEvents() {
