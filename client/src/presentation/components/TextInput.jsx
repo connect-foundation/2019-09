@@ -30,9 +30,7 @@ const TextInput = ({
   return (
     <TextField
       onKeyPress={onKeyPress}
-      onChange={e => {
-        textChangeHandler(e.target.value);
-      }}
+      onChange={textChangeHandler}
       label={label}
       className={classes.textField}
       variant="outlined"
