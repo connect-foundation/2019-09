@@ -16,6 +16,8 @@ const DEFAULT_TEXT_INPUT_MAX_LENGTH = 100;
 
 const NICKNAME_LENGTH = 8;
 
+const MAX_CHAT_LENGTH = 40;
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -25,4 +27,5 @@ export {
   STREAMER_LOADING_MESSAGE,
   DEFAULT_TEXT_INPUT_MAX_LENGTH,
   NICKNAME_LENGTH,
+  MAX_CHAT_LENGTH,
 };
