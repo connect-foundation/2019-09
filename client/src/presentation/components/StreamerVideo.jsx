@@ -8,6 +8,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%',
     transform: 'rotateY(180deg)',
+    controls: '',
   },
 }));
 
