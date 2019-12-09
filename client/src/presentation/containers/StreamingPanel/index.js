@@ -46,19 +46,18 @@ const StreamingPanel = ({ clientManager }) => {
   let showGameMessageBox = false;
   let showScoreBoard = false;
   let messageType;
-  const { isVisible, quizCandidates } = quizCandidatesNotice;
+  const { quizCandidates } = quizCandidatesNotice;
   const { message, scoreList } = scoreNotice;
-  const isScoreBoardVisible = scoreNotice.isVisible;
   const quizCandidateButtonHandler = quiz => {
     clientManager.selectQuiz(quiz);
   };
 
-  if (isVisible) {
+  if (quizCandidatesNotice.isVisible) {
     messageType = 'quizSelection';
     showGameMessageBox = true;
   }
 
-  if (isScoreBoardVisible) {
+  if (scoreNotice.isVisible) {
     messageType = 'scoreBoard';
     showScoreBoard = true;
   }
