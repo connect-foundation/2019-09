@@ -69,21 +69,22 @@ const reducer = (state, action) => {
         ...state,
         stream: action.payload.stream,
       };
-    case TYPES.SET_IS_VIDEO_VISIBLE:
+    case TYPES.SET_VIDEO_VISIBLE:
       return {
         ...state,
-        isVideoVisible: action.payload.isVideoVisible,
+        videoVisibility: action.payload.videoVisibility,
       };
-    case TYPES.SET_IS_CHATTING_DISABLED:
+    case TYPES.SET_CHATTING_DISABLED:
       return {
         ...state,
-        isChattingDisabled: action.payload.isChattingDisabled,
+        chattingDisabled: action.payload.chattingDisabled,
       };
     case TYPES.RESET:
       return {
         ...initialState,
       };
     default:
+      console.log(action.type);
       throw new Error();
   }
 };

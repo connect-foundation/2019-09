@@ -10,8 +10,8 @@ const TYPES = {
   SET_MESSAGE_NOTICE: 'setMessageNotice',
   SET_CURRENT_SECONDS: 'setCurrentSeconds',
   SET_VIEW_PLAYER_LIST: 'setViewPlayerList',
-  SET_IS_VIDEO_VISIBLE: 'setIsVideoVisible',
-  SET_IS_CHATTING_DISABLED: 'setIsChattingDisabled',
+  SET_VIDEO_VISIBILITY: 'setVideoVisibility',
+  SET_CHATTING_DISABLED: 'setChattingDisabled',
   SET_QUIZ_CANDIDATES_NOTICE: 'setQuizCandidatesNotice',
 };
 

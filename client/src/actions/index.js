@@ -43,11 +43,11 @@ const setQuiz = (quiz, quizLength) => {
   };
 };
 
-const setIsChattingDisabled = isChattingDisabled => {
+const setChattingDisabled = chattingDisabled => {
   return {
     type: TYPES.SET_IS_CHATTING_DISABLED,
     payload: {
-      isChattingDisabled,
+      chattingDisabled,
     },
   };
 };
@@ -63,11 +63,11 @@ const setScoreNotice = ({ isVisible, message, scoreList }) => {
   };
 };
 
-const setIsVideoVisible = isVideoVisible => {
+const setVideoVisibility = videoVisibility => {
   return {
-    type: TYPES.SET_IS_VIDEO_VISIBLE,
+    type: TYPES.SET_VIDEO_VISIBLE,
     payload: {
-      isVideoVisible,
+      videoVisibility,
     },
   };
 };
@@ -123,9 +123,9 @@ export default {
   setGameStatus,
   setCurrentSeconds,
   setQuiz,
-  setIsChattingDisabled,
+  setChattingDisabled,
   setScoreNotice,
-  setIsVideoVisible,
+  setVideoVisibility,
   setCurrentRound,
   setCurrentSet,
   setMessageNotice,
