@@ -18,7 +18,7 @@ const StreamerVideo = ({ stream }) => {
   useEffect(() => {
     const videoElement = ref.current;
     videoElement.srcObject = stream;
-  }, []);
+  }, [stream]);
 
   return <video className={classes.video} autoPlay ref={ref} />;
 };
