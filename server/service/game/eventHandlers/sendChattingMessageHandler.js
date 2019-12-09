@@ -38,6 +38,11 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
 
     if (gameManager.checkAllPlayersAreCorrect()) {
       gameController.endSet(gameManager, timer);
+      gameManager.updateRoundAndSet();
+      if (gameManager.isGameContinuable()) {
+        gameController.preparePlayerTypes(gameManager, timer);
+        gameController.waitForPeerConnection(gameManager, timer);
+      }
     }
     return;
   }

@@ -64,6 +64,18 @@ const disconnectPlayersAndStartGame = gameManager => {
   prepareSet(gameManager);
 };
 
+const waitForPeerConnection = (gameManager, timer) => {
+  timer.startTimeoutTimer(
+    MAX_PEER_CONNECTION_WAITING_SECONDS,
+    disconnectPlayersAndStartGame.bind(null, gameManager),
+  );
+};
+
+const preparePlayerTypes = gameManager => {
+  gameManager.selectStreamer();
+  assignPlayerType(gameManager);
+};
+
 const prepareGame = (gameManager, timer) => {
   gameManager.cancelReadyAllPlayers();
   gameManager.getPlayers().forEach(player => {
@@ -77,12 +89,8 @@ const prepareGame = (gameManager, timer) => {
   io.in(gameManager.getRoomId()).emit('startGame');
 
   gameManager.updateRoundAndSet();
-  gameManager.selectStreamer();
-  assignPlayerType(gameManager);
-  timer.startTimeoutTimer(
-    MAX_PEER_CONNECTION_WAITING_SECONDS,
-    disconnectPlayersAndStartGame.bind(null, gameManager),
-  );
+  preparePlayerTypes(gameManager);
+  waitForPeerConnection(gameManager, timer);
 };
 
 const endSet = (gameManager, timer) => {
@@ -91,8 +99,6 @@ const endSet = (gameManager, timer) => {
   });
 
   timer.clear();
-  gameManager.reset();
-  gameManager.resetAllPlayers();
 };
 
 const startSet = (gameManager, timer, quiz) => {
@@ -120,4 +126,6 @@ module.exports = {
   prepareSet,
   startSet,
   endSet,
+  preparePlayerTypes,
+  waitForPeerConnection,
 };

@@ -66,11 +66,6 @@ class GameManager {
         scoreList,
       },
     });
-
-    setTimeout(() => {
-      // eslint-disable-next-line no-restricted-globals
-      location.reload();
-    }, 5000);
   }
 
   correctAnswerHandler() {

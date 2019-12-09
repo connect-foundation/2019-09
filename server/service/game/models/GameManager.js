@@ -115,6 +115,10 @@ class GameManager {
     return streamer;
   }
 
+  getStreamerCandidates() {
+    return this.streamerCandidates;
+  }
+
   setStreamerCandidates() {
     for (let i = 0; i < MAX_ROUND_NUMBER; i++) {
       this.streamerCandidates.push([...this.players]);
@@ -185,6 +189,13 @@ class GameManager {
 
   checkAllPlayersAreReady() {
     return this.players.every(player => player.getIsReady());
+  }
+
+  isGameContinuable() {
+    return (
+      !!this.getStreamerCandidates().length &&
+      this.currentRound <= MAX_ROUND_NUMBER
+    );
   }
 }
 
