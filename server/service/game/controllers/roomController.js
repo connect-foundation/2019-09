@@ -56,7 +56,7 @@ const getRoomInformantionToJoin = () => {
   };
   const roomIds = Object.keys(rooms);
   /**
-   * starvation 방지 로직 필요!
+   * @todo starvation 방지 로직 필요!
    */
   const joinableRoomId = roomIds.find(roomId => {
     const room = getRoomByRoomId(roomId);

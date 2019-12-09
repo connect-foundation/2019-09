@@ -33,13 +33,10 @@ const assignPlayerType = gameManager => {
   });
 };
 
-// const emit
-
 const disconnectPlayersAndStartGame = (players, gameManager) => {
   players.forEach(player => {
     const socket = io.sockets.connected[player.getSocketId()];
     socket.disconnect();
-    // disconnectingHandler에서 gameManager의 player를 지워줘야함
   });
   /**
    * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
@@ -52,7 +49,10 @@ const disconnectPlayersAndStartGame = (players, gameManager) => {
       currentSet: gameManager.getCurrentSet(),
       quizCandidates: gameManager.isStreamer(socketId)
         ? ['문어', '고양이', '부스트캠퍼']
-        : [], // getQuizCandidates()
+        : [],
+      /**
+       * @todo 데이터베이스에서 단어를 요청하는 함수 필요
+       */
     });
   });
 
