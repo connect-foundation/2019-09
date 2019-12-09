@@ -96,9 +96,7 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
-    // this.dispatch({ type: 'resetChattingList' });
     this.dispatch({ type: 'reset' });
-    // 상태 초기화
   }
 
   endGameHandler() {
