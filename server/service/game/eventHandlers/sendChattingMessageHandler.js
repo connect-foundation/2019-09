@@ -1,5 +1,6 @@
 const short = require('short-uuid');
 const { io } = require('../../io');
+const { processChatWithSystemRule } = require('../../../utils/chatUtils');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
 
@@ -40,13 +41,15 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
     }
     return;
   }
-
-  io.in(socket.roomId).emit('sendChattingMessage', {
-    nickname,
-    message,
-    nicknameColor: player.getNicknameColor(),
-    id: short.generate(),
-  });
+  const processedChat = processChatWithSystemRule(message);
+  if (processedChat) {
+    io.in(socket.roomId).emit('sendChattingMessage', {
+      nickname,
+      message: processedChat,
+      nicknameColor: player.getNicknameColor(),
+      id: short.generate(),
+    });
+  }
 };
 
 module.exports = sendChattingMessageHandler;

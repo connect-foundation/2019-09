@@ -1,5 +1,7 @@
+/* eslint-disable class-methods-use-this */
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
+import { MAX_CHAT_LENGTH } from '../config';
 
 class ChattingManager {
   constructor(socket) {
@@ -8,9 +10,24 @@ class ChattingManager {
     this.isAvailableChatting = false;
   }
 
-  sendChattingMessage(newChatting) {
+  sliceChattingMessage(chat) {
+    return chat.slice(0, MAX_CHAT_LENGTH);
+  }
+
+  processChatWithSystemRule(chat) {
+    const trimmedChat = chat.trim();
+    if (!trimmedChat) return '';
+    return this.sliceChattingMessage(trimmedChat);
+  }
+
+  sendChattingMessage(newChat) {
     if (!this.isAvailableChatting) return;
-    this.socket.emit('sendChattingMessage', newChatting);
+    const processedChat = this.processChatWithSystemRule(newChat.message);
+    if (!processedChat) return;
+    this.socket.emit('sendChattingMessage', {
+      ...newChat,
+      message: processedChat,
+    });
   }
 
   registerSocketEvents() {
