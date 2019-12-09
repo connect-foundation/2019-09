@@ -7,14 +7,14 @@ import {
   MainIntroductionDescription,
   MainSlogan,
 } from '../../config';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
   menu: {
-    background: '#F3F4FE',
+    backgroundColor: '#FFFFFF',
     width: '100%',
-    height: 220,
     padding: '2rem',
-    border: '1px solid #cccccc',
+    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -24,13 +24,21 @@ const useStyle = makeStyles({
   },
 });
 
+/**
+ * font-size 고정 필요 rem 사용하지 말것
+ */
+const titleFontSize = '35px';
+const descriptionFontSize = '13px';
+
 const Introduction = () => {
   const classes = useStyle();
-
   return (
     <Container maxWidth="md" className={classes.menu}>
-      <Title content={MainIntroductionTitle} />
-      <Description content={MainIntroductionDescription} />
+      <Title content={MainIntroductionTitle} fontSize={titleFontSize} />
+      <Description
+        content={MainIntroductionDescription}
+        fontSize={descriptionFontSize}
+      />
       <br />
       <Slogan content={MainSlogan} />
     </Container>

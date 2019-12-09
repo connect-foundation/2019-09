@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -10,9 +11,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const StreamerVideo = () => {
+const StreamerVideo = ({ stream }) => {
   const classes = useStyles();
-  return <video className={classes.video} autoPlay />;
+  const ref = React.createRef();
+
+  useEffect(() => {
+    const videoElement = ref.current;
+    videoElement.srcObject = stream;
+  }, []);
+
+  return <video className={classes.video} autoPlay ref={ref} />;
+};
+
+StreamerVideo.propTypes = {
+  stream: PropTypes.shape.isRequired,
 };
 
 export default StreamerVideo;

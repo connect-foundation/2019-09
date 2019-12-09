@@ -5,17 +5,17 @@ import Button from '@material-ui/core/Button';
 import buttonStyle from './style';
 
 const useStyles = makeStyles({
-  button: {
+  button: props => ({
     ...buttonStyle,
     width: '100%',
     height: '5rem',
-    fontSize: '2rem',
+    fontSize: props.fontSize || '2rem',
     fontWeight: '600',
-  },
+  }),
 });
 
-const MenuButtton = ({ onClick, children }) => {
-  const classes = useStyles();
+const MenuButtton = ({ onClick, children, fontSize }) => {
+  const classes = useStyles({ fontSize });
   return (
     <Button onClick={onClick} variant="contained" className={classes.button}>
       {children}
@@ -25,6 +25,7 @@ const MenuButtton = ({ onClick, children }) => {
 
 MenuButtton.propTypes = {
   children: PropTypes.string.isRequired,
+  fontSize: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

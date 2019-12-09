@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
 import { SendButton } from './Buttons';
 import { CONSTANT_VALUES } from '../../utils';
+import { MAX_CHAT_LENGTH } from '../../config';
 
 const useStyles = makeStyles({
   InputWindow: {
@@ -15,9 +16,10 @@ const useStyles = makeStyles({
   },
 });
 
-const InputWindow = ({ clientManager, nickname }) => {
+const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
+
   const sendChattingMessageHandler = () => {
     if (!value) return;
     clientManager.sendChattingMessage({
@@ -26,20 +28,34 @@ const InputWindow = ({ clientManager, nickname }) => {
     });
     setValue('');
   };
+
+  const messageInputOnChangeHandler = event => {
+    if (event.target.value.length <= 40) {
+      setValue(event.target.value);
+    }
+  };
+
+  const messageInputOnKeyPressHandler = event => {
+    if (event.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
+      sendChattingMessageHandler();
+    }
+  };
+
   return (
     <Box className={classes.InputWindow}>
       <MessageInput
         value={value}
-        onChange={e => {
-          setValue(e.target.value);
-        }}
-        onKeyPress={e => {
-          if (e.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
-            sendChattingMessageHandler();
-          }
-        }}
+        isChattingDisabled={isChattingDisabled}
+        onChange={messageInputOnChangeHandler}
+        onKeyPress={messageInputOnKeyPressHandler}
+        maxLength={MAX_CHAT_LENGTH}
       />
-      <SendButton onClick={sendChattingMessageHandler}>Send</SendButton>
+      <SendButton
+        isChattingDisabled={isChattingDisabled}
+        onClick={sendChattingMessageHandler}
+      >
+        Send
+      </SendButton>
     </Box>
   );
 };
@@ -47,6 +63,7 @@ const InputWindow = ({ clientManager, nickname }) => {
 InputWindow.propTypes = {
   clientManager: PropTypes.shape.isRequired,
   nickname: PropTypes.string.isRequired,
+  isChattingDisabled: PropTypes.bool.isRequired,
 };
 
 export default InputWindow;
