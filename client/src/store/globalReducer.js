@@ -92,6 +92,19 @@ const reducer = (state, action) => {
       return {
         ...initialState,
       };
+    case 'clearWindow':
+      return {
+        ...state,
+        quizCandidatesNotice: {
+          isVisible: false,
+          quizCandidates: [],
+        },
+        scoreNotice: {
+          isVisible: false,
+          message: '',
+          scoreList: [],
+        },
+      };
     default:
       throw new Error();
   }

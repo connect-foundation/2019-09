@@ -34,6 +34,13 @@ class GameManager {
       window.location.href = '/';
       // this.dispatch({ type: 'reset' });
     });
+    this.socket.on('clearWindow', this.clearWindowHandler.bind(this));
+  }
+
+  clearWindowHandler() {
+    this.dispatch({
+      type: 'clearWindow',
+    });
   }
 
   endSetHandler({ scoreList }) {

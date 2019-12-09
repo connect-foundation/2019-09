@@ -40,6 +40,7 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
       gameController.endSet(gameManager, timer);
       gameManager.updateRoundAndSet();
       if (gameManager.isGameContinuable()) {
+        io.in(socket.roomId).emit('clearWindow');
         gameController.preparePlayerTypes(gameManager, timer);
         gameController.waitForPeerConnection(gameManager, timer);
       }
