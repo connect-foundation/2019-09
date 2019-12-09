@@ -30,6 +30,12 @@ class StreamingManager {
     } = this;
 
     localPlayer.type = 'streamer';
+
+    const socketIds = Object.keys(remotePlayers);
+    socketIds.forEach(socketId => {
+      remotePlayers[socketId].type = 'viewer';
+    });
+
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
     dispatch({
       type: 'setViewPlayerList',
@@ -38,7 +44,7 @@ class StreamingManager {
       },
     });
 
-    const socketIds = Object.keys(remotePlayers);
+    // const socketIds = Object.keys(remotePlayers);
     webRTCManager.closeAllConnections();
     await webRTCManager.createStream();
 
@@ -68,6 +74,7 @@ class StreamingManager {
         remotePlayers[socketId].type = 'streamer';
       }
     });
+    localPlayer.type = 'viewer';
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
     dispatch({
       type: 'setViewPlayerList',
