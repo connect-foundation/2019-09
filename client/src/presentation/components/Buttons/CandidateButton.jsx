@@ -15,7 +15,13 @@ const useStyles = makeStyles({
 const CandidateButton = ({ onClick, children }) => {
   const classes = useStyles();
   return (
-    <Button onClick={onClick} variant="contained" className={classes.button}>
+    <Button
+      onClick={() => {
+        onClick(children);
+      }}
+      variant="contained"
+      className={classes.button}
+    >
       {children}
     </Button>
   );

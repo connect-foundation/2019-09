@@ -1,5 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
@@ -18,14 +16,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const WordCandidates = ({ words }) => {
+const WordCandidates = ({ words, onClick }) => {
   const wordCandidates = words;
   const classes = useStyles();
   return (
     <Container className={classes.candidateContainer}>
       {wordCandidates.map(wordCandidate => {
         return (
-          <CandidateButton key={wordCandidate}>{wordCandidate}</CandidateButton>
+          <CandidateButton key={wordCandidate} onClick={onClick}>
+            {wordCandidate}
+          </CandidateButton>
         );
       })}
     </Container>
@@ -33,7 +33,8 @@ const WordCandidates = ({ words }) => {
 };
 
 WordCandidates.propTypes = {
-  words: PropTypes.array.isRequired,
+  words: PropTypes.arrayOf.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default WordCandidates;

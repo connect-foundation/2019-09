@@ -5,7 +5,7 @@ class SocketClient {
   constructor(options) {
     // this.playerType;
     // this.stream;
-    this.socket = io();
+    this.socket = io('localhost:3001');
     this.isReady = false;
     this.rtcPeerConnections = [];
     this.mediaConstraints = options.mediaConstraints;

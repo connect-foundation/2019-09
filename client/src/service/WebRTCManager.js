@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 // eslint-disable-next-line no-unused-vars
 import adapter from 'webrtc-adapter';
 import { PEER_CONNECTION_CONFIG, MEDIA_CONSTRAINTS } from './config';
@@ -19,6 +20,11 @@ class WebRTCManager {
    * 예외처리, 그리고 view와의 연결을
    * 책임져야함
    */
+
+  async getMediaPermission(mediaConstraints = MEDIA_CONSTRAINTS) {
+    await navigator.mediaDevices.getUserMedia(mediaConstraints);
+  }
+
   async createStream(mediaConstraints = MEDIA_CONSTRAINTS) {
     this.stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
   }
@@ -179,10 +185,10 @@ class WebRTCManager {
    * socket을 통해 전송받은 ice candidate를 connection에 등록한다.
    *
    * @param {string} key
-   * @param {candidate} candidate
+   * @param {iceCandidate} iceCandidate
    */
-  async addIceCandidate(key, candidate) {
-    const rtcIceCandidate = new RTCIceCandidate(candidate);
+  async addIceCandidate(key, iceCandidate) {
+    const rtcIceCandidate = new RTCIceCandidate(iceCandidate);
     const peerConnection = this.peerConnections[key];
     await peerConnection.addIceCandidate(rtcIceCandidate);
   }

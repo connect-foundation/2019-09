@@ -3,15 +3,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
-import { browserLocalStorage, CONSTANT_VALUES } from '../../utils';
+import { NICKNAME_LENGTH } from '../../config';
+
+import {
+  browserLocalStorage,
+  CONSTANT_VALUES,
+  STYLE_COLORS,
+} from '../../utils';
 
 const useStyle = makeStyles({
   menu: {
-    background: '#F3F4FE',
+    backgroundColor: '#FFFFFF',
     width: '100%',
     height: 'auto',
     padding: '2rem',
-    border: '0.1rem solid #cccccc',
+    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -24,7 +30,6 @@ const useStyle = makeStyles({
       marginBottom: '0.7rem',
     },
   },
-
   fullAnchor: {
     width: '100%',
   },
@@ -33,11 +38,40 @@ const useStyle = makeStyles({
 const textInpuStyles = {
   width: '100%',
 };
+/**
+ * 고정값 필요 rem 사용금지
+ */
+const menuButtonFontSize = '20px';
 
 const Menu = () => {
   const [nickname, setNickname] = useState(browserLocalStorage.getNickname());
   const classes = useStyle();
   const history = useHistory();
+
+  const checkNicknameValidity = targetNickname => {
+    if (!targetNickname) return false;
+    return true;
+  };
+
+  const sliceNicknameLength = targetNickname => {
+    return targetNickname.slice(0, NICKNAME_LENGTH);
+  };
+
+  const nicknameInputKeypressHandler = event => {
+    if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
+    const trimmedNickname = nickname.trim();
+    if (checkNicknameValidity(trimmedNickname)) {
+      const slicedNickname = sliceNicknameLength(trimmedNickname);
+      browserLocalStorage.setNickname(slicedNickname);
+      history.push('/game');
+    }
+  };
+
+  const nicknameInputTextChangeHandler = event => {
+    const trimmedNickname = event.target.value.trim();
+    const slicedNickname = sliceNicknameLength(trimmedNickname);
+    setNickname(slicedNickname);
+  };
 
   const playButtonClickHandler = event => {
     if (!nickname) {
@@ -53,13 +87,9 @@ const Menu = () => {
         label="NICKNAME"
         style={textInpuStyles}
         value={nickname}
-        textChangeHandler={setNickname}
-        onKeyPress={event => {
-          if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
-          if (!nickname) return;
-          browserLocalStorage.setNickname(nickname);
-          history.push('/game');
-        }}
+        textChangeHandler={nicknameInputTextChangeHandler}
+        onKeyPress={nicknameInputKeypressHandler}
+        maxLength={NICKNAME_LENGTH}
       />
 
       <Link
@@ -67,10 +97,11 @@ const Menu = () => {
         className={classes.fullAnchor}
         onClick={playButtonClickHandler}
       >
-        <MenuButton>PLAY</MenuButton>
+        <MenuButton fontSize={menuButtonFontSize}>PLAY</MenuButton>
       </Link>
-
-      <MenuButton>RANK</MenuButton>
+      <Link to="/ranking" className={classes.fullAnchor}>
+        <MenuButton fontSize={menuButtonFontSize}>RANK</MenuButton>
+      </Link>
     </Container>
   );
 };

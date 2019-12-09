@@ -16,7 +16,7 @@ class ClientManager {
       score: 0,
     };
     /** @todo 이후에 지워야 할 사항. 개발용 */
-    this.socket = io();
+    this.socket = io('localhost:3001');
     this.remotePlayers = {};
     this.gameManager = new GameManager(
       this.socket,
@@ -51,6 +51,7 @@ class ClientManager {
           viewPlayerList,
         },
       });
+      console.log('sendLeftPlayerHandler : ', socketId, viewPlayerList);
       this.streamingManager.closeConnection(socketId);
     } catch (e) {
       console.log(e);
@@ -91,7 +92,9 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
-    this.dispatch({ type: 'resetChattingList' });
+    // this.dispatch({ type: 'resetChattingList' });
+    this.dispatch({ type: 'reset' });
+    // 상태 초기화
   }
 
   endGameHandler() {
@@ -120,6 +123,14 @@ class ClientManager {
   resetStreaming() {
     this.localPlayer.isReady = false;
     this.streamingManager.resetWebRTC();
+  }
+
+  async getMediaPermission() {
+    await this.streamingManager.getMediaPermission();
+  }
+
+  selectQuiz(quiz) {
+    this.gameManager.selectQuiz(quiz);
   }
 }
 

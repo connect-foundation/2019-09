@@ -1,16 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
+import styled from 'styled-components';
 import Message from './Message';
 import Nickname from './Nickname';
+
+const ChattingRowWrapper = styled.li`
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
 
 const ChattingRow = ({ nickname, nicknameColor, message }) => {
   const newNickname = nickname ? `${nickname} : ` : 'Guest : ';
   return (
-    <Box>
-      <Nickname nicknameColor={nicknameColor}>{newNickname}</Nickname>
-      <Message>{message}</Message>
-    </Box>
+    <li>
+      <ChattingRowWrapper>
+        <Nickname nicknameColor={nicknameColor}>{newNickname}</Nickname>
+        <Message>{message}</Message>
+      </ChattingRowWrapper>
+    </li>
   );
 };
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import UnderlinedLetter from './UnderlinedLetter';
 import UnderlinedSpace from './UnderlinedSpace';
 
-const QuizDisplay = ({ word, isSecret }) => {
+const QuizDisplay = ({ quiz, quizLength }) => {
   const useStyles = makeStyles(() => ({
     quizDisplay: {
       '& > *': {
@@ -14,12 +14,13 @@ const QuizDisplay = ({ word, isSecret }) => {
     },
   }));
   const classes = useStyles();
-  const quizWord = word;
-  const letters = quizWord.split('');
+  const quizToDisplay = quiz;
+  const letters =
+    quiz !== '' ? quizToDisplay.split() : new Array(quizLength).fill(' ');
 
   return (
     <div className={classes.quizDisplay}>
-      {isSecret
+      {quiz === ''
         ? letters.map((letter, index) => {
             const key = `${letter}${index}`;
             return <UnderlinedSpace key={key} />;
@@ -33,8 +34,8 @@ const QuizDisplay = ({ word, isSecret }) => {
 };
 
 QuizDisplay.propTypes = {
-  word: PropTypes.string.isRequired,
-  isSecret: PropTypes.bool.isRequired,
+  quiz: PropTypes.string.isRequired,
+  quizLength: PropTypes.number.isRequired,
 };
 
 export default QuizDisplay;

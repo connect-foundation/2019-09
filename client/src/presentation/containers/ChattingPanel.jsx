@@ -4,26 +4,44 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChattingWindow, InputWindow } from '../components';
 import { GlobalContext } from '../../contexts';
-import { browserLocalStorage } from '../../utils';
+import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles(theme => ({
   chattingPanel: {
     height: '48rem',
     position: 'relative',
-    border: '1px solid #e7e7e7',
-    backgroundColor: '#F3F4FE',
+    backgroundColor: STYLE_COLORS.PANEL_COLOR,
+    boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.5)',
+    borderRadius: '0.3rem',
+    [theme.breakpoints.down('xs')]: {
+      height: 'auto',
+    },
   },
-});
+  chattingWindow: {
+    height: '90%',
+    overflow: 'auto',
+    wordWrap: 'break-word',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
+}));
 
 const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { chattingList } = useContext(GlobalContext);
+  const { chattingList, isChattingDisabled } = useContext(GlobalContext);
   const nickname = browserLocalStorage.getNickname();
 
   return (
     <Box className={classes.chattingPanel}>
-      <ChattingWindow chattingList={chattingList} />
-      <InputWindow clientManager={clientManager} nickname={nickname} />
+      <Box className={classes.chattingWindow}>
+        <ChattingWindow chattingList={chattingList} />
+      </Box>
+      <InputWindow
+        clientManager={clientManager}
+        nickname={nickname}
+        isChattingDisabled={isChattingDisabled}
+      />
     </Box>
   );
 };
