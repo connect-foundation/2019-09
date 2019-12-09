@@ -15,7 +15,7 @@ const emitEventsAfterJoin = socket => {
 const matchHandler = (socket, { nickname }) => {
   const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
   const player = new Player({
-    slicedNickname,
+    nickname: slicedNickname,
     socketId: socket.id,
     nicknameColor: getRandomColor(),
   });
