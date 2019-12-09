@@ -1,4 +1,4 @@
-import TYPES from '../constants/actions';
+import TYPES from '../constants/actionTypes';
 
 const setViewPlayerList = viewPlayerList => {
   return {

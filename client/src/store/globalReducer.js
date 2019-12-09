@@ -1,48 +1,39 @@
 import initialState from './globalState';
+import TYPES from '../constants/actionTypes';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'addChatting':
+    case TYPES.ADD_CHATTING:
       return {
         ...state,
         chattingList: [...state.chattingList, action.payload.newChatting],
       };
-    case 'resetChattingList':
-      return {
-        ...state,
-        chattingList: [],
-      };
-    case 'setViewPlayerList':
+    case TYPES.SET_VIEW_PLAYER_LIST:
       return {
         ...state,
         viewPlayerList: [...action.payload.viewPlayerList],
       };
-    case 'setGameStatus':
+    case TYPES.SET_GAME_STATUS:
       return {
         ...state,
         gameStatus: action.payload.gameStatus,
       };
-    case 'setCurrentRound':
+    case TYPES.SET_CURRENT_ROUND:
       return {
         ...state,
         currentRound: action.payload.currentRound,
       };
-    case 'setCurrentSet':
+    case TYPES.SET_CURRENT_SET:
       return {
         ...state,
         currentSet: action.payload.currentSet,
       };
-    case 'setQuizCandidates':
-      return {
-        ...state,
-        quizCandidates: action.payload.quizCandidates,
-      };
-    case 'setCurrentSeconds':
+    case TYPES.SET_CURRENT_SECONDS:
       return {
         ...state,
         currentSeconds: action.payload.currentSeconds,
       };
-    case 'setMessageNotice':
+    case TYPES.SET_MESSAGE_NOTICE:
       return {
         ...state,
         messageNotice: {
@@ -50,7 +41,7 @@ const reducer = (state, action) => {
           message: action.payload.message,
         },
       };
-    case 'setQuizCandidatesNotice':
+    case TYPES.SET_QUIZ_CANDIDATES_NOTICE:
       return {
         ...state,
         quizCandidatesNotice: {
@@ -58,7 +49,7 @@ const reducer = (state, action) => {
           quizCandidates: action.payload.quizCandidates,
         },
       };
-    case 'setScoreNotice':
+    case TYPES.SET_SCORE_NOTICE:
       return {
         ...state,
         scoreNotice: {
@@ -67,28 +58,28 @@ const reducer = (state, action) => {
           scoreList: action.payload.scoreList,
         },
       };
-    case 'setQuiz':
+    case TYPES.SET_QUIZ:
       return {
         ...state,
         quiz: action.payload.quiz,
         quizLength: action.payload.quizLength,
       };
-    case 'setStream':
+    case TYPES.SET_STREAM:
       return {
         ...state,
         stream: action.payload.stream,
       };
-    case 'setIsVideoVisible':
+    case TYPES.SET_IS_VIDEO_VISIBLE:
       return {
         ...state,
         isVideoVisible: action.payload.isVideoVisible,
       };
-    case 'setIsChattingDisabled':
+    case TYPES.SET_IS_CHATTING_DISABLED:
       return {
         ...state,
         isChattingDisabled: action.payload.isChattingDisabled,
       };
-    case 'reset':
+    case TYPES.RESET:
       return {
         ...initialState,
       };
