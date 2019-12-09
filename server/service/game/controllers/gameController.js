@@ -31,7 +31,7 @@ const assignPlayerType = gameManager => {
   });
 };
 
-const perpareSet = (gameManager, timer) => {
+const prepareSet = (gameManager, timer) => {
   /**
    * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
    */
@@ -61,7 +61,7 @@ const disconnectPlayersAndStartGame = gameManager => {
     socket.disconnect();
   });
 
-  perpareSet(gameManager);
+  prepareSet(gameManager);
 };
 
 const prepareGame = (gameManager, timer) => {
@@ -117,7 +117,7 @@ const startSet = (gameManager, timer, quiz) => {
 
 module.exports = {
   prepareGame,
-  perpareSet,
+  prepareSet,
   startSet,
   endSet,
 };
