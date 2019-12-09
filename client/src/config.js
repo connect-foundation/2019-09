@@ -18,6 +18,8 @@ const NICKNAME_LENGTH = 8;
 
 const MAX_CHAT_LENGTH = 40;
 
+const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -28,4 +30,5 @@ export {
   DEFAULT_TEXT_INPUT_MAX_LENGTH,
   NICKNAME_LENGTH,
   MAX_CHAT_LENGTH,
+  LOCALSTORAGE_NICKNAME_KEY,
 };

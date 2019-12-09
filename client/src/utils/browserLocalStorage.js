@@ -1,13 +1,13 @@
-import { NICKNAME_LENGTH } from '../config';
+import { NICKNAME_LENGTH, LOCALSTORAGE_NICKNAME_KEY } from '../config';
 
 const getNickname = () => {
   if (!localStorage) return '';
-  return localStorage.getItem('nickname') || '';
+  return localStorage.getItem(LOCALSTORAGE_NICKNAME_KEY) || '';
 };
 
 const setNickname = nickname => {
   if (!localStorage) return;
-  localStorage.setItem('nickname', nickname);
+  localStorage.setItem(LOCALSTORAGE_NICKNAME_KEY, nickname);
 };
 
 const verifyNicknameInLocalStorage = () => {
@@ -16,10 +16,10 @@ const verifyNicknameInLocalStorage = () => {
 
   const trimedNickname = nickname.trim();
   if (!trimedNickname) {
-    localStorage.removeItem('nickname');
+    localStorage.removeItem(LOCALSTORAGE_NICKNAME_KEY);
   } else if (trimedNickname.length > NICKNAME_LENGTH) {
     const slicedNickname = trimedNickname.slice(0, NICKNAME_LENGTH);
-    localStorage.setItem('nickname', slicedNickname);
+    localStorage.setItem(LOCALSTORAGE_NICKNAME_KEY, slicedNickname);
   }
 };
 
