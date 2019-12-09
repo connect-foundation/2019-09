@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 import { makeViewPlayerList } from '../utils';
-import EVENTS from '../constant/events';
+import EVENTS from '../constants/events';
 
 class StreamingManager {
   constructor(socket, remotePlayers, localPlayer) {

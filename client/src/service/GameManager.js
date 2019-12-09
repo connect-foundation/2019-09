@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
-import EVENTS from '../constant/events';
+import EVENTS from '../constants/events';
+import actions from '../actions';
 
 class GameManager {
   constructor(socket, localPlayer, remotePlayers) {
@@ -41,35 +42,17 @@ class GameManager {
   }
 
   endSetHandler({ scoreList }) {
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'scoreSharing' },
-    });
-    this.dispatch({
-      type: 'setCurrentSeconds',
-      payload: { currentSeconds: 0 },
-    });
-    this.dispatch({
-      type: 'setQuiz',
-      payload: {
-        quiz: '',
-        quizLength: 0,
-      },
-    });
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: false,
-      },
-    });
-    this.dispatch({
-      type: 'setScoreNotice',
-      payload: {
+    this.dispatch(actions.setGameStatus('scoreSharing'));
+    this.dispatch(actions.setCurrentSeconds(0));
+    this.dispatch(actions.setQuiz('', 0));
+    this.dispatch(actions.setChattingDisabled(false));
+    this.dispatch(
+      actions.setScoreNotice({
         isVisible: true,
         message: '최종 점수',
         scoreList,
-      },
-    });
+      }),
+    );
 
     setTimeout(() => {
       // eslint-disable-next-line no-restricted-globals
@@ -78,62 +61,24 @@ class GameManager {
   }
 
   correctAnswerHandler() {
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: true,
-      },
-    });
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: true,
-      },
-    });
+    this.dispatch(actions.setChattingDisabled(true));
   }
 
   startSetHandler({ quiz, quizLength }) {
-    this.dispatch({
-      type: 'setQuiz',
-      payload: {
-        quiz,
-        quizLength,
-      },
-    });
-    this.dispatch({
-      type: 'setIsVideoVisible',
-      payload: {
-        isVideoVisible: true,
-      },
-    });
+    this.dispatch(actions.setQuiz(quiz, quizLength));
+    this.dispatch(actions.setVideoVisibility(true));
   }
 
   prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
-    this.dispatch({
-      type: 'setCurrentRound',
-      payload: { currentRound },
-    });
-    this.dispatch({
-      type: 'setCurrentSet',
-      payload: { currentSet },
-    });
+    this.dispatch(actions.setCurrentRound(currentRound));
+    this.dispatch(actions.setCurrentSet(currentSet));
 
     if (quizCandidates.length === 0) {
-      this.dispatch({
-        type: 'setMessageNotice',
-        payload: {
-          isVisible: true,
-          message: '출제자가 단어를 선택 중입니다.',
-        },
-      });
+      this.dispatch(
+        actions.setMessageNotice(true, '출제자가 단어를 선택 중입니다.'),
+      );
     } else {
-      this.dispatch({
-        type: 'setQuizCandidatesNotice',
-        payload: {
-          isVisible: true,
-          quizCandidates,
-        },
-      });
+      this.dispatch(actions.setQuizCandidatesNotice(true, quizCandidates));
 
       this.quizSelectTimer = setTimeout(() => {
         const randomIndex = Math.round(
@@ -147,17 +92,11 @@ class GameManager {
   }
 
   sendCurrentSecondsHandler({ currentSeconds }) {
-    this.dispatch({
-      type: 'setCurrentSeconds',
-      payload: { currentSeconds },
-    });
+    this.dispatch(actions.setCurrentSeconds(currentSeconds));
   }
 
   startGameHandler() {
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'playing' },
-    });
+    this.dispatch(actions.setGameStatus('playing'));
   }
 
   sendPlayersHandler({ players }) {
@@ -192,17 +131,11 @@ class GameManager {
       this.localPlayer,
       this.remotePlayers,
     );
-    this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+    this.dispatch(actions.setViewPlayerList(viewPlayerList));
   }
 
   selectQuiz(quiz) {
-    this.dispatch({
-      type: 'setQuizCandidatesNotice',
-      payload: {
-        isVisible: false,
-        quizCandidates: [],
-      },
-    });
+    this.dispatch(actions.setQuizCandidatesNotice(false, []));
     this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
     clearTimeout(this.quizSelectTimer);
     this.quizSelectTimer = null;

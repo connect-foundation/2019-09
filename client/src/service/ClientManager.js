@@ -5,7 +5,8 @@ import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
-import EVENTS from '../constant/events';
+import EVENTS from '../constants/events';
+import actions from '../actions';
 
 class ClientManager {
   constructor() {
@@ -49,13 +50,7 @@ class ClientManager {
         this.localPlayer,
         this.remotePlayers,
       );
-      this.dispatch({
-        type: 'setViewPlayerList',
-        payload: {
-          viewPlayerList,
-        },
-      });
-      console.log('sendLeftPlayerHandler : ', socketId, viewPlayerList);
+      this.dispatch(actions.setViewPlayerList(viewPlayerList));
       this.streamingManager.closeConnection(socketId);
     } catch (e) {
       console.log(e);
@@ -96,7 +91,7 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
-    this.dispatch({ type: 'reset' });
+    this.dispatch(actions.reset());
   }
 
   endGameHandler() {
@@ -119,7 +114,7 @@ class ClientManager {
       this.localPlayer,
       this.remotePlayers,
     );
-    this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+    this.dispatch(actions.setViewPlayerList(viewPlayerList));
   }
 
   resetStreaming() {

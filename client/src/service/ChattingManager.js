@@ -2,7 +2,7 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { MAX_CHAT_LENGTH } from '../config';
-import EVENTS from '../constant/events';
+import EVENTS from '../constants/events';
 
 class ChattingManager {
   constructor(socket) {

@@ -45,7 +45,7 @@ const setQuiz = (quiz, quizLength) => {
 
 const setChattingDisabled = chattingDisabled => {
   return {
-    type: TYPES.SET_IS_CHATTING_DISABLED,
+    type: TYPES.SET_CHATTING_DISABLED,
     payload: {
       chattingDisabled,
     },

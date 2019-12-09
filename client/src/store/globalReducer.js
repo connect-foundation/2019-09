@@ -84,7 +84,6 @@ const reducer = (state, action) => {
         ...initialState,
       };
     default:
-      console.log(action.type);
       throw new Error();
   }
 };
