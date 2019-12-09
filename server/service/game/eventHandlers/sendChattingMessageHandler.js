@@ -16,11 +16,6 @@ const isCorrectAnswer = (gameManager, message, socketId) => {
 };
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
-  /**
-   * 정답 검증 로직 필요
-   * room.quiz === message
-   *  emit('정답!')
-   */
   const { gameManager, timer } = roomController.getRoomByRoomId(socket.roomId);
   const player = gameManager.getPlayerBySocketId(socket.id);
 
