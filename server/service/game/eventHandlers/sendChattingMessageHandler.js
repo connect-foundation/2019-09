@@ -1,7 +1,19 @@
 const short = require('short-uuid');
 const { io } = require('../../io');
-const roomController = require('../roomController');
 const { processChatWithSystemRule } = require('../../../utils/chatUtils');
+const roomController = require('../controllers/roomController');
+const gameController = require('../controllers/gameController');
+
+/**
+ * viewer가 입력한 채팅이 정답이라면 true를 반환하는 함수
+ */
+const isCorrectAnswer = (gameManager, message, socketId) => {
+  return (
+    gameManager.getStatus() === 'playing' &&
+    gameManager.getQuiz() === message &&
+    !gameManager.isStreamer(socketId)
+  );
+};
 
 const sendChattingMessageHandler = (socket, { nickname, message }) => {
   /**
@@ -9,14 +21,10 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
    * room.quiz === message
    *  emit('정답!')
    */
-  const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
+  const { gameManager, timer } = roomController.getRoomByRoomId(socket.roomId);
   const player = gameManager.getPlayerBySocketId(socket.id);
 
-  if (
-    gameManager.getStatus() === 'playing' &&
-    gameManager.getQuiz() === message &&
-    !gameManager.isStreamer(socket.id)
-  ) {
+  if (isCorrectAnswer(gameManager, message, socket.id)) {
     io.in(socket.roomId).emit('sendChattingMessage', {
       nickname: '안내',
       message: `${nickname}님이 정답을 맞췄습니다!`,
@@ -29,23 +37,18 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
     player.setIsCorrectPlayer(true);
 
     if (gameManager.checkAllPlayersAreCorrect()) {
-      io.in(gameManager.getRoomId()).emit('endSet', {
-        scoreList: gameManager.getScoreList(),
-      });
-      gameManager.reset();
-      gameManager.clearPlayingTimer();
-      gameManager.resetAllPlayers();
+      gameController.endSet(gameManager, timer);
     }
-  } else {
-    const processedChat = processChatWithSystemRule(message);
-    if (processedChat) {
-      io.in(socket.roomId).emit('sendChattingMessage', {
-        nickname,
-        message: processedChat,
-        nicknameColor: player.getNicknameColor(),
-        id: short.generate(),
-      });
-    }
+    return;
+  }
+  const processedChat = processChatWithSystemRule(message);
+  if (processedChat) {
+    io.in(socket.roomId).emit('sendChattingMessage', {
+      nickname,
+      message: processedChat,
+      nicknameColor: player.getNicknameColor(),
+      id: short.generate(),
+    });
   }
 };
 

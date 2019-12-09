@@ -1,5 +1,5 @@
 const { io } = require('../../io');
-const roomController = require('../roomController');
+const roomController = require('../controllers/roomController');
 const { MIN_PLAYER_COUNT } = require('../../../config');
 
 const assignStreamer = streamer => {
