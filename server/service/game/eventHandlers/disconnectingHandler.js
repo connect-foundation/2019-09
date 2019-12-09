@@ -99,7 +99,6 @@ const disconnectingHandler = socket => {
         io.in(gameManager.getRoomId()).emit('endSet', {
           scoreList: gameManager.getScoreList(),
         });
-        gameManager.clearQuizSelectTimer();
         gameManager.reset();
         gameManager.resetAllPlayers();
       }
@@ -112,7 +111,6 @@ const disconnectingHandler = socket => {
         scoreList: gameManager.getScoreList(),
       });
       gameManager.reset();
-      gameManager.clearPlayingTimer();
       gameManager.resetAllPlayers();
     }
   } catch (error) {
