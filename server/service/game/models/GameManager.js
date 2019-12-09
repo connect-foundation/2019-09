@@ -1,10 +1,4 @@
-const {
-  MAX_ROUND_NUMBER,
-  MAX_PEER_CONNECTION_WAITING_TIME,
-  MAX_QUIZ_SELECTION_WAITING_TIME,
-  ONE_SECOND,
-  ONE_SET_SECONDS,
-} = require('../../config');
+const { MAX_ROUND_NUMBER } = require('../../../config');
 
 class GameManager {
   constructor(roomId) {
@@ -16,10 +10,6 @@ class GameManager {
     this.currentRound = 0;
     this.currentSet = 0;
     this.streamer = null;
-    this.peerConnectCheckTimer = null;
-    this.quizSelectTimer = null;
-    this.playingTimer = null;
-    this.remainingPlayingTime = 0;
   }
 
   addPlayer(player) {
@@ -100,12 +90,6 @@ class GameManager {
     this.status = 'initializing';
   }
 
-  prepareSet() {
-    this.quiz = '';
-    this.updateRoundAndSet();
-    this.selectStreamer();
-  }
-
   updateRoundAndSet() {
     const maxSet = this.players.length;
     this.currentSet = this.currentSet < maxSet ? ++this.currentSet : 1;
@@ -167,57 +151,6 @@ class GameManager {
     return this.players.filter(player => !player.getIsConnectedToStreamer());
   }
 
-  startPeerConnectCheckTimer(disconnectPlayersAndStartGame) {
-    this.peerConnectCheckTimer = setTimeout(() => {
-      const playersToDisconnect = this.getPlayersUnconnectedToStreamer();
-
-      disconnectPlayersAndStartGame(playersToDisconnect, this);
-      this.clearPeerConnectCheckTimer();
-    }, MAX_PEER_CONNECTION_WAITING_TIME);
-  }
-
-  clearPeerConnectCheckTimer() {
-    clearTimeout(this.peerConnectCheckTimer);
-    this.peerConnectCheckTimer = null;
-  }
-
-  startQuizSelectTimer(emitSendCurrentSeconds) {
-    let iterationCount = MAX_QUIZ_SELECTION_WAITING_TIME;
-    const updateTimer = () => {
-      if (--iterationCount < 0) {
-        this.clearQuizSelectTimer();
-        return;
-      }
-      emitSendCurrentSeconds(iterationCount);
-      this.quizSelectTimer = setTimeout(updateTimer, ONE_SECOND);
-    };
-    this.quizSelectTimer = setTimeout(updateTimer);
-  }
-
-  clearQuizSelectTimer() {
-    clearTimeout(this.quizSelectTimer);
-    this.quizSelectTimer = null;
-  }
-
-  startPlayingTimer(emitSendCurrentSeconds, emitEndSet) {
-    this.remainingPlayingTime = ONE_SET_SECONDS;
-    const updateTimer = () => {
-      if (--this.remainingPlayingTime < 0) {
-        this.clearPlayingTimer();
-        emitEndSet(this);
-        return;
-      }
-      emitSendCurrentSeconds(this.remainingPlayingTime, this.roomId);
-      this.playingTimer = setTimeout(updateTimer, ONE_SECOND);
-    };
-    this.playingTimer = setTimeout(updateTimer);
-  }
-
-  clearPlayingTimer() {
-    clearTimeout(this.playingTimer);
-    this.playingTimer = null;
-  }
-
   checkAllConnectionsToStreamer() {
     const viewers = this.getOtherPlayers(this.streamer.getSocketId());
     return viewers.every(viewer => viewer.getIsConnectedToStreamer());
@@ -248,6 +181,10 @@ class GameManager {
       };
     });
     return scoreList;
+  }
+
+  checkAllPlayersAreReady() {
+    return this.players.every(player => player.getIsReady());
   }
 }
 
