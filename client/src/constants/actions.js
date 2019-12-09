@@ -1,14 +1,18 @@
-export const SET_VIEW_PLAYER_LIST = 'setViewPlayerList';
-export const RESET = 'reset';
-export const SET_GAME_STATUS = 'setGameStatus';
-export const SET_CURRENT_SECONDS = 'setCurrentSeconds';
-export const SET_QUIZ = 'setQuiz';
-export const SET_IS_CHATTING_DISABLED = 'setIsChattingDisabled';
-export const SET_SCORE_NOTICE = 'setScoreNotice';
-export const SET_IS_VIDEO_VISIBLE = 'setIsVideoVisible';
-export const SET_CURRENT_ROUND = 'setCurrentRound';
-export const SET_CURRENT_SET = 'setCurrentSet';
-export const SET_MESSAGE_NOTICE = 'setMessageNotice';
-export const SET_QUIZ_CANDIDATES_NOTICE = 'setQuizCandidatesNotice';
-export const ADD_CHATTING = 'addChatting';
-export const SET_STREAM = 'setStream';
+const TYPES = {
+  RESET: 'reset',
+  ADD_CHATTING: 'addChatting',
+  SET_QUIZ: 'setQuiz',
+  SET_STREAM: 'setStream',
+  SET_GAME_STATUS: 'setGameStatus',
+  SET_CURRENT_SET: 'setCurrentSet',
+  SET_SCORE_NOTICE: 'setScoreNotice',
+  SET_CURRENT_ROUND: 'setCurrentRound',
+  SET_MESSAGE_NOTICE: 'setMessageNotice',
+  SET_CURRENT_SECONDS: 'setCurrentSeconds',
+  SET_VIEW_PLAYER_LIST: 'setViewPlayerList',
+  SET_IS_VIDEO_VISIBLE: 'setIsVideoVisible',
+  SET_IS_CHATTING_DISABLED: 'setIsChattingDisabled',
+  SET_QUIZ_CANDIDATES_NOTICE: 'setQuizCandidatesNotice',
+};
+
+export default TYPES;
