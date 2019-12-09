@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
+import EVENTS from '../constant/events';
 
 class GameManager {
   constructor(socket, localPlayer, remotePlayers) {
@@ -12,24 +13,27 @@ class GameManager {
   }
 
   findMatch(nickname) {
-    this.socket.emit('match', { nickname });
+    this.socket.emit(EVENTS.MATCH, { nickname });
     this.makeAndDispatchViewPlayerList();
   }
 
   registerSocketEvents() {
-    this.socket.on('sendPlayers', this.sendPlayersHandler.bind(this));
-    this.socket.on('sendNewPlayer', this.sendNewPlayerHandler.bind(this));
-    this.socket.on('sendReady', this.sendReadyHandler.bind(this));
-    this.socket.on('startGame', this.startGameHandler.bind(this));
-    this.socket.on('prepareSet', this.prepareSetHandler.bind(this));
+    this.socket.on(EVENTS.SEND_PLAYERS, this.sendPlayersHandler.bind(this));
     this.socket.on(
-      'sendCurrentSeconds',
+      EVENTS.SEND_NEW_PLAYER,
+      this.sendNewPlayerHandler.bind(this),
+    );
+    this.socket.on(EVENTS.SEND_READY, this.sendReadyHandler.bind(this));
+    this.socket.on(EVENTS.START_GAME, this.startGameHandler.bind(this));
+    this.socket.on(EVENTS.PREPARE_SET, this.prepareSetHandler.bind(this));
+    this.socket.on(
+      EVENTS.SEND_CURRENT_SECONDS,
       this.sendCurrentSecondsHandler.bind(this),
     );
-    this.socket.on('startSet', this.startSetHandler.bind(this));
-    this.socket.on('correctAnswer', this.correctAnswerHandler.bind(this));
-    this.socket.on('endSet', this.endSetHandler.bind(this));
-    this.socket.on('disconnect', () => {
+    this.socket.on(EVENTS.START_SET, this.startSetHandler.bind(this));
+    this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
+    this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
+    this.socket.on(EVENTS.DISCONNECT, () => {
       // 데모데이 중 서버의 지속적인 다운을 대처하기 위해 '임시'로 작성함
       window.location.href = '/';
       // this.dispatch({ type: 'reset' });
@@ -180,7 +184,7 @@ class GameManager {
   }
 
   toggleReady(isReady) {
-    this.socket.emit('sendReady', { isReady: !isReady });
+    this.socket.emit(EVENTS.SEND_READY, { isReady: !isReady });
   }
 
   makeAndDispatchViewPlayerList() {
@@ -199,7 +203,7 @@ class GameManager {
         quizCandidates: [],
       },
     });
-    this.socket.emit('selectQuiz', { quiz });
+    this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
     clearTimeout(this.quizSelectTimer);
     this.quizSelectTimer = null;
   }

@@ -2,6 +2,7 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { MAX_CHAT_LENGTH } from '../config';
+import EVENTS from '../constant/events';
 
 class ChattingManager {
   constructor(socket) {
@@ -24,7 +25,7 @@ class ChattingManager {
     if (!this.isAvailableChatting) return;
     const processedChat = this.processChatWithSystemRule(newChat.message);
     if (!processedChat) return;
-    this.socket.emit('sendChattingMessage', {
+    this.socket.emit(EVENTS.SEND_CHATTING_MESSAGE, {
       ...newChat,
       message: processedChat,
     });
@@ -32,10 +33,10 @@ class ChattingManager {
 
   registerSocketEvents() {
     this.socket.on(
-      'sendChattingMessage',
+      EVENTS.SEND_CHATTING_MESSAGE,
       this.sendChattingMessageHandler.bind(this),
     );
-    this.socket.on('startChatting', this.startChattingHandler.bind(this));
+    this.socket.on(EVENTS.START_CHATTING, this.startChattingHandler.bind(this));
   }
 
   sendChattingMessageHandler(newChatting) {

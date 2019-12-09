@@ -5,6 +5,7 @@ import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
+import EVENTS from '../constant/events';
 
 class ClientManager {
   constructor() {
@@ -33,9 +34,12 @@ class ClientManager {
   }
 
   registerSocketEvents() {
-    this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
-    this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
-    this.socket.on('endGame', this.endGameHandler.bind(this));
+    this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
+    this.socket.on(
+      EVENTS.SEND_LEFT_PLAYER,
+      this.sendLeftPlayerHandler.bind(this),
+    );
+    this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -63,7 +67,7 @@ class ClientManager {
   }
 
   askSocketId() {
-    this.socket.emit('askSocketId');
+    this.socket.emit(EVENTS.ASK_SOCKET_ID);
   }
 
   findMatch(nickname) {
