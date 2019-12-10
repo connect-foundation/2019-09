@@ -145,6 +145,9 @@ const prepareGame = (gameManager, timer) => {
 const goToNextSet = (gameManager, timer) => {
   io.in(gameManager.getRoomId()).emit('clearWindow');
   preparePlayerTypes(gameManager, timer);
+  gameManager.getPlayers().forEach(player => {
+    player.setIsCorrectPlayer(false);
+  });
   waitForPeerConnection(gameManager, timer);
 };
 
