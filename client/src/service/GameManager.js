@@ -87,12 +87,6 @@ class GameManager {
         isChattingDisabled: true,
       },
     });
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: true,
-      },
-    });
   }
 
   startSetHandler({ quiz, quizLength }) {
