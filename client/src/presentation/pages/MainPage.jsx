@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, Introduction } from '../containers';
-import { STYLE_COLORS } from '../../utils';
+import backgroundImageSource from '../../assets/background.png';
 
 const useStyle = makeStyles(theme => ({
   mainPage: {
@@ -21,7 +21,7 @@ const useStyle = makeStyles(theme => ({
     margin: 0,
     width: '100%',
     height: '100%',
-    background: STYLE_COLORS.BACKGROUND_COLOR,
+    backgroundImage: `url(${backgroundImageSource})`,
     overflow: 'auto',
   },
 }));
