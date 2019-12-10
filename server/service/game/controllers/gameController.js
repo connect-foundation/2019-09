@@ -35,6 +35,34 @@ const pickQuizCandidates = () => {
   return ['문어', '고양이', '부스트캠퍼'];
 };
 
+const endSet = (gameManager, timer) => {
+  io.in(gameManager.getRoomId()).emit('endSet', {
+    scoreList: gameManager.getScoreList(),
+  });
+
+  timer.clear();
+};
+
+const startSet = (gameManager, timer, quiz) => {
+  timer.clear();
+  gameManager.setQuiz(quiz);
+  gameManager.setStatus('playing');
+  gameManager.getPlayers().forEach(player => {
+    const socketId = player.getSocketId();
+
+    io.to(socketId).emit('startSet', {
+      quiz: gameManager.isStreamer(socketId) ? quiz : '',
+      quizLength: quiz.length,
+    });
+  });
+
+  timer.startIntegrationTimer(
+    ONE_SET_SECONDS,
+    endSet.bind(null, gameManager, timer),
+    sendCurrentSecondsHandler,
+  );
+};
+
 const quizSelectionTimeoutHandler = (gameManager, timer) => {
   const quiz = gameManager.selectRandomQuiz();
   gameManager.setQuiz(quiz);
@@ -112,34 +140,6 @@ const prepareGame = (gameManager, timer) => {
   gameManager.updateRoundAndSet();
   preparePlayerTypes(gameManager);
   waitForPeerConnection(gameManager, timer);
-};
-
-const endSet = (gameManager, timer) => {
-  io.in(gameManager.getRoomId()).emit('endSet', {
-    scoreList: gameManager.getScoreList(),
-  });
-
-  timer.clear();
-};
-
-const startSet = (gameManager, timer, quiz) => {
-  timer.clear();
-  gameManager.setQuiz(quiz);
-  gameManager.setStatus('playing');
-  gameManager.getPlayers().forEach(player => {
-    const socketId = player.getSocketId();
-
-    io.to(socketId).emit('startSet', {
-      quiz: gameManager.isStreamer(socketId) ? quiz : '',
-      quizLength: quiz.length,
-    });
-  });
-
-  timer.startIntegrationTimer(
-    ONE_SET_SECONDS,
-    endSet.bind(null, gameManager, timer),
-    sendCurrentSecondsHandler,
-  );
 };
 
 const goToNextSet = (gameManager, timer) => {
