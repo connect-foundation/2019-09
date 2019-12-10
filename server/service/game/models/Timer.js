@@ -54,6 +54,10 @@ class Timer {
     }, seconds * 1000);
   }
 
+  getRemainingTime() {
+    return this.remainingTime;
+  }
+
   clear() {
     clearTimeout(this.timerId);
     this.timerId = null;

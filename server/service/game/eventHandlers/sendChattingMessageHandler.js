@@ -33,7 +33,7 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
       id: short.generate(),
     });
     io.to(socket.id).emit('correctAnswer');
-    const score = gameManager.getRemainingPlayingTime() + 50;
+    const score = player.getScore() + timer.getRemainingTime() + 50;
     player.setScore(score);
     player.setIsCorrectPlayer(true);
 
