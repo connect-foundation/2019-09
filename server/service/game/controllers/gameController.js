@@ -121,6 +121,12 @@ const startSet = (gameManager, timer, quiz) => {
   );
 };
 
+const goToNextSet = (gameManager, timer) => {
+  io.in(gameManager.getRoomId()).emit('clearWindow');
+  preparePlayerTypes(gameManager, timer);
+  waitForPeerConnection(gameManager, timer);
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -128,4 +134,5 @@ module.exports = {
   endSet,
   preparePlayerTypes,
   waitForPeerConnection,
+  goToNextSet,
 };
