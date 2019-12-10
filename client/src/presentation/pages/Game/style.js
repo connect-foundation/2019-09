@@ -15,13 +15,11 @@ const useStyles = makeStyles(theme => ({
     padding: '1rem 2rem',
     textAlign: 'left',
     color: theme.palette.text.secondary,
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-    },
   },
   gameHeader: {
     backgroundColor: STYLE_COLORS.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
+    height: '10%',
   },
   videoBox: {
     padding: theme.spacing(2),
@@ -35,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   playerPanelContainer: {
+    height: '100%',
     display: 'block',
   },
   playerPanelButton: {
@@ -58,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     padding: '0.5rem 2rem',
   },
   bottomGrid: {
-    height: 'auto',
+    height: '90%',
     [theme.breakpoints.down('xs')]: {
       display: 'block',
       position: 'relative',
@@ -105,7 +104,10 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   streamingPanelGrid: {
-    minHeight: '20rem',
+    [theme.breakpoints.down('xs')]: {
+      position: 'relative',
+      height: '70%',
+    },
   },
 }));
 
