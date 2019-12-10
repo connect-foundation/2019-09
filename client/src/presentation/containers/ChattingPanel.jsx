@@ -29,7 +29,7 @@ const useStyle = makeStyles(theme => ({
 
 const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { chattingList, isChattingDisabled } = useContext(GlobalContext);
+  const { chattingList, chattingDisabled } = useContext(GlobalContext);
   const nickname = browserLocalStorage.getNickname();
 
   return (
@@ -40,7 +40,7 @@ const ChattingPanel = ({ clientManager }) => {
       <InputWindow
         clientManager={clientManager}
         nickname={nickname}
-        isChattingDisabled={isChattingDisabled}
+        chattingDisabled={chattingDisabled}
       />
     </Box>
   );
