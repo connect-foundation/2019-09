@@ -156,13 +156,39 @@ const goToNextSetAfterNSeconds = ({ seconds, gameManager, timer }) => {
   );
 };
 
+const endGame = (gameManager, timer) => {
+  io.in(gameManager.getRoomId()).emit('endGame', {
+    scoreList: gameManager.getScoreList(),
+  });
+  timer.clear();
+};
+
+const resetGame = gameManager => {
+  /** @todo 점수와 닉네임을 DB에 저장하는 로직 필요 */
+  gameManager.reset();
+  gameManager.resetAllPlayers();
+  io.in(gameManager.getRoomId()).emit('resetGame', {
+    players: gameManager.getPlayers(),
+  });
+};
+
+const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
+  timer.startIntegrationTimer(
+    seconds,
+    resetGame.bind(null, gameManager),
+    sendCurrentSecondsHandler,
+  );
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
   startSet,
   endSet,
+  endGame,
   preparePlayerTypes,
   waitForPeerConnection,
   goToNextSet,
   goToNextSetAfterNSeconds,
+  resetGameAfterNSeconds,
 };

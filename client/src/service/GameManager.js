@@ -8,7 +8,6 @@ class GameManager {
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
-    this.quizSelectTimer = null;
   }
 
   findMatch(nickname) {
@@ -138,15 +137,6 @@ class GameManager {
           quizCandidates,
         },
       });
-
-      this.quizSelectTimer = setTimeout(() => {
-        const randomIndex = Math.round(
-          Math.random() * (quizCandidates.length - 1),
-        );
-
-        const quiz = quizCandidates[randomIndex];
-        this.selectQuiz(quiz);
-      }, 10000);
     }
   }
 
@@ -208,8 +198,6 @@ class GameManager {
       },
     });
     this.socket.emit('selectQuiz', { quiz });
-    clearTimeout(this.quizSelectTimer);
-    this.quizSelectTimer = null;
   }
 }
 

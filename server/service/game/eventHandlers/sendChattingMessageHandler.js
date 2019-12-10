@@ -3,7 +3,10 @@ const { io } = require('../../io');
 const { processChatWithSystemRule } = require('../../../utils/chatUtils');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
-const { SECONDS_BETWEEN_SETS } = require('../../../config');
+const {
+  SECONDS_BETWEEN_SETS,
+  SECONDS_AFTER_GAME_END,
+} = require('../../../config');
 
 /**
  * viewer가 입력한 채팅이 정답이라면 true를 반환하는 함수
@@ -43,6 +46,13 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
       if (gameManager.isGameContinuable()) {
         gameController.goToNextSetAfterNSeconds({
           seconds: SECONDS_BETWEEN_SETS,
+          gameManager,
+          timer,
+        });
+      } else {
+        gameController.endGame(gameManager, timer);
+        gameController.resetGameAfterNSeconds({
+          seconds: SECONDS_AFTER_GAME_END,
           gameManager,
           timer,
         });
