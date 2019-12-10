@@ -31,11 +31,26 @@ const assignPlayerType = gameManager => {
   });
 };
 
+const pickQuizCandidates = () => {
+  return ['문어', '고양이', '부스트캠퍼'];
+};
+
+const quizSelectionTimeoutHandler = (gameManager, timer) => {
+  const quiz = gameManager.selectRandomQuiz();
+  gameManager.setQuiz(quiz);
+  startSet(gameManager, timer, quiz);
+};
+
 const prepareSet = (gameManager, timer) => {
   /**
    * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
    */
   gameManager.setQuiz('');
+  /**
+   * @todo 추후 DB 연결시 async await 필요
+   */
+  const quizCandidates = pickQuizCandidates();
+  gameManager.setQuizCandidates(quizCandidates);
   gameManager.getPlayers().forEach(player => {
     const socketId = player.getSocketId();
 
@@ -43,13 +58,19 @@ const prepareSet = (gameManager, timer) => {
       currentRound: gameManager.getCurrentRound(),
       currentSet: gameManager.getCurrentSet(),
       quizCandidates: gameManager.isStreamer(socketId)
-        ? ['문어', '고양이', '부스트캠퍼']
-        : [], // getQuizCandidates()
+        ? gameManager.getQuizCandidates()
+        : [],
     });
   });
 
-  timer.startIntervalTimer(
+  // timer.startIntervalTimer(
+  //   MAX_QUIZ_SELECTION_WAITING_SECONDS,
+  //   sendCurrentSecondsHandler,
+  // );
+
+  timer.startIntegrationTimer(
     MAX_QUIZ_SELECTION_WAITING_SECONDS,
+    quizSelectionTimeoutHandler.bind(null, gameManager, timer),
     sendCurrentSecondsHandler,
   );
 };

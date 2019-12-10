@@ -5,6 +5,7 @@ class GameManager {
     this.roomId = roomId;
     this.status = 'waiting';
     this.quiz = '';
+    this.quizCandidates = [];
     this.players = [];
     this.streamerCandidates = [];
     this.currentRound = 0;
@@ -196,6 +197,21 @@ class GameManager {
       !!this.getStreamerCandidates().length &&
       this.currentRound <= MAX_ROUND_NUMBER
     );
+  }
+
+  setQuizCandidates(quizCandidates) {
+    this.quizCandidates = quizCandidates;
+  }
+
+  getQuizCandidates() {
+    return this.quizCandidates;
+  }
+
+  selectRandomQuiz() {
+    const randomIndex = Math.round(
+      Math.random() * (this.quizCandidates.length - 1),
+    );
+    return this.quizCandidates[randomIndex];
   }
 }
 
