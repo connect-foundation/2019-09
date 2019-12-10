@@ -15,12 +15,12 @@ class Timer {
   startIntegrationTimer(seconds, timeOutCallback, intervalCallback) {
     this.remainingTime = seconds;
     const updateTimer = () => {
+      intervalCallback(this.remainingTime, this.roomId);
       if (--this.remainingTime < 0) {
         this.clear();
         timeOutCallback();
         return;
       }
-      intervalCallback(this.remainingTime, this.roomId);
       this.timerId = setTimeout(updateTimer, ONE_SECOND);
     };
     this.timerId = setTimeout(updateTimer);

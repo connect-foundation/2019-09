@@ -69,7 +69,7 @@ class GameManager {
       type: 'setScoreNotice',
       payload: {
         isVisible: true,
-        message: '최종 점수',
+        message: '중간 점수',
         scoreList,
       },
     });

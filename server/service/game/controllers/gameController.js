@@ -148,6 +148,14 @@ const goToNextSet = (gameManager, timer) => {
   waitForPeerConnection(gameManager, timer);
 };
 
+const goToNextSetAfterNSeconds = ({ seconds, gameManager, timer }) => {
+  timer.startIntegrationTimer(
+    seconds,
+    goToNextSet.bind(null, gameManager, timer),
+    sendCurrentSecondsHandler,
+  );
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -156,4 +164,5 @@ module.exports = {
   preparePlayerTypes,
   waitForPeerConnection,
   goToNextSet,
+  goToNextSetAfterNSeconds,
 };
