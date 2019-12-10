@@ -25,7 +25,7 @@ const GamePresentation = ({ gameProps }) => {
     currentSeconds,
     classes,
     readyButtonHandler,
-    isMobile,
+    mobileChattingPanelVisibility,
   } = gameProps;
 
   return (
@@ -89,7 +89,7 @@ const GamePresentation = ({ gameProps }) => {
             </ReadyButton>
           </Box>
         </Grid>
-        {isMobile ? (
+        {mobileChattingPanelVisibility ? (
           <>
             <Grid
               item
