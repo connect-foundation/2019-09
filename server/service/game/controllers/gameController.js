@@ -54,20 +54,20 @@ const prepareSet = (gameManager, timer) => {
   );
 };
 
-const disconnectPlayersAndStartGame = gameManager => {
+const disconnectPlayersAndStartGame = (gameManager, timer) => {
   const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
   playersToDisconnect.forEach(player => {
     const socket = io.sockets.connected[player.getSocketId()];
     socket.disconnect();
   });
 
-  prepareSet(gameManager);
+  prepareSet(gameManager, timer);
 };
 
 const waitForPeerConnection = (gameManager, timer) => {
   timer.startTimeoutTimer(
     MAX_PEER_CONNECTION_WAITING_SECONDS,
-    disconnectPlayersAndStartGame.bind(null, gameManager),
+    disconnectPlayersAndStartGame.bind(null, gameManager, timer),
   );
 };
 
