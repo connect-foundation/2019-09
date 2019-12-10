@@ -72,6 +72,8 @@ class StreamingManager {
     socketIds.forEach(socketId => {
       if (socketId === streamerSocketId) {
         remotePlayers[socketId].type = 'streamer';
+      } else {
+        remotePlayers[socketId].type = 'viewer';
       }
     });
     localPlayer.type = 'viewer';
