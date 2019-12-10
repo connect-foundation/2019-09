@@ -73,6 +73,12 @@ class GameManager {
         scoreList,
       },
     });
+    this.dispatch({
+      type: 'setIsVideoVisible',
+      payload: {
+        isVideoVisible: false,
+      },
+    });
   }
 
   correctAnswerHandler() {
@@ -104,13 +110,6 @@ class GameManager {
         isVideoVisible: true,
       },
     });
-    this.dispatch({
-      type: 'setQuizCandidatesNotice',
-      payload: {
-        isVisible: false,
-        quizCandidates: [],
-      },
-    });
   }
 
   prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
@@ -139,6 +138,15 @@ class GameManager {
           quizCandidates,
         },
       });
+
+      this.quizSelectTimer = setTimeout(() => {
+        const randomIndex = Math.round(
+          Math.random() * (quizCandidates.length - 1),
+        );
+
+        const quiz = quizCandidates[randomIndex];
+        this.selectQuiz(quiz);
+      }, 10000);
     }
   }
 
@@ -192,6 +200,13 @@ class GameManager {
   }
 
   selectQuiz(quiz) {
+    this.dispatch({
+      type: 'setQuizCandidatesNotice',
+      payload: {
+        isVisible: false,
+        quizCandidates: [],
+      },
+    });
     this.socket.emit('selectQuiz', { quiz });
     clearTimeout(this.quizSelectTimer);
     this.quizSelectTimer = null;
