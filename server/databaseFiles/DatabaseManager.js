@@ -50,6 +50,17 @@ class DatabaseManager {
     }
   }
 
+  async getAllRankings() {
+    try {
+      const ranking = await this.Ranking.findAll();
+      const convertedData = this.convertMysqlData(ranking);
+      return convertedData;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
   async castQuizCandidates() {
     try {
       const quizCandidates = await this.Quiz.findAll({
