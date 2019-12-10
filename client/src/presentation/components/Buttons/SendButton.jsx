@@ -12,14 +12,14 @@ const useStyles = makeStyles({
   },
 });
 
-const SendButton = ({ onClick, children, isChattingDisabled }) => {
+const SendButton = ({ onClick, children, chattingDisabled }) => {
   const classes = useStyles();
   return (
     <Button
       onClick={onClick}
       variant="contained"
       className={classes.button}
-      disabled={isChattingDisabled}
+      disabled={chattingDisabled}
     >
       {children}
     </Button>
@@ -29,7 +29,7 @@ const SendButton = ({ onClick, children, isChattingDisabled }) => {
 SendButton.propTypes = {
   children: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  isChattingDisabled: PropTypes.bool.isRequired,
+  chattingDisabled: PropTypes.bool.isRequired,
 };
 
 export default SendButton;
