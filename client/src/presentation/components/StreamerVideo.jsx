@@ -20,7 +20,7 @@ const StreamerVideo = ({ stream }) => {
     videoElement.srcObject = stream;
   }, []);
 
-  return <video className={classes.video} autoPlay ref={ref} />;
+  return <video className={classes.video} autoPlay playsInline ref={ref} />;
 };
 
 StreamerVideo.propTypes = {

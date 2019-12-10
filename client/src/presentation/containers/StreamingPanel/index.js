@@ -38,7 +38,7 @@ const StreamingPanel = ({ clientManager }) => {
   const {
     quizCandidatesNotice,
     stream,
-    isVideoVisible,
+    videoVisibility,
     currentSeconds,
     scoreNotice,
   } = useContext(GlobalContext);
@@ -81,7 +81,7 @@ const StreamingPanel = ({ clientManager }) => {
     showGameMessageBox,
     gameMessageContent,
     stream,
-    isVideoVisible,
+    videoVisibility,
     scoreList,
     message,
   };
