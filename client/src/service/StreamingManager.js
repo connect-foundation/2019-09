@@ -67,7 +67,14 @@ class StreamingManager {
   }
 
   async assignViewerHandler({ streamerSocketId }) {
-    const { remotePlayers, localPlayer, dispatch } = this;
+    const {
+      remotePlayers,
+      localPlayer,
+      dispatch,
+      webRTCManager,
+      iceCandidateHandler,
+      trackHandler,
+    } = this;
     const socketIds = Object.keys(remotePlayers);
     socketIds.forEach(socketId => {
       if (socketId === streamerSocketId) {
@@ -84,7 +91,7 @@ class StreamingManager {
         viewPlayerList,
       },
     });
-    const { webRTCManager, iceCandidateHandler, trackHandler } = this;
+    webRTCManager.closeAllConnections();
     webRTCManager.createConnection(streamerSocketId);
     webRTCManager.registerIceCandidate(
       streamerSocketId,
