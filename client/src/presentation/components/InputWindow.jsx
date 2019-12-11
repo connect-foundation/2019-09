@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-const InputWindow = ({ clientManager, isChattingDisabled }) => {
+const InputWindow = ({ clientManager, chattingDisabled }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
 
@@ -61,7 +61,7 @@ const InputWindow = ({ clientManager, isChattingDisabled }) => {
 
 InputWindow.propTypes = {
   clientManager: PropTypes.shape.isRequired,
-  isChattingDisabled: PropTypes.bool.isRequired,
+  chattingDisabled: PropTypes.bool.isRequired,
 };
 
 export default InputWindow;

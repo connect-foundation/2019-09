@@ -58,14 +58,9 @@ class GameManager {
         isVisible: true,
         message: '중간 점수',
         scoreList,
-      },
-    });
-    this.dispatch({
-      type: 'setIsVideoVisible',
-      payload: {
-        isVideoVisible: false,
-      },
-    });
+      }),
+    );
+    this.dispatch(actions.setVideoVisibility(false));
   }
 
   correctAnswerHandler() {
@@ -82,9 +77,7 @@ class GameManager {
     this.dispatch(actions.setCurrentSet(currentSet));
 
     if (quizCandidates.length === 0) {
-      this.dispatch(
-        actions.setMessageNotice(true, WAITING_FOR_STREAMER),
-      );
+      this.dispatch(actions.setMessageNotice(true, WAITING_FOR_STREAMER));
     } else {
       this.dispatch(actions.setQuizCandidatesNotice(true, quizCandidates));
     }

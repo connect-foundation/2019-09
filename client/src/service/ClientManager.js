@@ -35,7 +35,6 @@ class ClientManager {
   }
 
   registerSocketEvents() {
-    
     this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
     this.socket.on(
       EVENTS.SEND_LEFT_PLAYER,
@@ -99,37 +98,11 @@ class ClientManager {
   endGameHandler({ scoreList }) {
     this.resetStreaming();
     this.resetReadyButton();
-    this.dispatch({
-      type: 'setScoreNotice',
-      payload: {
-        isVisible: true,
-        message: '최종 점수',
-        scoreList,
-      },
-    });
-    this.dispatch({
-      type: 'setCurrentSeconds',
-      payload: { currentSeconds: 0 },
-    });
-    this.dispatch({
-      type: 'setQuiz',
-      payload: {
-        quiz: '',
-        quizLength: 0,
-      },
-    });
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: false,
-      },
-    });
-    this.dispatch({
-      type: 'setIsVideoVisible',
-      payload: {
-        isVideoVisible: false,
-      },
-    });
+    this.dispatch(actions.setScoreNotice(true, '최종 점수', scoreList));
+    this.dispatch(actions.setCurrentSeconds(0));
+    this.dispatch(actions.setQuiz('', 0));
+    this.dispatch(actions.setChattingDisabled(false));
+    this.dispatch(actions.setVideoVisibility(false));
     this.streamingManager.closeAllConnections();
   }
 

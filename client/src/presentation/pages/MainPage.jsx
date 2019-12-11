@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, Introduction } from '../containers';
 import backgroundImageSource from '../../assets/background.png';
+import browserLocalStorage from '../../utils/browserLocalStorage';
 
 const useStyle = makeStyles(theme => ({
   mainPage: {

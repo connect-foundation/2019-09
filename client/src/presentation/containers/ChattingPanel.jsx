@@ -29,7 +29,7 @@ const useStyle = makeStyles(theme => ({
 
 const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { chattingList, isChattingDisabled } = useContext(GlobalContext);
+  const { chattingList, chattingDisabled } = useContext(GlobalContext);
 
   return (
     <Box className={classes.chattingPanel}>
@@ -38,7 +38,7 @@ const ChattingPanel = ({ clientManager }) => {
       </Box>
       <InputWindow
         clientManager={clientManager}
-        isChattingDisabled={isChattingDisabled}
+        isChattingDisabled={chattingDisabled}
       />
     </Box>
   );
