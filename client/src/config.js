@@ -18,6 +18,8 @@ const NICKNAME_LENGTH = 8;
 
 const MAX_CHAT_LENGTH = 40;
 
+const MOBILE_PANEL_HEIGHT = '50%';
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -28,4 +30,5 @@ export {
   DEFAULT_TEXT_INPUT_MAX_LENGTH,
   NICKNAME_LENGTH,
   MAX_CHAT_LENGTH,
+  MOBILE_PANEL_HEIGHT,
 };

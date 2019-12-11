@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { STYLE_COLORS } from '../../../utils';
 import backgroundImageSource from '../../../assets/background.png';
+import { MOBILE_PANEL_HEIGHT } from '../../../config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +21,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: STYLE_COLORS.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
     height: '10%',
+    [theme.breakpoints.down('xs')]: {
+      height: 'auto',
+    },
   },
   videoBox: {
     padding: theme.spacing(2),
@@ -88,6 +92,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   mobileChattingPanel: {
+    height: MOBILE_PANEL_HEIGHT,
     position: 'absolute',
     top: '0',
     bottom: '0',
@@ -106,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   streamingPanelGrid: {
     [theme.breakpoints.down('xs')]: {
       position: 'relative',
-      height: '70%',
+      height: MOBILE_PANEL_HEIGHT,
     },
   },
 }));
