@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MetaTags from 'react-meta-tags';
 import Container from '@material-ui/core/Container';
@@ -29,6 +29,11 @@ const useStyle = makeStyles(theme => ({
 
 const MainPage = () => {
   const classes = useStyle();
+
+  useEffect(() => {
+    browserLocalStorage.verifyNicknameInLocalStorage();
+  }, []);
+
   return (
     <Box className={classes.mainPageWrapper}>
       <MetaTags>

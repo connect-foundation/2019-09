@@ -20,6 +20,8 @@ const MAX_CHAT_LENGTH = 40;
 
 const MOBILE_PANEL_HEIGHT = '50%';
 
+const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -31,4 +33,5 @@ export {
   NICKNAME_LENGTH,
   MAX_CHAT_LENGTH,
   MOBILE_PANEL_HEIGHT,
+  LOCALSTORAGE_NICKNAME_KEY,
 };
