@@ -5,7 +5,6 @@ import { GlobalContext } from '../../../contexts';
 import WordCandidates from '../WordCandidates';
 import { CenterTimer } from '../../components';
 import walkingCatImageSource from '../../../assets/cat.gif';
-import { STREAMER_LOADING_MESSAGE } from '../../../config';
 import StreamingPanelPresentation from './presenter';
 import useStyles from './style';
 
@@ -41,6 +40,7 @@ const StreamingPanel = ({ clientManager }) => {
     isVideoVisible,
     currentSeconds,
     scoreNotice,
+    messageNotice,
   } = useContext(GlobalContext);
 
   let showGameMessageBox = false;
@@ -62,13 +62,18 @@ const StreamingPanel = ({ clientManager }) => {
     showScoreBoard = true;
   }
 
+  if (messageNotice.isVisible) {
+    messageType = 'streamerLoading';
+    showGameMessageBox = true;
+  }
+
   let gameMessageContent;
   if (showGameMessageBox) {
     gameMessageContent = makeGameMessageContent({
       messageType,
       currentSeconds,
       loadingImageSource: walkingCatImageSource,
-      loadingMessage: STREAMER_LOADING_MESSAGE,
+      loadingMessage: messageNotice.message,
       words: quizCandidates,
       quizCandidateButtonHandler,
     });

@@ -10,13 +10,13 @@ const MOBILE_VIEW_BREAKPOINT = 600;
 
 const DEFAULT_SCOREBOARD_TITLE = 'Final Score';
 
-const STREAMER_LOADING_MESSAGE = 'Waiting for streamer...';
-
 const DEFAULT_TEXT_INPUT_MAX_LENGTH = 100;
 
 const NICKNAME_LENGTH = 8;
 
 const MAX_CHAT_LENGTH = 40;
+
+const WAITING_FOR_STREAMER = 'Waiting For Streamer...';
 
 export {
   MainIntroductionDescription,
@@ -24,8 +24,8 @@ export {
   MainSlogan,
   MOBILE_VIEW_BREAKPOINT,
   DEFAULT_SCOREBOARD_TITLE,
-  STREAMER_LOADING_MESSAGE,
   DEFAULT_TEXT_INPUT_MAX_LENGTH,
   NICKNAME_LENGTH,
   MAX_CHAT_LENGTH,
+  WAITING_FOR_STREAMER,
 };

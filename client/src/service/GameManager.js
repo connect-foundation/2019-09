@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
+import { WAITING_FOR_STREAMER } from '../config';
 
 class GameManager {
   constructor(socket, localPlayer, remotePlayers) {
@@ -120,7 +121,7 @@ class GameManager {
         type: 'setMessageNotice',
         payload: {
           isVisible: true,
-          message: '출제자가 단어를 선택 중입니다.',
+          message: WAITING_FOR_STREAMER,
         },
       });
     } else {

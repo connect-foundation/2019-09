@@ -95,6 +95,10 @@ const reducer = (state, action) => {
     case 'clearWindow':
       return {
         ...state,
+        messageNotice: {
+          isVisible: false,
+          message: '',
+        },
         quizCandidatesNotice: {
           isVisible: false,
           quizCandidates: [],
