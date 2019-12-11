@@ -16,7 +16,7 @@ const MessageInput = ({
   value,
   onChange,
   onKeyPress,
-  isChattingDisabled,
+  chattingDisabled,
   maxLength,
 }) => {
   const classes = useStyles();
@@ -31,7 +31,7 @@ const MessageInput = ({
         'aria-label': 'description',
         maxLength: maxLength || `${DEFAULT_TEXT_INPUT_MAX_LENGTH}`,
       }}
-      disabled={isChattingDisabled}
+      disabled={chattingDisabled}
     />
   );
 };
@@ -40,7 +40,7 @@ MessageInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onKeyPress: PropTypes.func.isRequired,
-  isChattingDisabled: PropTypes.bool.isRequired,
+  chattingDisabled: PropTypes.bool.isRequired,
   maxLength: PropTypes.string.isRequired,
 };
 

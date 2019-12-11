@@ -44,13 +44,13 @@ const InputWindow = ({ clientManager, isChattingDisabled }) => {
     <Box className={classes.InputWindow}>
       <MessageInput
         value={value}
-        isChattingDisabled={isChattingDisabled}
+        chattingDisabled={chattingDisabled}
         onChange={messageInputOnChangeHandler}
         onKeyPress={messageInputOnKeyPressHandler}
         maxLength={MAX_CHAT_LENGTH}
       />
       <SendButton
-        isChattingDisabled={isChattingDisabled}
+        chattingDisabled={chattingDisabled}
         onClick={sendChattingMessageHandler}
       >
         Send

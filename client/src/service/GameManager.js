@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
+import EVENTS from '../constants/events';
+import actions from '../actions';
 
 class GameManager {
   constructor(socket, localPlayer, remotePlayers) {
@@ -12,24 +14,27 @@ class GameManager {
   }
 
   findMatch(nickname) {
-    this.socket.emit('match', { nickname });
+    this.socket.emit(EVENTS.MATCH, { nickname });
     this.makeAndDispatchViewPlayerList();
   }
 
   registerSocketEvents() {
-    this.socket.on('sendPlayers', this.sendPlayersHandler.bind(this));
-    this.socket.on('sendNewPlayer', this.sendNewPlayerHandler.bind(this));
-    this.socket.on('sendReady', this.sendReadyHandler.bind(this));
-    this.socket.on('startGame', this.startGameHandler.bind(this));
-    this.socket.on('prepareSet', this.prepareSetHandler.bind(this));
+    this.socket.on(EVENTS.SEND_PLAYERS, this.sendPlayersHandler.bind(this));
     this.socket.on(
-      'sendCurrentSeconds',
+      EVENTS.SEND_NEW_PLAYER,
+      this.sendNewPlayerHandler.bind(this),
+    );
+    this.socket.on(EVENTS.SEND_READY, this.sendReadyHandler.bind(this));
+    this.socket.on(EVENTS.START_GAME, this.startGameHandler.bind(this));
+    this.socket.on(EVENTS.PREPARE_SET, this.prepareSetHandler.bind(this));
+    this.socket.on(
+      EVENTS.SEND_CURRENT_SECONDS,
       this.sendCurrentSecondsHandler.bind(this),
     );
-    this.socket.on('startSet', this.startSetHandler.bind(this));
-    this.socket.on('correctAnswer', this.correctAnswerHandler.bind(this));
-    this.socket.on('endSet', this.endSetHandler.bind(this));
-    this.socket.on('disconnect', () => {
+    this.socket.on(EVENTS.START_SET, this.startSetHandler.bind(this));
+    this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
+    this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
+    this.socket.on(EVENTS.DISCONNECT, () => {
       // 데모데이 중 서버의 지속적인 다운을 대처하기 위해 '임시'로 작성함
       window.location.href = '/';
       // this.dispatch({ type: 'reset' });
@@ -37,35 +42,17 @@ class GameManager {
   }
 
   endSetHandler({ scoreList }) {
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'scoreSharing' },
-    });
-    this.dispatch({
-      type: 'setCurrentSeconds',
-      payload: { currentSeconds: 0 },
-    });
-    this.dispatch({
-      type: 'setQuiz',
-      payload: {
-        quiz: '',
-        quizLength: 0,
-      },
-    });
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: false,
-      },
-    });
-    this.dispatch({
-      type: 'setScoreNotice',
-      payload: {
+    this.dispatch(actions.setGameStatus('scoreSharing'));
+    this.dispatch(actions.setCurrentSeconds(0));
+    this.dispatch(actions.setQuiz('', 0));
+    this.dispatch(actions.setChattingDisabled(false));
+    this.dispatch(
+      actions.setScoreNotice({
         isVisible: true,
         message: '최종 점수',
         scoreList,
-      },
-    });
+      }),
+    );
 
     setTimeout(() => {
       // eslint-disable-next-line no-restricted-globals
@@ -74,62 +61,24 @@ class GameManager {
   }
 
   correctAnswerHandler() {
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: true,
-      },
-    });
-    this.dispatch({
-      type: 'setIsChattingDisabled',
-      payload: {
-        isChattingDisabled: true,
-      },
-    });
+    this.dispatch(actions.setChattingDisabled(true));
   }
 
   startSetHandler({ quiz, quizLength }) {
-    this.dispatch({
-      type: 'setQuiz',
-      payload: {
-        quiz,
-        quizLength,
-      },
-    });
-    this.dispatch({
-      type: 'setIsVideoVisible',
-      payload: {
-        isVideoVisible: true,
-      },
-    });
+    this.dispatch(actions.setQuiz(quiz, quizLength));
+    this.dispatch(actions.setVideoVisibility(true));
   }
 
   prepareSetHandler({ currentRound, currentSet, quizCandidates }) {
-    this.dispatch({
-      type: 'setCurrentRound',
-      payload: { currentRound },
-    });
-    this.dispatch({
-      type: 'setCurrentSet',
-      payload: { currentSet },
-    });
+    this.dispatch(actions.setCurrentRound(currentRound));
+    this.dispatch(actions.setCurrentSet(currentSet));
 
     if (quizCandidates.length === 0) {
-      this.dispatch({
-        type: 'setMessageNotice',
-        payload: {
-          isVisible: true,
-          message: '출제자가 단어를 선택 중입니다.',
-        },
-      });
+      this.dispatch(
+        actions.setMessageNotice(true, '출제자가 단어를 선택 중입니다.'),
+      );
     } else {
-      this.dispatch({
-        type: 'setQuizCandidatesNotice',
-        payload: {
-          isVisible: true,
-          quizCandidates,
-        },
-      });
+      this.dispatch(actions.setQuizCandidatesNotice(true, quizCandidates));
 
       this.quizSelectTimer = setTimeout(() => {
         const randomIndex = Math.round(
@@ -143,17 +92,11 @@ class GameManager {
   }
 
   sendCurrentSecondsHandler({ currentSeconds }) {
-    this.dispatch({
-      type: 'setCurrentSeconds',
-      payload: { currentSeconds },
-    });
+    this.dispatch(actions.setCurrentSeconds(currentSeconds));
   }
 
   startGameHandler() {
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'playing' },
-    });
+    this.dispatch(actions.setGameStatus('playing'));
   }
 
   sendPlayersHandler({ players }) {
@@ -180,7 +123,7 @@ class GameManager {
   }
 
   toggleReady(isReady) {
-    this.socket.emit('sendReady', { isReady: !isReady });
+    this.socket.emit(EVENTS.SEND_READY, { isReady: !isReady });
   }
 
   makeAndDispatchViewPlayerList() {
@@ -188,18 +131,12 @@ class GameManager {
       this.localPlayer,
       this.remotePlayers,
     );
-    this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+    this.dispatch(actions.setViewPlayerList(viewPlayerList));
   }
 
   selectQuiz(quiz) {
-    this.dispatch({
-      type: 'setQuizCandidatesNotice',
-      payload: {
-        isVisible: false,
-        quizCandidates: [],
-      },
-    });
-    this.socket.emit('selectQuiz', { quiz });
+    this.dispatch(actions.setQuizCandidatesNotice(false, []));
+    this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
     clearTimeout(this.quizSelectTimer);
     this.quizSelectTimer = null;
   }
