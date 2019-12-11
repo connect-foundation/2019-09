@@ -5,6 +5,8 @@ import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
+import EVENTS from '../constants/events';
+import actions from '../actions';
 
 class ClientManager {
   constructor() {
@@ -33,9 +35,13 @@ class ClientManager {
   }
 
   registerSocketEvents() {
-    this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
-    this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
-    this.socket.on('endGame', this.endGameHandler.bind(this));
+    
+    this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
+    this.socket.on(
+      EVENTS.SEND_LEFT_PLAYER,
+      this.sendLeftPlayerHandler.bind(this),
+    );
+    this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
     this.socket.on('resetGame', this.resetGameHandler.bind(this));
   }
 
@@ -46,13 +52,7 @@ class ClientManager {
         this.localPlayer,
         this.remotePlayers,
       );
-      this.dispatch({
-        type: 'setViewPlayerList',
-        payload: {
-          viewPlayerList,
-        },
-      });
-      console.log('sendLeftPlayerHandler : ', socketId, viewPlayerList);
+      this.dispatch(actions.setViewPlayerList(viewPlayerList));
       this.streamingManager.closeConnection(socketId);
     } catch (e) {
       console.log(e);
@@ -64,7 +64,7 @@ class ClientManager {
   }
 
   askSocketId() {
-    this.socket.emit('askSocketId');
+    this.socket.emit(EVENTS.ASK_SOCKET_ID);
   }
 
   findMatch(nickname) {
@@ -93,9 +93,7 @@ class ClientManager {
   exitRoom() {
     this.streamingManager.resetWebRTC();
     this.socket.disconnect();
-    // this.dispatch({ type: 'resetChattingList' });
-    this.dispatch({ type: 'reset' });
-    // 상태 초기화
+    this.dispatch(actions.reset());
   }
 
   endGameHandler({ scoreList }) {
@@ -140,7 +138,7 @@ class ClientManager {
       this.localPlayer,
       this.remotePlayers,
     );
-    this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+    this.dispatch(actions.setViewPlayerList(viewPlayerList));
   }
 
   resetStreaming() {

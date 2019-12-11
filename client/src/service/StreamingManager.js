@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 import { makeViewPlayerList } from '../utils';
+import EVENTS from '../constants/events';
 
 class StreamingManager {
   constructor(socket, remotePlayers, localPlayer) {
@@ -13,10 +14,19 @@ class StreamingManager {
   }
 
   registerSocketEvents() {
-    this.socket.on('assignStreamer', this.assignStreamerHandler.bind(this));
-    this.socket.on('assignViewer', this.assignViewerHandler.bind(this));
-    this.socket.on('sendIceCandidate', this.sendIceCandidateHandler.bind(this));
-    this.socket.on('sendDescription', this.sendDescriptionHandler.bind(this));
+    this.socket.on(
+      EVENTS.ASSIGN_STREAMER,
+      this.assignStreamerHandler.bind(this),
+    );
+    this.socket.on(EVENTS.ASSING_VIEWER, this.assignViewerHandler.bind(this));
+    this.socket.on(
+      EVENTS.SEND_ICE_CANDIDATE,
+      this.sendIceCandidateHandler.bind(this),
+    );
+    this.socket.on(
+      EVENTS.SEND_DESCRIPTION,
+      this.sendDescriptionHandler.bind(this),
+    );
   }
 
   async assignStreamerHandler() {
@@ -57,7 +67,7 @@ class StreamingManager {
     const offers = await webRTCManager.createOfferDescriptions(socketIds);
     await webRTCManager.setLocalDescriptions(socketIds, offers);
     socketIds.forEach((socketId, index) => {
-      socket.emit('sendDescription', {
+      socket.emit(EVENTS.SEND_DESCRIPTION, {
         target: socketId,
         description: offers[index],
       });
@@ -110,12 +120,12 @@ class StreamingManager {
     if (description.type === 'answer') return;
     const answer = await webRTCManager.createAnswerDescription(target);
     await webRTCManager.setLocalDescription(target, answer);
-    socket.emit('sendDescription', { target, description: answer });
+    socket.emit(EVENTS.SEND_DESCRIPTION, { target, description: answer });
   }
 
   iceCandidateHandler(socketId, event) {
     if (!event.candidate) return;
-    this.socket.emit('sendIceCandidate', {
+    this.socket.emit(EVENTS.SEND_ICE_CANDIDATE, {
       target: socketId,
       iceCandidate: event.candidate,
     });
@@ -124,7 +134,7 @@ class StreamingManager {
   // eslint-disable-next-line class-methods-use-this
   trackHandler(stream) {
     this.dispatch({ type: 'setStream', payload: { stream } });
-    this.socket.emit('connectPeer');
+    this.socket.emit(EVENTS.CONNECT_PEER);
   }
 
   closeConnection(socketId) {

@@ -37,7 +37,7 @@ const StreamingPanel = ({ clientManager }) => {
   const {
     quizCandidatesNotice,
     stream,
-    isVideoVisible,
+    videoVisibility,
     currentSeconds,
     scoreNotice,
     messageNotice,
@@ -85,7 +85,7 @@ const StreamingPanel = ({ clientManager }) => {
     showGameMessageBox,
     gameMessageContent,
     stream,
-    isVideoVisible,
+    videoVisibility,
     scoreList,
     message,
   };
