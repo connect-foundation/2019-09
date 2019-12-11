@@ -109,6 +109,30 @@ class ClientManager {
         scoreList,
       },
     });
+    this.dispatch({
+      type: 'setCurrentSeconds',
+      payload: { currentSeconds: 0 },
+    });
+    this.dispatch({
+      type: 'setQuiz',
+      payload: {
+        quiz: '',
+        quizLength: 0,
+      },
+    });
+    this.dispatch({
+      type: 'setIsChattingDisabled',
+      payload: {
+        isChattingDisabled: false,
+      },
+    });
+    this.dispatch({
+      type: 'setIsVideoVisible',
+      payload: {
+        isVideoVisible: false,
+      },
+    });
+    this.streamingManager.closeAllConnections();
   }
 
   resetReadyButton() {
