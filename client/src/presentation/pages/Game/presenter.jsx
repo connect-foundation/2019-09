@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
+import MetaTags from 'react-meta-tags';
 import { Timer, QuizDisplay, ExitButton, ReadyButton } from '../../components';
 import {
   StreamingPanel,
@@ -30,6 +31,12 @@ const GamePresentation = ({ gameProps }) => {
 
   return (
     <div className={classes.root}>
+      <MetaTags>
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, user-scalable=no, width=device-width"
+        />
+      </MetaTags>
       <Grid container spacing={0} className={classes.gameHeader}>
         <Grid item xs>
           <Box className={classes.timerBox}>
