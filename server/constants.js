@@ -1,4 +1,4 @@
-const ERROR_500 = {
+const ERROR_500_DATABASE = {
   error: {
     errors: [
       {
@@ -12,4 +12,4 @@ const ERROR_500 = {
   },
 };
 
-module.exports = { ERROR_500 };
+module.exports = { ERROR_500_DATABASE };
