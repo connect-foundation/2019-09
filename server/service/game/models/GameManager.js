@@ -1,4 +1,4 @@
-const { MAX_ROUND_NUMBER } = require('../../../config');
+const { MAX_ROUND_NUMBER, MIN_PLAYER_COUNT } = require('../../../config');
 
 class GameManager {
   constructor(roomId) {
@@ -195,7 +195,8 @@ class GameManager {
   isGameContinuable() {
     return (
       !!this.getStreamerCandidates().length &&
-      this.currentRound <= MAX_ROUND_NUMBER
+      this.currentRound <= MAX_ROUND_NUMBER &&
+      this.players.length >= MIN_PLAYER_COUNT
     );
   }
 
