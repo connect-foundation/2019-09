@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
   video: {
-    width: '100%',
+    maxWidth: '100%',
     height: '100%',
     transform: 'rotateY(180deg)',
   },
@@ -18,7 +18,7 @@ const StreamerVideo = ({ stream }) => {
   useEffect(() => {
     const videoElement = ref.current;
     videoElement.srcObject = stream;
-  }, []);
+  }, [stream]);
 
   return <video className={classes.video} autoPlay playsInline ref={ref} />;
 };

@@ -1,10 +1,11 @@
-const { MAX_ROUND_NUMBER } = require('../../../config');
+const { MAX_ROUND_NUMBER, MIN_PLAYER_COUNT } = require('../../../config');
 
 class GameManager {
   constructor(roomId) {
     this.roomId = roomId;
     this.status = 'waiting';
     this.quiz = '';
+    this.quizCandidates = [];
     this.players = [];
     this.streamerCandidates = [];
     this.currentRound = 0;
@@ -115,6 +116,10 @@ class GameManager {
     return streamer;
   }
 
+  getStreamerCandidates() {
+    return this.streamerCandidates;
+  }
+
   setStreamerCandidates() {
     for (let i = 0; i < MAX_ROUND_NUMBER; i++) {
       this.streamerCandidates.push([...this.players]);
@@ -185,6 +190,29 @@ class GameManager {
 
   checkAllPlayersAreReady() {
     return this.players.every(player => player.getIsReady());
+  }
+
+  isGameContinuable() {
+    return (
+      !!this.getStreamerCandidates().length &&
+      this.currentRound <= MAX_ROUND_NUMBER &&
+      this.players.length >= MIN_PLAYER_COUNT
+    );
+  }
+
+  setQuizCandidates(quizCandidates) {
+    this.quizCandidates = quizCandidates;
+  }
+
+  getQuizCandidates() {
+    return this.quizCandidates;
+  }
+
+  selectRandomQuiz() {
+    const randomIndex = Math.round(
+      Math.random() * (this.quizCandidates.length - 1),
+    );
+    return this.quizCandidates[randomIndex];
   }
 }
 

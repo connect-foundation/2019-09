@@ -10,17 +10,25 @@ const useStyles = makeStyles({
     width: '100%',
     boxSizing: 'border-box',
     height: 'auto',
-    marginBottom: '0.5rem',
+    marginBottom: '1rem',
     padding: '0.5rem 1rem',
     display: 'flex',
     fontSize: '1.6rem',
     color: STYLE_COLORS.BASE_BLACK_COLOR,
-    backgroundColor: STYLE_COLORS.BASE_WHITE_COLOR,
+    backgroundColor: (() => {
+      return props.isCorrectPlayer
+        ? STYLE_COLORS.THEME_COLOR
+        : STYLE_COLORS.PURE_WHITE_COLOR;
+    })(),
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.6)',
     borderRadius: '0.3rem',
     border: (() => {
-      if (props.type === 'streamer') return '0.2rem solid #e74c3c';
-      if (props.isReady) return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
+      if (props.type === 'streamer') {
+        return '0.2rem solid #e74c3c';
+      }
+      if (props.isReady || props.isCorrectPlayer) {
+        return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
+      }
       return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
     })(),
   }),
@@ -46,7 +54,12 @@ const useStyles = makeStyles({
 });
 
 const PlayerProfile = ({ nickname, score, isReady, type, isLocalPlayer }) => {
-  const classes = useStyles({ isReady, type, isLocalPlayer });
+  const classes = useStyles({
+    isReady,
+    type,
+    isLocalPlayer,
+    isCorrectPlayer: false,
+  });
   return (
     <Box className={classes.PlayerProfile}>
       <Box className={classes.playerInformation}>
