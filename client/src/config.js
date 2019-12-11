@@ -22,6 +22,8 @@ const MOBILE_PANEL_HEIGHT = '50%';
 
 const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
 
+const GAME_END_SCOREBOARD_TITLE = '최종 점수';
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -34,4 +36,5 @@ export {
   WAITING_FOR_STREAMER,
   MOBILE_PANEL_HEIGHT,
   LOCALSTORAGE_NICKNAME_KEY,
+  GAME_END_SCOREBOARD_TITLE,
 };
