@@ -41,22 +41,7 @@ const sendChattingMessageHandler = (socket, { nickname, message }) => {
     player.setIsCorrectPlayer(true);
 
     if (gameManager.checkAllPlayersAreCorrect()) {
-      gameController.endSet(gameManager, timer);
-      gameManager.updateRoundAndSet();
-      if (gameManager.isGameContinuable()) {
-        gameController.goToNextSetAfterNSeconds({
-          seconds: SECONDS_BETWEEN_SETS,
-          gameManager,
-          timer,
-        });
-      } else {
-        gameController.endGame(gameManager, timer);
-        gameController.resetGameAfterNSeconds({
-          seconds: SECONDS_AFTER_GAME_END,
-          gameManager,
-          timer,
-        });
-      }
+      gameController.repeatSet(gameManager, timer);
     }
     return;
   }

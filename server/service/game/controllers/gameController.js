@@ -3,6 +3,8 @@ const {
   MAX_PEER_CONNECTION_WAITING_SECONDS,
   MAX_QUIZ_SELECTION_WAITING_SECONDS,
   ONE_SET_SECONDS,
+  SECONDS_BETWEEN_SETS,
+  SECONDS_AFTER_GAME_END,
 } = require('../../../config');
 
 const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
@@ -49,7 +51,7 @@ const startSet = (gameManager, timer, quiz) => {
   gameManager.setStatus('playing');
   gameManager.getPlayers().forEach(player => {
     const socketId = player.getSocketId();
-
+    io.to(socketId).emit('clearWindow');
     io.to(socketId).emit('startSet', {
       quiz: gameManager.isStreamer(socketId) ? quiz : '',
       quizLength: quiz.length,
@@ -58,7 +60,7 @@ const startSet = (gameManager, timer, quiz) => {
 
   timer.startIntegrationTimer(
     ONE_SET_SECONDS,
-    endSet.bind(null, gameManager, timer),
+    repeatSet.bind(null, gameManager, timer),
     sendCurrentSecondsHandler,
   );
 };
@@ -90,11 +92,6 @@ const prepareSet = (gameManager, timer) => {
         : [],
     });
   });
-
-  // timer.startIntervalTimer(
-  //   MAX_QUIZ_SELECTION_WAITING_SECONDS,
-  //   sendCurrentSecondsHandler,
-  // );
 
   timer.startIntegrationTimer(
     MAX_QUIZ_SELECTION_WAITING_SECONDS,
@@ -183,6 +180,25 @@ const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
   );
 };
 
+const repeatSet = (gameManager, timer) => {
+  gameManager.updateRoundAndSet();
+  if (gameManager.isGameContinuable()) {
+    endSet(gameManager, timer);
+    goToNextSetAfterNSeconds({
+      seconds: SECONDS_BETWEEN_SETS,
+      gameManager,
+      timer,
+    });
+  } else {
+    endGame(gameManager, timer);
+    resetGameAfterNSeconds({
+      seconds: SECONDS_AFTER_GAME_END,
+      gameManager,
+      timer,
+    });
+  }
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -194,4 +210,5 @@ module.exports = {
   goToNextSet,
   goToNextSetAfterNSeconds,
   resetGameAfterNSeconds,
+  repeatSet,
 };
