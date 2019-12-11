@@ -1,6 +1,6 @@
-const getRankingsTop100 = async () => {
+const getRankings = async offset => {
   try {
-    const resData = await fetch(`http://localhost:3000/api/ranking/top-100`, {
+    const resData = await fetch(`/api/ranking?offset=${offset}`, {
       method: 'GET',
     });
     const jsonData = await resData.json();
@@ -10,4 +10,4 @@ const getRankingsTop100 = async () => {
   }
 };
 
-export { getRankingsTop100 };
+export { getRankings };
