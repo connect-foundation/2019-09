@@ -26,7 +26,6 @@ class ChattingManager {
     const processedChat = this.processChatWithSystemRule(newChat.message);
     if (!processedChat) return;
     this.socket.emit(EVENTS.SEND_CHATTING_MESSAGE, {
-      ...newChat,
       message: processedChat,
     });
   }

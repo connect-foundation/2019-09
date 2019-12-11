@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, Introduction } from '../containers';
-import { STYLE_COLORS } from '../../utils';
+import { STYLE_COLORS, browserLocalStorage } from '../../utils';
 
 const useStyle = makeStyles(theme => ({
   mainPage: {
@@ -28,6 +28,11 @@ const useStyle = makeStyles(theme => ({
 
 const MainPage = () => {
   const classes = useStyle();
+
+  useEffect(() => {
+    browserLocalStorage.verifyNicknameInLocalStorage();
+  }, []);
+
   return (
     <Box className={classes.mainPageWrapper}>
       <Container maxWidth="md" className={classes.mainPage}>

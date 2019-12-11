@@ -16,14 +16,13 @@ const useStyles = makeStyles({
   },
 });
 
-const InputWindow = ({ clientManager, nickname, chattingDisabled }) => {
+const InputWindow = ({ clientManager, isChattingDisabled }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
 
   const sendChattingMessageHandler = () => {
     if (!value) return;
     clientManager.sendChattingMessage({
-      nickname,
       message: value,
     });
     setValue('');
@@ -62,8 +61,7 @@ const InputWindow = ({ clientManager, nickname, chattingDisabled }) => {
 
 InputWindow.propTypes = {
   clientManager: PropTypes.shape.isRequired,
-  nickname: PropTypes.string.isRequired,
-  chattingDisabled: PropTypes.bool.isRequired,
+  isChattingDisabled: PropTypes.bool.isRequired,
 };
 
 export default InputWindow;

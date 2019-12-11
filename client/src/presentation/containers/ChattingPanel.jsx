@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChattingWindow, InputWindow } from '../components';
 import { GlobalContext } from '../../contexts';
-import { browserLocalStorage, STYLE_COLORS } from '../../utils';
+import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles(theme => ({
   chattingPanel: {
@@ -29,8 +29,7 @@ const useStyle = makeStyles(theme => ({
 
 const ChattingPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { chattingList, chattingDisabled } = useContext(GlobalContext);
-  const nickname = browserLocalStorage.getNickname();
+  const { chattingList, isChattingDisabled } = useContext(GlobalContext);
 
   return (
     <Box className={classes.chattingPanel}>
@@ -39,8 +38,7 @@ const ChattingPanel = ({ clientManager }) => {
       </Box>
       <InputWindow
         clientManager={clientManager}
-        nickname={nickname}
-        chattingDisabled={chattingDisabled}
+        isChattingDisabled={isChattingDisabled}
       />
     </Box>
   );
