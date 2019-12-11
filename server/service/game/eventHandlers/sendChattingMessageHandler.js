@@ -3,6 +3,10 @@ const { io } = require('../../io');
 const { processChatWithSystemRule } = require('../../../utils/chatUtils');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
+const {
+  SECONDS_BETWEEN_SETS,
+  SECONDS_AFTER_GAME_END,
+} = require('../../../config');
 
 /**
  * viewer가 입력한 채팅이 정답이라면 true를 반환하는 함수
@@ -28,12 +32,12 @@ const sendChattingMessageHandler = (socket, { message }) => {
       id: short.generate(),
     });
     io.to(socket.id).emit('correctAnswer');
-    const score = gameManager.getRemainingPlayingTime() + 50;
+    const score = player.getScore() + timer.getRemainingTime() + 50;
     player.setScore(score);
     player.setIsCorrectPlayer(true);
 
     if (gameManager.checkAllPlayersAreCorrect()) {
-      gameController.endSet(gameManager, timer);
+      gameController.repeatSet(gameManager, timer);
     }
     return;
   }

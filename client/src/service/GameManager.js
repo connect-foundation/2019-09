@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
+import { WAITING_FOR_STREAMER } from '../config';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 
@@ -10,7 +11,6 @@ class GameManager {
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
-    this.quizSelectTimer = null;
   }
 
   findMatch(nickname) {
@@ -39,6 +39,13 @@ class GameManager {
       window.location.href = '/';
       // this.dispatch({ type: 'reset' });
     });
+    this.socket.on('clearWindow', this.clearWindowHandler.bind(this));
+  }
+
+  clearWindowHandler() {
+    this.dispatch({
+      type: 'clearWindow',
+    });
   }
 
   endSetHandler({ scoreList }) {
@@ -49,15 +56,16 @@ class GameManager {
     this.dispatch(
       actions.setScoreNotice({
         isVisible: true,
-        message: '최종 점수',
+        message: '중간 점수',
         scoreList,
-      }),
-    );
-
-    setTimeout(() => {
-      // eslint-disable-next-line no-restricted-globals
-      location.reload();
-    }, 5000);
+      },
+    });
+    this.dispatch({
+      type: 'setIsVideoVisible',
+      payload: {
+        isVideoVisible: false,
+      },
+    });
   }
 
   correctAnswerHandler() {
@@ -75,19 +83,10 @@ class GameManager {
 
     if (quizCandidates.length === 0) {
       this.dispatch(
-        actions.setMessageNotice(true, '출제자가 단어를 선택 중입니다.'),
+        actions.setMessageNotice(true, WAITING_FOR_STREAMER),
       );
     } else {
       this.dispatch(actions.setQuizCandidatesNotice(true, quizCandidates));
-
-      this.quizSelectTimer = setTimeout(() => {
-        const randomIndex = Math.round(
-          Math.random() * (quizCandidates.length - 1),
-        );
-
-        const quiz = quizCandidates[randomIndex];
-        this.selectQuiz(quiz);
-      }, 10000);
     }
   }
 
@@ -137,8 +136,6 @@ class GameManager {
   selectQuiz(quiz) {
     this.dispatch(actions.setQuizCandidatesNotice(false, []));
     this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
-    clearTimeout(this.quizSelectTimer);
-    this.quizSelectTimer = null;
   }
 }
 

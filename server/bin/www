@@ -12,6 +12,7 @@ const http = require('http');
 // const connection = require('../databaseFiles/connection');
 // const { initializeQuizzes } = require('../databaseFiles/databaseModels/seeder');
 const app = require('../app');
+const { PING_INTERVAL, PING_TIMEOUT } = require('../config');
 
 /**
  * Create HTTP server.
@@ -93,7 +94,10 @@ function onListening() {
 // await connection.sync();
 // await initializeQuizzes();
 
-app.service.attach(server);
+app.service.attach(server, {
+  pingInterval: PING_INTERVAL,
+  pingTimeout: PING_TIMEOUT,
+});
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);

@@ -35,12 +35,14 @@ class ClientManager {
   }
 
   registerSocketEvents() {
+    
     this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
     this.socket.on(
       EVENTS.SEND_LEFT_PLAYER,
       this.sendLeftPlayerHandler.bind(this),
     );
     this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
+    this.socket.on('resetGame', this.resetGameHandler.bind(this));
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -94,19 +96,41 @@ class ClientManager {
     this.dispatch(actions.reset());
   }
 
-  endGameHandler() {
-    this.localPlayer.type = 'viewer';
-    this.localPlayer.isReady = false;
-    const keys = Object.keys(this.remotePlayers);
-    keys.forEach(key => {
-      this.remotePlayers[key].type = 'viewer';
-      this.remotePlayers[key].isReady = false;
-    });
-
-    this.gameManager.makeAndDispatchViewPlayerList();
-
+  endGameHandler({ scoreList }) {
     this.resetStreaming();
     this.resetReadyButton();
+    this.dispatch({
+      type: 'setScoreNotice',
+      payload: {
+        isVisible: true,
+        message: '최종 점수',
+        scoreList,
+      },
+    });
+    this.dispatch({
+      type: 'setCurrentSeconds',
+      payload: { currentSeconds: 0 },
+    });
+    this.dispatch({
+      type: 'setQuiz',
+      payload: {
+        quiz: '',
+        quizLength: 0,
+      },
+    });
+    this.dispatch({
+      type: 'setIsChattingDisabled',
+      payload: {
+        isChattingDisabled: false,
+      },
+    });
+    this.dispatch({
+      type: 'setIsVideoVisible',
+      payload: {
+        isVideoVisible: false,
+      },
+    });
+    this.streamingManager.closeAllConnections();
   }
 
   resetReadyButton() {
@@ -128,6 +152,48 @@ class ClientManager {
 
   selectQuiz(quiz) {
     this.gameManager.selectQuiz(quiz);
+  }
+
+  /**
+   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
+   * remotePlayers 형태를 array 변경과 함께.
+   */
+  syncLocalPlayer(players) {
+    const localPlayer = players.find(player => {
+      return player.socketId === this.localPlayer.socketId;
+    });
+    Object.keys(localPlayer).forEach(key => {
+      this.localPlayer[key] = localPlayer[key];
+    });
+  }
+
+  syncRemotePlayers(players) {
+    const remotePlayers = [];
+    players.forEach(player => {
+      if (player.socketId !== this.localPlayer.socketId) {
+        remotePlayers.push(player);
+      }
+    });
+    remotePlayers.forEach(player => {
+      const { socketId } = player;
+      Object.keys(player).forEach(key => {
+        this.remotePlayers[socketId][key] = player[key];
+      });
+    });
+  }
+
+  resetGameHandler({ players }) {
+    this.syncLocalPlayer(players);
+    this.syncRemotePlayers(players);
+    this.gameManager.makeAndDispatchViewPlayerList();
+    this.streamingManager.resetWebRTC();
+    this.dispatch({
+      type: 'clearWindow',
+    });
+    this.dispatch({
+      type: 'setGameStatus',
+      payload: { gameStatus: 'waiting' },
+    });
   }
 }
 
