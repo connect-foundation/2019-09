@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { MAX_RANKING_COUNT, QUIZ_CANDIDATES_COUNT } = require('../config');
+const { RANKING_COUNT, QUIZ_CANDIDATES_COUNT } = require('../config');
 
 class DatabaseManager {
   constructor({ Quiz, Ranking }) {
@@ -33,14 +33,16 @@ class DatabaseManager {
     return convertedData;
   }
 
-  async getHighRankings() {
+  async getRankings(offset = 0) {
+    const convertedOffSet = offset * RANKING_COUNT;
     try {
       const highRankers = await this.Ranking.findAll({
         order: [
           ['score', 'DESC'],
           ['createdAt', 'ASC'],
         ],
-        limit: MAX_RANKING_COUNT,
+        limit: RANKING_COUNT,
+        offset: convertedOffSet,
       });
       const convertedData = this.convertMysqlData(highRankers);
       return convertedData;

@@ -4,8 +4,9 @@ const Quiz = require('../../databaseFiles/databaseModels/Quiz');
 const { ERROR_500 } = require('../../constants');
 
 const databaseManager = new DatabaseManager({ Quiz, Ranking });
-const getHighRankings = async (req, res) => {
-  const rankingList = await databaseManager.getHighRankings();
+const getRankings = async (req, res) => {
+  const offset = +req.query.offset || 0;
+  const rankingList = await databaseManager.getRankings(offset);
   if (rankingList) {
     res.status(200).send(rankingList);
   } else {
@@ -22,4 +23,4 @@ const getAllRankings = async (req, res) => {
   }
 };
 
-module.exports = { getHighRankings, getAllRankings };
+module.exports = { getRankings, getAllRankings };
