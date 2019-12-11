@@ -5,8 +5,11 @@ import Message from './Message';
 import Nickname from './Nickname';
 
 const ChattingRowWrapper = styled.li`
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #ffffff99;
+  padding: 0.4rem;
+  border-radius: 0.3rem;
 `;
 
 const ChattingRow = ({ nickname, nicknameColor, message }) => {
