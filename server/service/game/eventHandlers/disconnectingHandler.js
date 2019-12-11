@@ -65,7 +65,11 @@ const disconnectPlayersAndStartGame = (players, gameManager) => {
 
 const disconnectingHandler = socket => {
   try {
-    const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
+    const room = roomController.getRoomByRoomId(socket.roomId);
+    if (!room) {
+      return;
+    }
+    const { gameManager } = room;
     gameManager.leaveRoom(socket.id);
     socket.leave(gameManager.getRoomId());
 
