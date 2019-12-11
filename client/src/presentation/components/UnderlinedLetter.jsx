@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 const UnderlinedLetter = ({ letter }) => {
   const useStyles = makeStyles(() => ({
     underlinedLetter: {
-      textDecoration: 'underline',
       fontSize: '2rem',
       fontWeight: 'bold',
     },

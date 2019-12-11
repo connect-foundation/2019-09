@@ -149,14 +149,14 @@ body {
 }
 
 @font-face {
-  font-family: 'S-CoreDream-9Black';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-9Black.woff')
+  font-family: 'CookieRunOTF-Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff')
     format('woff');
   font-weight: normal;
   font-style: normal;
 }
 * {
-  font-family: 'S-CoreDream-9Black' !important;
+  font-family: 'CookieRunOTF-Bold' !important;
 }
 
 a {

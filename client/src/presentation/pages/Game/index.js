@@ -40,9 +40,13 @@ const Game = () => {
     quizLength,
   } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-  const isMobile = window.outerWidth < MOBILE_VIEW_BREAKPOINT;
+  const isMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
+  const [
+    mobileChattingPanelVisibility,
+    setMobileChattingPanelVisibility,
+  ] = useState(isMobile);
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
-  let previousWindowOuterWidth = window.outerWidth;
+  let previousWindowInnerWidth = window.innerWidth;
 
   const playerPanelContainerClasses = (() => {
     return isPlayerListVisible
@@ -57,25 +61,26 @@ const Game = () => {
   })();
 
   const isShiftingToMobileView = currentIsMobile => {
-    return currentIsMobile && previousWindowOuterWidth > MOBILE_VIEW_BREAKPOINT;
+    return currentIsMobile && previousWindowInnerWidth > MOBILE_VIEW_BREAKPOINT;
   };
 
   const isShiftingToDesktopView = currentIsMobile => {
     return (
-      !currentIsMobile && previousWindowOuterWidth <= MOBILE_VIEW_BREAKPOINT
+      !currentIsMobile && previousWindowInnerWidth <= MOBILE_VIEW_BREAKPOINT
     );
   };
 
   const resizeHandler = event => {
-    const currentIsMobile = event.target.outerWidth < MOBILE_VIEW_BREAKPOINT;
+    const currentIsMobile = event.target.innerWidth < MOBILE_VIEW_BREAKPOINT;
+    setMobileChattingPanelVisibility(currentIsMobile);
     if (isShiftingToMobileView(currentIsMobile)) {
       setIsPlayerListVisible(false);
-      previousWindowOuterWidth = event.target.outerWidth;
+      previousWindowInnerWidth = event.target.innerWidth;
       return;
     }
     if (isShiftingToDesktopView(currentIsMobile)) {
       setIsPlayerListVisible(true);
-      previousWindowOuterWidth = event.target.outerWidth;
+      previousWindowInnerWidth = event.target.innerWidth;
     }
   };
 
@@ -106,7 +111,7 @@ const Game = () => {
     currentSeconds,
     classes,
     readyButtonHandler,
-    isMobile,
+    mobileChattingPanelVisibility,
   };
 
   return <GamePresentation gameProps={gameProps} />;

@@ -8,7 +8,7 @@ import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
-    height: '48rem',
+    height: '100%',
     position: 'relative',
     padding: '1rem',
     boxSizing: 'border-box',

@@ -19,7 +19,7 @@ const TextInput = ({
       boxSizing: 'border-box',
       width: style.width || '',
       '& > *': {
-        fontSize: '1.2rem',
+        fontSize: '1.6rem',
         fontWeight: '600',
       },
     },
