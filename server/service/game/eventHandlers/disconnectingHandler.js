@@ -43,14 +43,7 @@ const disconnectingHandler = socket => {
         return;
       }
       if (!gameManager.getStreamer()) {
-        gameController.endSet(gameManager, timer);
-        gameManager.updateRoundAndSet();
-        gameController.goToNextSetAfterNSeconds({
-          seconds: SECONDS_BETWEEN_SETS,
-          gameManager,
-          timer,
-        });
-        return;
+        gameController.repeatSet(gameManager, timer);
       }
     }
   } catch (error) {
