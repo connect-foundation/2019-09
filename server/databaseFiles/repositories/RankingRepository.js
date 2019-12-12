@@ -42,6 +42,11 @@ class RankingRepository {
     const convertedData = convertSequelizeArrayData(rankings);
     return convertedData;
   }
+
+  async getRankingCount() {
+    const rankingCount = await this.model.count();
+    return rankingCount;
+  }
 }
 
 module.exports = RankingRepository;
