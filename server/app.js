@@ -3,7 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const service = require('./service');
-const apiRanking = require('./routes/api/ranking');
+const api = require('./routes/api');
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 app.get((req, res) => {
   res.send('index');
 });
-app.use('/api', apiRanking);
+app.use('/api', api);
 app.use((req, res) => {
   res.redirect('/');
 });
