@@ -79,6 +79,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   chattingContainer: {
+    height: '100%',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       maxWidth: 'none',
