@@ -40,6 +40,10 @@ class GameManager {
       // this.dispatch({ type: 'reset' });
     });
     this.socket.on('clearWindow', this.clearWindowHandler.bind(this));
+    this.socket.on(
+      EVENTS.UPDATE_PROFILE_SCORE,
+      this.updateProfileScoreHandler.bind(this),
+    );
   }
 
   clearWindowHandler() {
@@ -101,6 +105,15 @@ class GameManager {
   /** @todo 매개변수 통합하여 전송하도록 변경 필요 */
   sendNewPlayerHandler({ socketId, nickname, isReady, type, score }) {
     this.remotePlayers[socketId] = { nickname, isReady, type, score };
+    this.makeAndDispatchViewPlayerList();
+  }
+
+  updateProfileScoreHandler({ player }) {
+    if (player.socketId === this.localPlayer.socketId) {
+      this.localPlayer.score = player.score;
+    } else {
+      this.remotePlayers[player.socketId].score = player.score;
+    }
     this.makeAndDispatchViewPlayerList();
   }
 
