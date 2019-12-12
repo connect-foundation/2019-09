@@ -9,6 +9,9 @@ const {
   GAME_PLAYING,
   QUIZ_NOT_SELECTED,
 } = require('../../../config');
+const { QuizRepository } = require('../../../databaseFiles/repositories');
+
+const quizRepository = new QuizRepository();
 
 const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
   io.in(roomId).emit('sendCurrentSeconds', {
@@ -36,8 +39,14 @@ const assignPlayerType = gameManager => {
   });
 };
 
-const pickQuizCandidates = () => {
-  return ['문어', '고양이', '부스트캠퍼'];
+const pickQuizCandidates = async () => {
+  const quizCandidates = await quizRepository.findRandomQuizzes();
+
+  const quizWords = quizCandidates.map(quiz => {
+    return quiz.word;
+  });
+
+  return quizWords;
 };
 
 const endSet = (gameManager, timer) => {
@@ -74,15 +83,12 @@ const quizSelectionTimeoutHandler = (gameManager, timer) => {
   startSet(gameManager, timer, quiz);
 };
 
-const prepareSet = (gameManager, timer) => {
+const prepareSet = async (gameManager, timer) => {
   /**
    * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
    */
   gameManager.setQuiz(QUIZ_NOT_SELECTED);
-  /**
-   * @todo 추후 DB 연결시 async await 필요
-   */
-  const quizCandidates = pickQuizCandidates();
+  const quizCandidates = await pickQuizCandidates();
   gameManager.setQuizCandidates(quizCandidates);
   gameManager.setStatus(GAME_INITIALIZING);
   gameManager.getPlayers().forEach(player => {
