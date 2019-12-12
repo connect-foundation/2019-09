@@ -11,7 +11,7 @@ const debug = require('debug')('server:server');
 const http = require('http');
 const connection = require('../databaseFiles/connection');
 const {
-  initializeRanking,
+  initializeRankings,
   initializeQuizzes,
 } = require('../databaseFiles/databaseModels/seeder');
 const app = require('../app');
@@ -95,7 +95,7 @@ function onListening() {
    * @todo 추후 DB 용
    */
   await connection.sync();
-  await initializeRanking();
+  await initializeRankings();
   await initializeQuizzes();
 
   app.service.attach(server, {

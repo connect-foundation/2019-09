@@ -19,7 +19,7 @@ const initializeQuizzes = async () => {
     });
 };
 
-const initializeRanking = async () => {
+const initializeRankings = async () => {
   const rankings = [];
   fs.createReadStream(path.join(__dirname, 'ranking.csv'))
     .pipe(csv())
@@ -28,15 +28,11 @@ const initializeRanking = async () => {
     })
     .on('end', async () => {
       try {
-        const rankingDummyList = rankings.map(ranking => {
-          ranking.score = Math.round(Math.random() * 1000);
-          return ranking;
-        });
-        await Ranking.bulkCreate(rankingDummyList);
+        await Ranking.bulkCreate(rankings);
       } catch (error) {
         console.error(error);
       }
     });
 };
 
-module.exports = { initializeQuizzes, initializeRanking };
+module.exports = { initializeQuizzes, initializeRankings };
