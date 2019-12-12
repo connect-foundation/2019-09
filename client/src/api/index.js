@@ -1,6 +1,21 @@
-const getRankings = async offset => {
+const getRankings = async (offset, dateTime) => {
   try {
-    const responseData = await fetch(`/api/ranking?offset=${offset}`, {
+    const responseData = await fetch(
+      `/api/ranking?offset=${offset}&datetime=${dateTime}`,
+      {
+        method: 'GET',
+      },
+    );
+    const jsonData = await responseData.json();
+    return jsonData;
+  } catch (error) {
+    return [];
+  }
+};
+
+const getRankingInformation = async () => {
+  try {
+    const responseData = await fetch(`/api/ranking/information`, {
       method: 'GET',
     });
     const jsonData = await responseData.json();
@@ -10,4 +25,4 @@ const getRankings = async offset => {
   }
 };
 
-export { getRankings };
+export { getRankings, getRankingInformation };
