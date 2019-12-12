@@ -22,4 +22,5 @@ module.exports = {
   GAME_PLAYING: 'playing',
   GAME_INITIALIZING: 'initializing',
   QUIZ_NOT_SELECTED: '',
+  INVALID_DATE: 'Invalid Date',
 };
