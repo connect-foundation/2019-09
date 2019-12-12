@@ -174,6 +174,14 @@ const goToNextSetAfterNSeconds = ({ seconds, gameManager, timer }) => {
 };
 
 const endGame = async (gameManager, timer) => {
+  /**
+   * 동시 접근하면 문제 발생
+   */
+  if (gameManager.getStatus() === 'ending') {
+    return;
+  }
+  gameManager.setStatus('ending');
+
   const players = gameManager.getPlayers();
   io.in(gameManager.getRoomId()).emit('endGame', {
     scoreList: gameManager.getScoreList(),
