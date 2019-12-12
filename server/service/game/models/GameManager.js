@@ -8,7 +8,7 @@ class GameManager {
     this.quizCandidates = [];
     this.players = [];
     this.streamerCandidates = [];
-    this.currentRound = 0;
+    this.currentRound = 1;
     this.currentSet = 0;
     this.streamer = null;
   }
@@ -92,9 +92,13 @@ class GameManager {
   }
 
   updateRoundAndSet() {
-    const maxSet = this.players.length;
-    this.currentSet = this.currentSet < maxSet ? ++this.currentSet : 1;
-    if (this.currentSet === 1) this.currentRound++;
+    const streamers = this.streamerCandidates[this.currentRound - 1];
+    if (streamers.length === 0) {
+      this.currentRound++;
+      this.currentSet = 0;
+    } else {
+      this.currentSet++;
+    }
   }
 
   selectStreamer() {
