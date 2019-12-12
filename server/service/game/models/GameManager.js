@@ -81,7 +81,7 @@ class GameManager {
     this.streamerCandidates = [];
     this.streamer = null;
     this.quiz = '';
-    this.currentRound = 0;
+    this.currentRound = 1;
     this.currentSet = 0;
   }
 
