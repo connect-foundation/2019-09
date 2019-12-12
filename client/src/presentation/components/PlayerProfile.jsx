@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     borderRadius: '0.3rem',
     border: (() => {
       if (props.type === 'streamer') {
-        return '0.2rem solid #e74c3c';
+        return `0.2rem solid ${STYLE_COLORS.STREAMER_BORDER_COLOR}`;
       }
       if (props.isReady || props.isCorrectPlayer) {
         return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
