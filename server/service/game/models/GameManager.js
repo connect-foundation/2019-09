@@ -137,7 +137,7 @@ class GameManager {
 
     this.removeStreamerCandidate(socketId);
 
-    if (this.isStreamer(socketId)) {
+    if (this.streamer && this.isStreamer(socketId)) {
       this.streamer = null;
     }
   }
