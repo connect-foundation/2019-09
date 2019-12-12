@@ -57,6 +57,7 @@ class GameManager {
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
     this.dispatch(actions.setChattingDisabled(false));
+    this.dispatch(actions.clearWindow());
     this.dispatch(
       actions.setScoreNotice({
         isVisible: true,

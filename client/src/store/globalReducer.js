@@ -83,7 +83,7 @@ const reducer = (state, action) => {
       return {
         ...initialState,
       };
-    case 'clearWindow':
+    case TYPES.CLEAR_WINDOW:
       return {
         ...state,
         messageNotice: {
