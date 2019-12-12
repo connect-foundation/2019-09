@@ -7,7 +7,7 @@ import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
-import { GAME_END_SCOREBOARD_TITLE } from '../config';
+import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
 
 class ClientManager {
   constructor() {
@@ -18,8 +18,7 @@ class ClientManager {
       socketId: '',
       score: 0,
     };
-    /** @todo 이후에 지워야 할 사항. 개발용 */
-    this.socket = io('localhost:3001');
+    this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
     this.gameManager = new GameManager(
       this.socket,

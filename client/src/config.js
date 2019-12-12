@@ -22,6 +22,9 @@ const MOBILE_PANEL_HEIGHT = '50%';
 
 const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
 
+
+const SOCKETIO_SERVER_URL =
+  process.env.NODE_ENV === 'development' ? 'localhost:3001' : '';
 const GAME_END_SCOREBOARD_TITLE = '최종 점수';
 
 export {
@@ -36,5 +39,6 @@ export {
   WAITING_FOR_STREAMER,
   MOBILE_PANEL_HEIGHT,
   LOCALSTORAGE_NICKNAME_KEY,
+  SOCKETIO_SERVER_URL,
   GAME_END_SCOREBOARD_TITLE,
 };
