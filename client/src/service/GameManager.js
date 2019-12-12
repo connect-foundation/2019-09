@@ -11,11 +11,6 @@ class GameManager {
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
-    this.history = null;
-  }
-
-  setHistory(history) {
-    this.history = history;
   }
 
   findMatch(nickname) {
@@ -39,11 +34,7 @@ class GameManager {
     this.socket.on(EVENTS.START_SET, this.startSetHandler.bind(this));
     this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
     this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
-    this.socket.on(EVENTS.DISCONNECT, () => {
-      this.history.push('/');
-      this.dispatch(actions.reset());
-    });
-    this.socket.on('clearWindow', this.clearWindowHandler.bind(this));
+    this.socket.on(EVENTS.CLEAR_WINDOW, this.clearWindowHandler.bind(this));
     this.socket.on(
       EVENTS.UPDATE_PROFILE_SCORE,
       this.updateProfileScoreHandler.bind(this),
@@ -51,9 +42,7 @@ class GameManager {
   }
 
   clearWindowHandler() {
-    this.dispatch({
-      type: 'clearWindow',
-    });
+    this.dispatch(actions.clearWindow());
   }
 
   endSetHandler({ scoreList }) {

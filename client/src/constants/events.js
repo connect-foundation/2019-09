@@ -27,6 +27,8 @@ const EVENTS = {
   // ChattingManager
   SEND_CHATTING_MESSAGE: 'sendChattingMessage',
   START_CHATTING: 'startChatting',
+  RESET_GAME: 'resetGame',
+  CLEAR_WINDOW: 'clearWindow',
 };
 
 export default EVENTS;
