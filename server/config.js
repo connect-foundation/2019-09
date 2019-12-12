@@ -19,4 +19,7 @@ module.exports = {
   PING_INTERVAL: 1000,
   PING_TIMEOUT: 5000,
   NICKNAME_LENGTH: 8,
+  GAME_PLAYING: 'playing',
+  GAME_INITIALIZING: 'initializing',
+  QUIZ_NOT_SELECTED: '',
 };
