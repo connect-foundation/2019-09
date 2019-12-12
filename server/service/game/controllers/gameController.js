@@ -9,9 +9,13 @@ const {
   GAME_PLAYING,
   QUIZ_NOT_SELECTED,
 } = require('../../../config');
-const { QuizRepository } = require('../../../databaseFiles/repositories');
+const {
+  QuizRepository,
+  RankingRepository,
+} = require('../../../databaseFiles/repositories');
 
 const quizRepository = new QuizRepository();
+const rankingRepository = new RankingRepository();
 
 const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
   io.in(roomId).emit('sendCurrentSeconds', {
@@ -166,11 +170,13 @@ const goToNextSetAfterNSeconds = ({ seconds, gameManager, timer }) => {
   );
 };
 
-const endGame = (gameManager, timer) => {
+const endGame = async (gameManager, timer) => {
+  const players = gameManager.getPlayers();
   io.in(gameManager.getRoomId()).emit('endGame', {
     scoreList: gameManager.getScoreList(),
   });
   timer.clear();
+  await rankingRepository.insertRankings(players);
 };
 
 const resetGame = gameManager => {
