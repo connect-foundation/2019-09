@@ -13,6 +13,7 @@ const TYPES = {
   SET_VIDEO_VISIBILITY: 'setVideoVisibility',
   SET_CHATTING_DISABLED: 'setChattingDisabled',
   SET_QUIZ_CANDIDATES_NOTICE: 'setQuizCandidatesNotice',
+  CLEAR_WINDOW: 'clearWindow',
 };
 
 export default TYPES;

@@ -7,7 +7,7 @@ import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
-import { SOCKETIO_SERVER_URL } from '../config';
+import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
 
 class ClientManager {
   constructor() {
@@ -98,7 +98,14 @@ class ClientManager {
   endGameHandler({ scoreList }) {
     this.resetStreaming();
     this.resetReadyButton();
-    this.dispatch(actions.setScoreNotice(true, '최종 점수', scoreList));
+    this.dispatch(actions.clearWindow());
+    this.dispatch(
+      actions.setScoreNotice({
+        isVisible: true,
+        message: GAME_END_SCOREBOARD_TITLE,
+        scoreList,
+      }),
+    );
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
     this.dispatch(actions.setChattingDisabled(false));
@@ -160,9 +167,7 @@ class ClientManager {
     this.syncRemotePlayers(players);
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
-    this.dispatch({
-      type: 'clearWindow',
-    });
+    this.dispatch(actions.clearWindow());
     this.dispatch({
       type: 'setGameStatus',
       payload: { gameStatus: 'waiting' },

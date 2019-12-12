@@ -27,23 +27,22 @@ const TopRankPanel = ({ rankingList }) => {
   const firstPlace = findRanker('1', rankingList);
   const secondPlace = findRanker('2', rankingList);
   const thirdPlace = findRanker('3', rankingList);
-
   return (
     <Container className={classes.topRankContainer}>
       <RankPodium
-        rank={secondPlace.rank}
-        rankerScore={secondPlace.score}
-        rankerNickname={secondPlace.nickname}
+        rank={secondPlace ? secondPlace.rank : '2'}
+        rankerScore={secondPlace ? secondPlace.score : '0'}
+        rankerNickname={secondPlace ? secondPlace.nickname : '2등'}
       />
       <RankPodium
-        rank={firstPlace.rank}
-        rankerScore={firstPlace.score}
-        rankerNickname={firstPlace.nickname}
+        rank={firstPlace ? firstPlace.rank : '1'}
+        rankerScore={firstPlace ? firstPlace.score : '0'}
+        rankerNickname={firstPlace ? firstPlace.nickname : '1등'}
       />
       <RankPodium
-        rank={thirdPlace.rank}
-        rankerScore={thirdPlace.score}
-        rankerNickname={thirdPlace.nickname}
+        rank={thirdPlace ? thirdPlace.rank : '3'}
+        rankerScore={thirdPlace ? thirdPlace.score : '0'}
+        rankerNickname={thirdPlace ? thirdPlace.nickname : '3등'}
       />
     </Container>
   );
