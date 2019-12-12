@@ -24,6 +24,7 @@ const Game = () => {
   if (!isClientManagerInitialized) {
     clientManager = new ClientManager();
     clientManager.init();
+    clientManager.setHistoryInGameManager(history);
     clientManager.getMediaPermission().catch(() => {
       exitButtonHandler();
       alert('카메라를 허용해주세요');

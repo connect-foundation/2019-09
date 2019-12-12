@@ -173,6 +173,10 @@ class ClientManager {
       payload: { gameStatus: 'waiting' },
     });
   }
+
+  setHistoryInGameManager(history) {
+    this.gameManager.setHistory(history);
+  }
 }
 
 export default ClientManager;

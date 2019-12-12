@@ -11,6 +11,11 @@ class GameManager {
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
+    this.history = null;
+  }
+
+  setHistory(history) {
+    this.history = history;
   }
 
   findMatch(nickname) {
@@ -35,9 +40,8 @@ class GameManager {
     this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
     this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
     this.socket.on(EVENTS.DISCONNECT, () => {
-      // 데모데이 중 서버의 지속적인 다운을 대처하기 위해 '임시'로 작성함
-      window.location.href = '/';
-      // this.dispatch({ type: 'reset' });
+      this.history.push('/');
+      this.dispatch(actions.reset());
     });
     this.socket.on('clearWindow', this.clearWindowHandler.bind(this));
   }
