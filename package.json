@@ -11,6 +11,7 @@
     "client"
   ],
   "scripts": {
-    "test": "yarn workspace client test && yarn workspace server test"
+    "test": "yarn workspace client test && yarn workspace server test",
+    "dev-start": "nodemon server/bin/www"
   }
 }
