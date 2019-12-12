@@ -31,10 +31,11 @@ const sendChattingMessageHandler = (socket, { message }) => {
       nicknameColor: '#000000',
       id: short.generate(),
     });
-    io.to(socket.id).emit('correctAnswer');
     const score = player.getScore() + timer.getRemainingTime() + 50;
     player.setScore(score);
     player.setIsCorrectPlayer(true);
+    io.to(socket.id).emit('correctAnswer');
+    io.in(socket.roomId).emit('updateProfileScore', { player });
 
     if (gameManager.checkAllPlayersAreCorrect()) {
       gameController.repeatSet(gameManager, timer);
