@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { STYLE_COLORS } from '../../../utils';
-import backgroundImageSource from '../../../assets/background.png';
 import { MOBILE_PANEL_HEIGHT } from '../../../config';
 
 const useStyles = makeStyles(theme => ({
@@ -9,7 +8,6 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     width: '100%',
     height: '100%',
-    backgroundImage: `url(${backgroundImageSource})`,
     overflow: 'auto',
   },
   timerBox: {

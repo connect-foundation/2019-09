@@ -4,7 +4,6 @@ import MetaTags from 'react-meta-tags';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, Introduction } from '../containers';
-import backgroundImageSource from '../../assets/background.png';
 import browserLocalStorage from '../../utils/browserLocalStorage';
 
 const useStyle = makeStyles(theme => ({
@@ -23,7 +22,6 @@ const useStyle = makeStyles(theme => ({
     margin: 0,
     width: '100%',
     height: '100%',
-    backgroundImage: `url(${backgroundImageSource})`,
     overflow: 'auto',
   },
 }));

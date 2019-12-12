@@ -10,6 +10,7 @@ const useStyles = makeStyles({
     width: 'auto',
     height: '3rem',
     padding: '0 1rem',
+    zIndex: '10',
   },
 });
 
