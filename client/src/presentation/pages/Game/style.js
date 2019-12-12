@@ -14,6 +14,10 @@ const useStyles = makeStyles(theme => ({
     padding: '1rem 2rem',
     textAlign: 'left',
     color: theme.palette.text.secondary,
+    height: '100%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    alignItems: 'center',
   },
   gameHeader: {
     backgroundColor: STYLE_COLORS.THEME_COLOR,
