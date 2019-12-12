@@ -22,7 +22,7 @@ const Game = () => {
   }
 
   if (!isClientManagerInitialized) {
-    clientManager = new ClientManager();
+    clientManager = new ClientManager(history);
     clientManager.init();
     clientManager.getMediaPermission().catch(() => {
       exitButtonHandler();
