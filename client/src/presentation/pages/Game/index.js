@@ -6,6 +6,8 @@ import { MOBILE_VIEW_BREAKPOINT } from '../../../config';
 import { GlobalContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
+import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
+import useIsMobile from '../../../hooks/useIsMobile';
 
 let isClientManagerInitialized = false;
 let clientManager;
@@ -39,50 +41,25 @@ const Game = () => {
     quiz,
     quizLength,
   } = useContext(GlobalContext);
-  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+
+  const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
+  const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const isMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
+
   const [
     mobileChattingPanelVisibility,
     setMobileChattingPanelVisibility,
   ] = useState(isMobile);
-  const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
-  let previousWindowInnerWidth = window.innerWidth;
 
-  const playerPanelContainerClasses = (() => {
-    return isPlayerListVisible
-      ? classes.playerPanelContainer
-      : [classes.playerPanelContainer, classes.mobileViewHide];
-  })();
+  const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
+
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const readyButtonContainerClasses = (() => {
     return gameStatus === 'waiting'
       ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
   })();
-
-  const isShiftingToMobileView = currentIsMobile => {
-    return currentIsMobile && previousWindowInnerWidth > MOBILE_VIEW_BREAKPOINT;
-  };
-
-  const isShiftingToDesktopView = currentIsMobile => {
-    return (
-      !currentIsMobile && previousWindowInnerWidth <= MOBILE_VIEW_BREAKPOINT
-    );
-  };
-
-  const resizeHandler = event => {
-    const currentIsMobile = event.target.innerWidth < MOBILE_VIEW_BREAKPOINT;
-    setMobileChattingPanelVisibility(currentIsMobile);
-    if (isShiftingToMobileView(currentIsMobile)) {
-      setIsPlayerListVisible(false);
-      previousWindowInnerWidth = event.target.innerWidth;
-      return;
-    }
-    if (isShiftingToDesktopView(currentIsMobile)) {
-      setIsPlayerListVisible(true);
-      previousWindowInnerWidth = event.target.innerWidth;
-    }
-  };
 
   const showPlayersButtonHandler = () => {
     setIsPlayerListVisible(!isPlayerListVisible);
@@ -96,8 +73,25 @@ const Game = () => {
     window.onpopstate = () => {
       exitButtonHandler();
     };
-    window.addEventListener('resize', resizeHandler);
   }, []);
+
+  useEffect(() => {
+    setMobileChattingPanelVisibility(currentIsMobile);
+  }, [currentIsMobile]);
+
+  useEffect(() => {
+    if (shiftingToWhichView === 'mobile') {
+      setIsPlayerListVisible(false);
+    } else if (shiftingToWhichView === 'desktop') {
+      setIsPlayerListVisible(true);
+    }
+  }, [shiftingToWhichView]);
+
+  const playerPanelContainerClasses = (() => {
+    return isPlayerListVisible
+      ? classes.playerPanelContainer
+      : [classes.playerPanelContainer, classes.mobileViewHide];
+  })();
 
   const gameProps = {
     quiz,
