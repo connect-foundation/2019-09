@@ -22,6 +22,9 @@ const MOBILE_PANEL_HEIGHT = '50%';
 
 const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
 
+const SOCKETIO_SERVER_URL =
+  process.env.NODE_ENV === 'development' ? 'localhost:3001' : '';
+
 export {
   MainIntroductionDescription,
   MainIntroductionTitle,
@@ -34,4 +37,5 @@ export {
   WAITING_FOR_STREAMER,
   MOBILE_PANEL_HEIGHT,
   LOCALSTORAGE_NICKNAME_KEY,
+  SOCKETIO_SERVER_URL,
 };
