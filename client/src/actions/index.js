@@ -116,6 +116,11 @@ const setStream = stream => {
     },
   };
 };
+const clearWindow = () => {
+  return {
+    type: TYPES.CLEAR_WINDOW,
+  };
+};
 
 export default {
   setViewPlayerList,
@@ -131,4 +136,5 @@ export default {
   setMessageNotice,
   setQuizCandidatesNotice,
   setStream,
+  clearWindow,
 };
