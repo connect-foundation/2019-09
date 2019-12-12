@@ -59,7 +59,6 @@ class ClientManager {
   }
 
   sendSocketIdHandler({ socketId }) {
-    console.log('SOCOKETET', socketId);
     this.localPlayer.socketId = socketId;
   }
 
