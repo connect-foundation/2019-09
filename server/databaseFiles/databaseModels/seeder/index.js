@@ -1,10 +1,11 @@
 const fs = require('fs');
 const csv = require('csv-parser');
+const path = require('path');
 const { Quiz, Ranking } = require('../');
 
 const initializeQuizzes = async () => {
   const quizzes = [];
-  fs.createReadStream('./databaseFiles/databaseModels/seeder/quizzes.csv')
+  fs.createReadStream(path.join(__dirname, 'quizzes.csv'))
     .pipe(csv())
     .on('data', data => {
       quizzes.push(data);
@@ -20,7 +21,7 @@ const initializeQuizzes = async () => {
 
 const initializeRanking = async () => {
   const rankings = [];
-  fs.createReadStream('./databaseFiles/databaseModels/seeder/ranking.csv')
+  fs.createReadStream(path.join(__dirname, 'ranking.csv'))
     .pipe(csv())
     .on('data', data => {
       rankings.push(data);
