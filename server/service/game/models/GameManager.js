@@ -198,7 +198,7 @@ class GameManager {
 
   isGameContinuable() {
     return (
-      !!this.getStreamerCandidates().length &&
+      this.getStreamerCandidates().flat().length > 0 &&
       this.currentRound <= MAX_ROUND_NUMBER &&
       this.players.length >= MIN_PLAYER_COUNT
     );
