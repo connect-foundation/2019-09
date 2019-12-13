@@ -7,38 +7,39 @@ import { GlobalContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
 
-let isClientManagerInitialized = false;
 let clientManager;
 
-const exitButtonHandler = () => {
-  isClientManagerInitialized = false;
-  clientManager.exitRoom();
-};
-
 const Game = () => {
-  const history = useHistory();
-  if (!browserLocalStorage.getNickname()) {
-    history.push('/');
-  }
-
-  if (!isClientManagerInitialized) {
-    clientManager = new ClientManager(history);
-    clientManager.init();
-    clientManager.getMediaPermission().catch(() => {
-      exitButtonHandler();
-      alert('카메라를 허용해주세요');
-    });
-    isClientManagerInitialized = true;
-  }
-
-  const classes = useStyles();
   const {
     gameStatus,
     viewPlayerList,
     currentSeconds,
     quiz,
     quizLength,
+    clientManagerInitialized,
   } = useContext(GlobalContext);
+
+  const exitButtonHandler = () => {
+    clientManager.exitRoom();
+  };
+
+  const history = useHistory();
+  if (!browserLocalStorage.getNickname()) {
+    history.push('/');
+  }
+
+  if (!clientManagerInitialized) {
+    clientManager = new ClientManager(history);
+    clientManager.init();
+    clientManager.getMediaPermission().catch(() => {
+      exitButtonHandler();
+      alert('카메라를 허용해주세요');
+    });
+    clientManager.setClientManagerInitialized(true);
+  }
+
+  const classes = useStyles();
+
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
   const [

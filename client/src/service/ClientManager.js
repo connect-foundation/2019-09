@@ -50,6 +50,7 @@ class ClientManager {
     this.streamingManager.resetWebRTC();
     this.history.push('/');
     this.dispatch(actions.reset());
+    this.gameManager.timer.clear();
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -91,6 +92,7 @@ class ClientManager {
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
     this.findMatch(browserLocalStorage.getNickname());
     this.chattingManager.registerSocketEvents();
+    this.gameManager.setInactivePlayerBanTimer();
   }
 
   sendChattingMessage(newChatting) {
@@ -98,7 +100,7 @@ class ClientManager {
   }
 
   exitRoom() {
-    this.socket.disconnect();
+    this.gameManager.exitRoom();
   }
 
   endGameHandler({ scoreList }) {
@@ -178,10 +180,17 @@ class ClientManager {
       type: 'setGameStatus',
       payload: { gameStatus: 'waiting' },
     });
+    this.gameManager.setInactivePlayerBanTimer();
   }
 
   setHistoryInGameManager(history) {
     this.gameManager.setHistory(history);
+  }
+
+  setClientManagerInitialized(clientManagerInitialized) {
+    this.dispatch(
+      actions.setClientManagerInitialized(clientManagerInitialized),
+    );
   }
 }
 
