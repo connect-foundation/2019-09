@@ -30,11 +30,17 @@ const Game = () => {
 
   if (!clientManagerInitialized) {
     clientManager = new ClientManager(history);
-    clientManager.init();
-    clientManager.getMediaPermission().catch(() => {
-      exitButtonHandler();
-      alert('카메라를 허용해주세요');
-    });
+    clientManager
+      .getMediaPermission()
+      .then(() => {
+        clientManager.init();
+        clientManager.setClientManagerInitialized(true);
+      })
+      .catch(() => {
+        history.push('/');
+        clientManager.setClientManagerInitialized(false);
+        alert('카메라를 허용해주세요');
+      });
     clientManager.setClientManagerInitialized(true);
   }
 
