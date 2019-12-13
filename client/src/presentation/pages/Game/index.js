@@ -44,14 +44,16 @@ const Game = () => {
 
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
-  const isMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
+  const initialIsMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
 
   const [
     mobileChattingPanelVisibility,
     setMobileChattingPanelVisibility,
-  ] = useState(isMobile);
+  ] = useState(initialIsMobile);
 
-  const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
+  const [isPlayerListVisible, setIsPlayerListVisible] = useState(
+    !initialIsMobile,
+  );
 
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
@@ -82,7 +84,9 @@ const Game = () => {
   useEffect(() => {
     if (shiftingToWhichView === 'mobile') {
       setIsPlayerListVisible(false);
-    } else if (shiftingToWhichView === 'desktop') {
+      return;
+    }
+    if (shiftingToWhichView === 'desktop') {
       setIsPlayerListVisible(true);
     }
   }, [shiftingToWhichView]);
