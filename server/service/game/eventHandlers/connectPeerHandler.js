@@ -6,7 +6,10 @@ const connectPeerHandler = socket => {
   const connectedPlayer = gameManager.getPlayerBySocketId(socket.id);
   connectedPlayer.setIsConnectedToStreamer(true);
 
-  if (gameManager.checkAllConnectionsToStreamer()) {
+  if (
+    gameManager.getStreamer() &&
+    gameManager.checkAllConnectionsToStreamer()
+  ) {
     /**
      * 연결 준비 후 정상 시작
      */

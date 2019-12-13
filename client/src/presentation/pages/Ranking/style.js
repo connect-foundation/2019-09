@@ -20,6 +20,10 @@ const useStyle = makeStyles({
     top: '1.5rem',
     right: '2.5rem',
   },
+  MoreButton: {
+    textAlign: 'center',
+    marginBottom: '2rem',
+  },
 });
 
 export default useStyle;
