@@ -10,7 +10,8 @@ import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
 
 class ClientManager {
-  constructor() {
+  constructor(history) {
+    this.history = history;
     this.localPlayer = {
       isReady: false,
       nickname: '',
@@ -41,7 +42,14 @@ class ClientManager {
       this.sendLeftPlayerHandler.bind(this),
     );
     this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
-    this.socket.on('resetGame', this.resetGameHandler.bind(this));
+    this.socket.on(EVENTS.RESET_GAME, this.resetGameHandler.bind(this));
+    this.socket.on(EVENTS.DISCONNECT, this.disconnectHandler.bind(this));
+  }
+
+  disconnectHandler() {
+    this.streamingManager.resetWebRTC();
+    this.history.push('/');
+    this.dispatch(actions.reset());
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -90,9 +98,7 @@ class ClientManager {
   }
 
   exitRoom() {
-    this.streamingManager.resetWebRTC();
     this.socket.disconnect();
-    this.dispatch(actions.reset());
   }
 
   endGameHandler({ scoreList }) {
@@ -172,6 +178,10 @@ class ClientManager {
       type: 'setGameStatus',
       payload: { gameStatus: 'waiting' },
     });
+  }
+
+  setHistoryInGameManager(history) {
+    this.gameManager.setHistory(history);
   }
 }
 
