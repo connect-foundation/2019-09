@@ -1,6 +1,7 @@
 const Player = require('../models/Player');
 const roomController = require('../controllers/roomController');
 const { getRandomColor } = require('../../../utils/colorGenerator');
+const { NICKNAME_LENGTH } = require('../../../config');
 
 const emitEventsAfterJoin = socket => {
   socket.emit('startChatting');
@@ -12,8 +13,9 @@ const emitEventsAfterJoin = socket => {
 };
 
 const matchHandler = (socket, { nickname }) => {
+  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
   const player = new Player({
-    nickname,
+    nickname: slicedNickname,
     socketId: socket.id,
     nicknameColor: getRandomColor(),
   });

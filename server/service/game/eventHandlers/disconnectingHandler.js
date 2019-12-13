@@ -1,119 +1,50 @@
 const { io } = require('../../io');
 const roomController = require('../controllers/roomController');
-const { MIN_PLAYER_COUNT } = require('../../../config');
-
-const assignStreamer = streamer => {
-  io.to(streamer.socketId).emit('assignStreamer');
-};
-
-const assignViewer = (viewer, streamer) => {
-  io.to(viewer.socketId).emit('assignViewer', {
-    streamerSocketId: streamer.socketId,
-  });
-};
-const sendReady = (roomId, player) => {
-  io.in(roomId).emit('sendReady', {
-    socketId: player.getSocketId(),
-    isReady: player.getIsReady(),
-  });
-};
-
-const isRoomReady = gameManager => {
-  const players = gameManager.getPlayers();
-  return players.every(player => player.getIsReady());
-};
-
-const assignPlayerType = gameManager => {
-  const streamer = gameManager.getStreamer();
-  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
-
-  assignStreamer(streamer);
-  viewers.forEach(viewer => {
-    assignViewer(viewer, streamer);
-  });
-};
-
-const disconnectPlayersAndStartGame = (players, gameManager) => {
-  players.forEach(player => {
-    const socket = io.sockets.connected[player.getSocketId()];
-    socket.disconnect();
-  });
-  /**
-   * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
-   */
-  gameManager.getPlayers().forEach(player => {
-    const socketId = player.getSocketId();
-
-    io.to(socketId).emit('prepareSet', {
-      currentRound: gameManager.getCurrentRound(),
-      currentSet: gameManager.getCurrentSet(),
-      quizCandidates: gameManager.isStreamer(socketId)
-        ? ['문어', '고양이', '부스트캠퍼']
-        : [],
-      /**
-       * @todo 데이터베이스에서 단어를 요청하는 함수 필요
-       */
-    });
-  });
-
-  gameManager.startQuizSelectTimer(currentSeconds => {
-    io.in(gameManager.getRoomId()).emit('sendCurrentSeconds', {
-      currentSeconds,
-    });
-  });
-};
+const gameController = require('../controllers/gameController');
+const {
+  SECONDS_AFTER_GAME_END,
+  SECONDS_BETWEEN_SETS,
+  MIN_PLAYER_COUNT,
+} = require('../../../config');
 
 const disconnectingHandler = socket => {
   try {
-    const { gameManager } = roomController.getRoomByRoomId(socket.roomId);
+    const room = roomController.getRoomByRoomId(socket.roomId);
+    if (!room) {
+      return;
+    }
+    const { gameManager, timer } = room;
     gameManager.leaveRoom(socket.id);
     socket.leave(gameManager.getRoomId());
+    const roomStatus = gameManager.getStatus();
 
     io.in(gameManager.getRoomId()).emit('sendLeftPlayer', {
       socketId: socket.id,
     });
 
-    if (gameManager.getStatus() === 'waiting') {
-      const playerCount = gameManager.getPlayers().length;
-
-      if (isRoomReady(gameManager) && playerCount >= MIN_PLAYER_COUNT) {
-        gameManager.cancelReadyAllPlayers();
-        gameManager
-          .getPlayers()
-          .forEach(sendReady.bind(null, gameManager.getRoomId()));
-
-        gameManager.prepareGame();
-        io.in(gameManager.getRoomId()).emit('startGame');
-
-        gameManager.prepareSet();
-        assignPlayerType(gameManager);
-        gameManager.startPeerConnectCheckTimer(disconnectPlayersAndStartGame);
+    if (roomStatus === 'waiting') {
+      if (
+        gameManager.checkAllPlayersAreReady() &&
+        gameManager.getPlayers().length >= MIN_PLAYER_COUNT
+      ) {
+        gameController.prepareGame(gameManager, timer);
       }
       return;
     }
-    if (gameManager.getStatus() === 'initializing') {
-      if (
-        !gameManager.getStreamer() ||
-        gameManager.getPlayers().length < MIN_PLAYER_COUNT
-      ) {
-        io.in(gameManager.getRoomId()).emit('endSet', {
-          scoreList: gameManager.getScoreList(),
+
+    if (roomStatus === 'initializing' || roomStatus === 'playing') {
+      if (!gameManager.isGameContinuable()) {
+        gameController.endGame(gameManager, timer);
+        gameController.resetGameAfterNSeconds({
+          seconds: SECONDS_AFTER_GAME_END,
+          gameManager,
+          timer,
         });
-        gameManager.clearQuizSelectTimer();
-        gameManager.reset();
-        gameManager.resetAllPlayers();
+        return;
       }
-    }
-    if (
-      (gameManager.getStatus() === 'playing' && !gameManager.getStreamer()) ||
-      gameManager.getPlayers().length < MIN_PLAYER_COUNT
-    ) {
-      io.in(gameManager.getRoomId()).emit('endSet', {
-        scoreList: gameManager.getScoreList(),
-      });
-      gameManager.reset();
-      gameManager.clearPlayingTimer();
-      gameManager.resetAllPlayers();
+      if (!gameManager.getStreamer()) {
+        gameController.repeatSet(gameManager, timer);
+      }
     }
   } catch (error) {
     console.log(error);

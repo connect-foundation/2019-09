@@ -1,13 +1,14 @@
-const { MAX_ROUND_NUMBER } = require('../../../config');
+const { MAX_ROUND_NUMBER, MIN_PLAYER_COUNT } = require('../../../config');
 
 class GameManager {
   constructor(roomId) {
     this.roomId = roomId;
     this.status = 'waiting';
     this.quiz = '';
+    this.quizCandidates = [];
     this.players = [];
     this.streamerCandidates = [];
-    this.currentRound = 0;
+    this.currentRound = 1;
     this.currentSet = 0;
     this.streamer = null;
   }
@@ -80,7 +81,7 @@ class GameManager {
     this.streamerCandidates = [];
     this.streamer = null;
     this.quiz = '';
-    this.currentRound = 0;
+    this.currentRound = 1;
     this.currentSet = 0;
   }
 
@@ -91,9 +92,13 @@ class GameManager {
   }
 
   updateRoundAndSet() {
-    const maxSet = this.players.length;
-    this.currentSet = this.currentSet < maxSet ? ++this.currentSet : 1;
-    if (this.currentSet === 1) this.currentRound++;
+    const streamers = this.streamerCandidates[this.currentRound - 1];
+    if (streamers.length === 0) {
+      this.currentRound++;
+      this.currentSet = 0;
+    } else {
+      this.currentSet++;
+    }
   }
 
   selectStreamer() {
@@ -115,6 +120,10 @@ class GameManager {
     return streamer;
   }
 
+  getStreamerCandidates() {
+    return this.streamerCandidates;
+  }
+
   setStreamerCandidates() {
     for (let i = 0; i < MAX_ROUND_NUMBER; i++) {
       this.streamerCandidates.push([...this.players]);
@@ -128,7 +137,7 @@ class GameManager {
 
     this.removeStreamerCandidate(socketId);
 
-    if (this.isStreamer(socketId)) {
+    if (this.streamer && this.isStreamer(socketId)) {
       this.streamer = null;
     }
   }
@@ -185,6 +194,29 @@ class GameManager {
 
   checkAllPlayersAreReady() {
     return this.players.every(player => player.getIsReady());
+  }
+
+  isGameContinuable() {
+    return (
+      this.getStreamerCandidates().flat().length > 0 &&
+      this.currentRound <= MAX_ROUND_NUMBER &&
+      this.players.length >= MIN_PLAYER_COUNT
+    );
+  }
+
+  setQuizCandidates(quizCandidates) {
+    this.quizCandidates = quizCandidates;
+  }
+
+  getQuizCandidates() {
+    return this.quizCandidates;
+  }
+
+  selectRandomQuiz() {
+    const randomIndex = Math.round(
+      Math.random() * (this.quizCandidates.length - 1),
+    );
+    return this.quizCandidates[randomIndex];
   }
 }
 

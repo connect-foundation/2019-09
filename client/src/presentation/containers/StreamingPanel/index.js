@@ -5,7 +5,6 @@ import { GlobalContext } from '../../../contexts';
 import WordCandidates from '../WordCandidates';
 import { CenterTimer } from '../../components';
 import walkingCatImageSource from '../../../assets/cat.gif';
-import { STREAMER_LOADING_MESSAGE } from '../../../config';
 import StreamingPanelPresentation from './presenter';
 import useStyles from './style';
 
@@ -38,29 +37,34 @@ const StreamingPanel = ({ clientManager }) => {
   const {
     quizCandidatesNotice,
     stream,
-    isVideoVisible,
+    videoVisibility,
     currentSeconds,
     scoreNotice,
+    messageNotice,
   } = useContext(GlobalContext);
 
   let showGameMessageBox = false;
   let showScoreBoard = false;
   let messageType;
-  const { isVisible, quizCandidates } = quizCandidatesNotice;
+  const { quizCandidates } = quizCandidatesNotice;
   const { message, scoreList } = scoreNotice;
-  const isScoreBoardVisible = scoreNotice.isVisible;
   const quizCandidateButtonHandler = quiz => {
     clientManager.selectQuiz(quiz);
   };
 
-  if (isVisible) {
+  if (quizCandidatesNotice.isVisible) {
     messageType = 'quizSelection';
     showGameMessageBox = true;
   }
 
-  if (isScoreBoardVisible) {
+  if (scoreNotice.isVisible) {
     messageType = 'scoreBoard';
     showScoreBoard = true;
+  }
+
+  if (messageNotice.isVisible) {
+    messageType = 'streamerLoading';
+    showGameMessageBox = true;
   }
 
   let gameMessageContent;
@@ -69,7 +73,7 @@ const StreamingPanel = ({ clientManager }) => {
       messageType,
       currentSeconds,
       loadingImageSource: walkingCatImageSource,
-      loadingMessage: STREAMER_LOADING_MESSAGE,
+      loadingMessage: messageNotice.message,
       words: quizCandidates,
       quizCandidateButtonHandler,
     });
@@ -81,7 +85,7 @@ const StreamingPanel = ({ clientManager }) => {
     showGameMessageBox,
     gameMessageContent,
     stream,
-    isVideoVisible,
+    videoVisibility,
     scoreList,
     message,
   };

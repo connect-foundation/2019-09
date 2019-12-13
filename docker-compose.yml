@@ -32,6 +32,7 @@ services:
     container_name: mysql
     volumes:
       - ./mysql.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./mysql/data:/var/lib/mysql
     restart: always
     env_file:
       - ./.env

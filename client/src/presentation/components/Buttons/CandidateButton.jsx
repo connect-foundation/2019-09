@@ -7,8 +7,10 @@ import buttonStyle from './style';
 const useStyles = makeStyles({
   button: {
     ...buttonStyle,
-    width: '10rem',
+    width: 'auto',
     height: '3rem',
+    padding: '0 1rem',
+    zIndex: '10',
   },
 });
 

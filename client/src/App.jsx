@@ -7,7 +7,7 @@ import { globalState, globalReducer } from './store';
 
 const App = () => {
   const theme = createMuiTheme({
-    typography: { fontFamily: 'Aldrich' },
+    typography: { fontFamily: 'CookieRunOTF-Bold' },
   });
 
   const [state, dispatch] = useReducer(globalReducer, globalState);

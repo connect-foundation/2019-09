@@ -7,7 +7,6 @@ import { GlobalContext } from '../../contexts';
 const useStyle = makeStyles(() => ({
   mobileChattingPanel: {
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     border: 'none',
     wordWrap: 'break-word',
   },

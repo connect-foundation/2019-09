@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { STYLE_COLORS } from '../../../utils';
+import { MOBILE_PANEL_HEIGHT } from '../../../config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -7,20 +8,24 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     width: '100%',
     height: '100%',
-    background: STYLE_COLORS.BACKGROUND_COLOR,
     overflow: 'auto',
   },
   timerBox: {
     padding: '1rem 2rem',
     textAlign: 'left',
     color: theme.palette.text.secondary,
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-    },
+    height: '100%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    alignItems: 'center',
   },
   gameHeader: {
     backgroundColor: STYLE_COLORS.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
+    height: '10%',
+    [theme.breakpoints.down('xs')]: {
+      height: 'auto',
+    },
   },
   videoBox: {
     padding: theme.spacing(2),
@@ -34,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   playerPanelContainer: {
+    height: '100%',
     display: 'block',
   },
   playerPanelButton: {
@@ -57,7 +63,7 @@ const useStyles = makeStyles(theme => ({
     padding: '0.5rem 2rem',
   },
   bottomGrid: {
-    height: 'auto',
+    height: '90%',
     [theme.breakpoints.down('xs')]: {
       display: 'block',
       position: 'relative',
@@ -73,6 +79,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   chattingContainer: {
+    height: '100%',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       maxWidth: 'none',
@@ -88,6 +95,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   mobileChattingPanel: {
+    height: MOBILE_PANEL_HEIGHT,
     position: 'absolute',
     top: '0',
     bottom: '0',
@@ -104,7 +112,10 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   streamingPanelGrid: {
-    minHeight: '20rem',
+    [theme.breakpoints.down('xs')]: {
+      position: 'relative',
+      height: MOBILE_PANEL_HEIGHT,
+    },
   },
 }));
 
