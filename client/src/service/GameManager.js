@@ -147,11 +147,10 @@ class GameManager {
     this.timer.startIntegrationTimer(
       INACTIVE_PLAYER_BAN_TIME,
       this.exitRoom.bind(this),
-      time => {
+      () => {
         if (this.localPlayer.isReady) {
           this.timer.clear();
         }
-        console.log(time);
       },
     );
   }
