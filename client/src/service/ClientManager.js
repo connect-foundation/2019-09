@@ -5,9 +5,13 @@ import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
+import EVENTS from '../constants/events';
+import actions from '../actions';
+import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
 
 class ClientManager {
-  constructor() {
+  constructor(history) {
+    this.history = history;
     this.localPlayer = {
       isReady: false,
       nickname: '',
@@ -15,8 +19,7 @@ class ClientManager {
       socketId: '',
       score: 0,
     };
-    /** @todo 이후에 지워야 할 사항. 개발용 */
-    this.socket = io('localhost:3001');
+    this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
     this.gameManager = new GameManager(
       this.socket,
@@ -33,9 +36,21 @@ class ClientManager {
   }
 
   registerSocketEvents() {
-    this.socket.on('sendSocketId', this.sendSocketIdHandler.bind(this));
-    this.socket.on('sendLeftPlayer', this.sendLeftPlayerHandler.bind(this));
-    this.socket.on('endGame', this.endGameHandler.bind(this));
+    this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
+    this.socket.on(
+      EVENTS.SEND_LEFT_PLAYER,
+      this.sendLeftPlayerHandler.bind(this),
+    );
+    this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
+    this.socket.on(EVENTS.RESET_GAME, this.resetGameHandler.bind(this));
+    this.socket.on(EVENTS.DISCONNECT, this.disconnectHandler.bind(this));
+  }
+
+  disconnectHandler() {
+    this.streamingManager.resetWebRTC();
+    this.history.push('/');
+    this.dispatch(actions.reset());
+    this.gameManager.timer.clear();
   }
 
   sendLeftPlayerHandler({ socketId }) {
@@ -45,13 +60,7 @@ class ClientManager {
         this.localPlayer,
         this.remotePlayers,
       );
-      this.dispatch({
-        type: 'setViewPlayerList',
-        payload: {
-          viewPlayerList,
-        },
-      });
-      console.log('sendLeftPlayerHandler : ', socketId, viewPlayerList);
+      this.dispatch(actions.setViewPlayerList(viewPlayerList));
       this.streamingManager.closeConnection(socketId);
     } catch (e) {
       console.log(e);
@@ -63,7 +72,7 @@ class ClientManager {
   }
 
   askSocketId() {
-    this.socket.emit('askSocketId');
+    this.socket.emit(EVENTS.ASK_SOCKET_ID);
   }
 
   findMatch(nickname) {
@@ -83,6 +92,7 @@ class ClientManager {
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
     this.findMatch(browserLocalStorage.getNickname());
     this.chattingManager.registerSocketEvents();
+    this.gameManager.setInactivePlayerBanTimer();
   }
 
   sendChattingMessage(newChatting) {
@@ -90,26 +100,25 @@ class ClientManager {
   }
 
   exitRoom() {
-    this.streamingManager.resetWebRTC();
-    this.socket.disconnect();
-    // this.dispatch({ type: 'resetChattingList' });
-    this.dispatch({ type: 'reset' });
-    // 상태 초기화
+    this.gameManager.exitRoom();
   }
 
-  endGameHandler() {
-    this.localPlayer.type = 'viewer';
-    this.localPlayer.isReady = false;
-    const keys = Object.keys(this.remotePlayers);
-    keys.forEach(key => {
-      this.remotePlayers[key].type = 'viewer';
-      this.remotePlayers[key].isReady = false;
-    });
-
-    this.gameManager.makeAndDispatchViewPlayerList();
-
+  endGameHandler({ scoreList }) {
     this.resetStreaming();
     this.resetReadyButton();
+    this.dispatch(actions.clearWindow());
+    this.dispatch(
+      actions.setScoreNotice({
+        isVisible: true,
+        message: GAME_END_SCOREBOARD_TITLE,
+        scoreList,
+      }),
+    );
+    this.dispatch(actions.setCurrentSeconds(0));
+    this.dispatch(actions.setQuiz('', 0));
+    this.dispatch(actions.setChattingDisabled(false));
+    this.dispatch(actions.setVideoVisibility(false));
+    this.streamingManager.closeAllConnections();
   }
 
   resetReadyButton() {
@@ -117,7 +126,7 @@ class ClientManager {
       this.localPlayer,
       this.remotePlayers,
     );
-    this.dispatch({ type: 'setViewPlayerList', payload: { viewPlayerList } });
+    this.dispatch(actions.setViewPlayerList(viewPlayerList));
   }
 
   resetStreaming() {
@@ -131,6 +140,57 @@ class ClientManager {
 
   selectQuiz(quiz) {
     this.gameManager.selectQuiz(quiz);
+  }
+
+  /**
+   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
+   * remotePlayers 형태를 array 변경과 함께.
+   */
+  syncLocalPlayer(players) {
+    const localPlayer = players.find(player => {
+      return player.socketId === this.localPlayer.socketId;
+    });
+    Object.keys(localPlayer).forEach(key => {
+      this.localPlayer[key] = localPlayer[key];
+    });
+  }
+
+  syncRemotePlayers(players) {
+    const remotePlayers = [];
+    players.forEach(player => {
+      if (player.socketId !== this.localPlayer.socketId) {
+        remotePlayers.push(player);
+      }
+    });
+    remotePlayers.forEach(player => {
+      const { socketId } = player;
+      Object.keys(player).forEach(key => {
+        this.remotePlayers[socketId][key] = player[key];
+      });
+    });
+  }
+
+  resetGameHandler({ players }) {
+    this.syncLocalPlayer(players);
+    this.syncRemotePlayers(players);
+    this.gameManager.makeAndDispatchViewPlayerList();
+    this.streamingManager.resetWebRTC();
+    this.dispatch(actions.clearWindow());
+    this.dispatch({
+      type: 'setGameStatus',
+      payload: { gameStatus: 'waiting' },
+    });
+    this.gameManager.setInactivePlayerBanTimer();
+  }
+
+  setHistoryInGameManager(history) {
+    this.gameManager.setHistory(history);
+  }
+
+  setClientManagerInitialized(clientManagerInitialized) {
+    this.dispatch(
+      actions.setClientManagerInitialized(clientManagerInitialized),
+    );
   }
 }
 

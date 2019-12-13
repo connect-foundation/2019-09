@@ -31,9 +31,10 @@ const useStyle = makeStyles({
     color: STYLE_COLORS.PURE_WHITE_COLOR,
     textAlign: 'center',
     flex: '1',
+    marginRight: '1rem',
   },
   score: {
-    color: STYLE_COLORS.PURE_WHITE_COLOR,
+    color: STYLE_COLORS.THEME_COLOR,
     textAlign: 'center',
     flex: '1',
   },

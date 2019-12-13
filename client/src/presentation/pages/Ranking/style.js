@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { STYLE_COLORS } from '../../../utils';
 
 const useStyle = makeStyles({
   mainPage: {
@@ -14,13 +13,16 @@ const useStyle = makeStyles({
     margin: 0,
     width: '100%',
     height: '100%',
-    background: STYLE_COLORS.BACKGROUND_COLOR,
     overflow: 'auto',
   },
   exitButtonWrapper: {
     position: 'fixed',
     top: '1.5rem',
     right: '2.5rem',
+  },
+  MoreButton: {
+    textAlign: 'center',
+    marginBottom: '2rem',
   },
 });
 

@@ -10,13 +10,22 @@ const MOBILE_VIEW_BREAKPOINT = 600;
 
 const DEFAULT_SCOREBOARD_TITLE = 'Final Score';
 
-const STREAMER_LOADING_MESSAGE = 'Waiting for streamer...';
-
 const DEFAULT_TEXT_INPUT_MAX_LENGTH = 100;
 
 const NICKNAME_LENGTH = 8;
 
 const MAX_CHAT_LENGTH = 40;
+
+const WAITING_FOR_STREAMER = 'Waiting For Streamer...';
+
+const MOBILE_PANEL_HEIGHT = '50%';
+
+const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
+
+
+const SOCKETIO_SERVER_URL =
+  process.env.NODE_ENV === 'development' ? 'localhost:3001' : '';
+const GAME_END_SCOREBOARD_TITLE = '최종 점수';
 
 export {
   MainIntroductionDescription,
@@ -24,8 +33,12 @@ export {
   MainSlogan,
   MOBILE_VIEW_BREAKPOINT,
   DEFAULT_SCOREBOARD_TITLE,
-  STREAMER_LOADING_MESSAGE,
   DEFAULT_TEXT_INPUT_MAX_LENGTH,
   NICKNAME_LENGTH,
   MAX_CHAT_LENGTH,
+  WAITING_FOR_STREAMER,
+  MOBILE_PANEL_HEIGHT,
+  LOCALSTORAGE_NICKNAME_KEY,
+  SOCKETIO_SERVER_URL,
+  GAME_END_SCOREBOARD_TITLE,
 };

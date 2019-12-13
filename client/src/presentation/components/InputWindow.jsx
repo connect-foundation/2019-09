@@ -16,14 +16,13 @@ const useStyles = makeStyles({
   },
 });
 
-const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
+const InputWindow = ({ clientManager, chattingDisabled }) => {
   const [value, setValue] = useState('');
   const classes = useStyles();
 
   const sendChattingMessageHandler = () => {
     if (!value) return;
     clientManager.sendChattingMessage({
-      nickname,
       message: value,
     });
     setValue('');
@@ -45,13 +44,13 @@ const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
     <Box className={classes.InputWindow}>
       <MessageInput
         value={value}
-        isChattingDisabled={isChattingDisabled}
+        chattingDisabled={chattingDisabled}
         onChange={messageInputOnChangeHandler}
         onKeyPress={messageInputOnKeyPressHandler}
         maxLength={MAX_CHAT_LENGTH}
       />
       <SendButton
-        isChattingDisabled={isChattingDisabled}
+        chattingDisabled={chattingDisabled}
         onClick={sendChattingMessageHandler}
       >
         Send
@@ -62,8 +61,7 @@ const InputWindow = ({ clientManager, nickname, isChattingDisabled }) => {
 
 InputWindow.propTypes = {
   clientManager: PropTypes.shape.isRequired,
-  nickname: PropTypes.string.isRequired,
-  isChattingDisabled: PropTypes.bool.isRequired,
+  chattingDisabled: PropTypes.bool.isRequired,
 };
 
 export default InputWindow;

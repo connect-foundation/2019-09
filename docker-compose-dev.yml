@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  trycatch:
+    image: node:12.13.0
+    container_name: trycatch
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./:/app/
+    working_dir: /app/
+    user: root
+    command: bash -c "npm install yarn nodemon -g && yarn install && yarn workspace client build && yarn dev-start"
+    restart: always
+    env_file:
+      - ./.env
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - ./mysql.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./mysql/data:/var/lib/mysql
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - '3306:3306'

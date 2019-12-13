@@ -199,3 +199,6 @@ demoData.js
 .env.development.local
 .env.test.local
 .env.production.local
+
+# DB
+mysql/data/
