@@ -4,6 +4,8 @@ import { makeViewPlayerList } from '../utils';
 import { WAITING_FOR_STREAMER } from '../config';
 import EVENTS from '../constants/events';
 import actions from '../actions';
+import Timer from './Timer';
+import { INACTIVE_PLAYER_BAN_TIME } from '../constants/timer';
 
 class GameManager {
   constructor(socket, localPlayer, remotePlayers) {
@@ -11,6 +13,7 @@ class GameManager {
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
+    this.timer = new Timer();
   }
 
   findMatch(nickname) {
@@ -86,6 +89,7 @@ class GameManager {
   }
 
   startGameHandler() {
+    this.timer.clear();
     this.dispatch(actions.setGameStatus('playing'));
   }
 
@@ -114,6 +118,7 @@ class GameManager {
   sendReadyHandler({ socketId, isReady }) {
     if (socketId === this.localPlayer.socketId) {
       this.localPlayer.isReady = isReady;
+      this.toggleInactivePlayerBanTimer();
     } else {
       this.remotePlayers[socketId].isReady = isReady;
     }
@@ -136,6 +141,31 @@ class GameManager {
   selectQuiz(quiz) {
     this.dispatch(actions.setQuizCandidatesNotice(false, []));
     this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
+  }
+
+  setInactivePlayerBanTimer() {
+    this.timer.startIntegrationTimer(
+      INACTIVE_PLAYER_BAN_TIME,
+      this.exitRoom.bind(this),
+      () => {
+        if (this.localPlayer.isReady) {
+          this.timer.clear();
+        }
+      },
+    );
+  }
+
+  exitRoom() {
+    this.socket.disconnect();
+    this.dispatch(actions.setClientManagerInitialized(false));
+  }
+
+  toggleInactivePlayerBanTimer() {
+    if (this.localPlayer.isReady) {
+      this.timer.clear();
+    } else {
+      this.setInactivePlayerBanTimer();
+    }
   }
 }
 
