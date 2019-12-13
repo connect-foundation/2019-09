@@ -122,6 +122,15 @@ const clearWindow = () => {
   };
 };
 
+const setClientManagerInitialized = clientManagerInitialized => {
+  return {
+    type: 'setClientManagerInitialized',
+    payload: {
+      clientManagerInitialized,
+    },
+  };
+};
+
 export default {
   setViewPlayerList,
   reset,
@@ -137,4 +146,5 @@ export default {
   setQuizCandidatesNotice,
   setStream,
   clearWindow,
+  setClientManagerInitialized,
 };

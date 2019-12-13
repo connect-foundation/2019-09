@@ -100,6 +100,12 @@ const reducer = (state, action) => {
           scoreList: [],
         },
       };
+    case TYPES.SET_CLIENT_MANAGER_INITIALIZED:
+      return {
+        ...state,
+        clientManagerInitialized: action.payload.clientManagerInitialized,
+      };
+
     default:
       throw new Error();
   }
