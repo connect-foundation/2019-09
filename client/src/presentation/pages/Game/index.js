@@ -2,7 +2,13 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import ClientManager from '../../../service/ClientManager';
 import { browserLocalStorage } from '../../../utils';
-import { MOBILE_VIEW_BREAKPOINT } from '../../../config';
+import {
+  MOBILE_VIEW_BREAKPOINT,
+  WAITING_STATUS,
+  MOBILE_VIEW,
+  DESKTOP_VIEW,
+  ALLOW_CAMERA_MESSAGE,
+} from '../../../config';
 import { GlobalContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
@@ -28,7 +34,7 @@ const Game = () => {
     clientManager.init();
     clientManager.getMediaPermission().catch(() => {
       exitButtonHandler();
-      alert('카메라를 허용해주세요');
+      alert(ALLOW_CAMERA_MESSAGE);
     });
     isClientManagerInitialized = true;
   }
@@ -58,7 +64,7 @@ const Game = () => {
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const readyButtonContainerClasses = (() => {
-    return gameStatus === 'waiting'
+    return gameStatus === WAITING_STATUS
       ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
   })();
@@ -82,11 +88,11 @@ const Game = () => {
   }, [currentIsMobile]);
 
   useEffect(() => {
-    if (shiftingToWhichView === 'mobile') {
+    if (shiftingToWhichView === MOBILE_VIEW) {
       setIsPlayerListVisible(false);
       return;
     }
-    if (shiftingToWhichView === 'desktop') {
+    if (shiftingToWhichView === DESKTOP_VIEW) {
       setIsPlayerListVisible(true);
     }
   }, [shiftingToWhichView]);

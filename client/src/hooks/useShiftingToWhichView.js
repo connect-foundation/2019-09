@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import useIsMobile from './useIsMobile';
+import { MOBILE_VIEW, DESKTOP_VIEW } from '../config';
 
 const useShiftingToWhichView = mobileViewBreakpoint => {
   const isMobile = useIsMobile(mobileViewBreakpoint);
@@ -11,9 +12,11 @@ const useShiftingToWhichView = mobileViewBreakpoint => {
 
   useEffect(() => {
     if (!isViewShiftingToMobile(isMobile)) {
-      setShiftingTo('desktop');
-    } else if (isViewShiftingToMobile(isMobile)) {
-      setShiftingTo('mobile');
+      setShiftingTo(DESKTOP_VIEW);
+      return;
+    }
+    if (isViewShiftingToMobile(isMobile)) {
+      setShiftingTo(MOBILE_VIEW);
     }
   }, [isMobile]);
   return shiftingTo;

@@ -27,6 +27,8 @@ const EVENTS = {
   // ChattingManager
   SEND_CHATTING_MESSAGE: 'sendChattingMessage',
   START_CHATTING: 'startChatting',
+  // DOM events
+  RESIZE: 'resize',
 };
 
 export default EVENTS;
