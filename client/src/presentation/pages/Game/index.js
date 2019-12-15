@@ -15,59 +15,55 @@ import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
 
-let isClientManagerInitialized = false;
 let clientManager;
 
-const exitButtonHandler = () => {
-  isClientManagerInitialized = false;
-  clientManager.exitRoom();
-};
-
 const Game = () => {
-  const history = useHistory();
-  if (!browserLocalStorage.getNickname()) {
-    history.push('/');
-  }
-
-  if (!isClientManagerInitialized) {
-    clientManager = new ClientManager(history);
-    clientManager.init();
-    clientManager.getMediaPermission().catch(() => {
-      exitButtonHandler();
-      alert(ALLOW_CAMERA_MESSAGE);
-    });
-    isClientManagerInitialized = true;
-  }
-
-  const classes = useStyles();
   const {
     gameStatus,
     viewPlayerList,
     currentSeconds,
     quiz,
     quizLength,
+    clientManagerInitialized,
   } = useContext(GlobalContext);
-
+  
+  const classes = useStyles();
+  const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const initialIsMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
-
+  
   const [
     mobileChattingPanelVisibility,
     setMobileChattingPanelVisibility,
   ] = useState(initialIsMobile);
-
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(
     !initialIsMobile,
   );
 
-  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+  if (!browserLocalStorage.getNickname()) {
+    history.push('/');
+  }
 
-  const readyButtonContainerClasses = (() => {
-    return gameStatus === WAITING_STATUS
-      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
-      : classes.gameStartHide;
-  })();
+  if (!clientManagerInitialized) {
+    clientManager = new ClientManager(history);
+    clientManager
+      .getMediaPermission()
+      .then(() => {
+        clientManager.init();
+        clientManager.setClientManagerInitialized(true);
+      })
+      .catch(() => {
+        history.push('/');
+        clientManager.setClientManagerInitialized(false);
+        alert(ALLOW_CAMERA_MESSAGE);
+      });
+    clientManager.setClientManagerInitialized(true);
+  }
+  
+  const exitButtonHandler = () => {
+    clientManager.exitRoom();
+  };
 
   const showPlayersButtonHandler = () => {
     setIsPlayerListVisible(!isPlayerListVisible);
@@ -96,12 +92,20 @@ const Game = () => {
       setIsPlayerListVisible(true);
     }
   }, [shiftingToWhichView]);
+  
+  const readyButtonContainerClasses = (() => {
+    return gameStatus === WAITING_STATUS
+      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
+      : classes.gameStartHide;
+  })();
 
   const playerPanelContainerClasses = (() => {
     return isPlayerListVisible
       ? classes.playerPanelContainer
       : [classes.playerPanelContainer, classes.mobileViewHide];
   })();
+  
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const gameProps = {
     quiz,

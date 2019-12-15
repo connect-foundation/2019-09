@@ -32,6 +32,8 @@ const initialState = {
     message: '',
     scoreList: [],
   },
+
+  clientManagerInitialized: false,
 };
 
 export default initialState;
