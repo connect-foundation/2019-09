@@ -3,9 +3,10 @@ import { useHistory } from 'react-router-dom';
 import ClientManager from '../../../service/ClientManager';
 import { browserLocalStorage } from '../../../utils';
 import { MOBILE_VIEW_BREAKPOINT } from '../../../config';
-import { GlobalContext } from '../../../contexts';
+import { GlobalContext, DispatchContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
+import actions from '../../../actions';
 
 let clientManager;
 
@@ -17,10 +18,16 @@ const Game = () => {
     quiz,
     quizLength,
     clientManagerInitialized,
+    toast,
   } = useContext(GlobalContext);
+  const dispatch = useContext(DispatchContext);
 
   const exitButtonHandler = () => {
     clientManager.exitRoom();
+  };
+
+  const toastCloseHandler = () => {
+    dispatch(actions.closeToast());
   };
 
   const history = useHistory();
@@ -119,6 +126,8 @@ const Game = () => {
     classes,
     readyButtonHandler,
     mobileChattingPanelVisibility,
+    toast,
+    toastCloseHandler,
   };
 
   return <GamePresentation gameProps={gameProps} />;

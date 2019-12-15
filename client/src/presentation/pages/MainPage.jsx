@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MetaTags from 'react-meta-tags';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { MainTitle, Menu, Introduction } from '../containers';
 import browserLocalStorage from '../../utils/browserLocalStorage';
+import Toast from '../components/Toast';
+import { GlobalContext, DispatchContext } from '../../contexts';
+import actions from '../../actions';
 
 const useStyle = makeStyles(theme => ({
   mainPage: {
@@ -29,6 +32,13 @@ const useStyle = makeStyles(theme => ({
 const MainPage = () => {
   const classes = useStyle();
 
+  const dispatch = useContext(DispatchContext);
+  const { toast } = useContext(GlobalContext);
+
+  const toastCloseHandler = () => {
+    dispatch(actions.closeToast());
+  };
+
   useEffect(() => {
     browserLocalStorage.verifyNicknameInLocalStorage();
   }, []);
@@ -42,6 +52,12 @@ const MainPage = () => {
         />
       </MetaTags>
       <Container maxWidth="md" className={classes.mainPage}>
+        <Toast
+          open={toast.open}
+          toastType={toast.toastType}
+          message={toast.message}
+          closeHandler={toastCloseHandler}
+        />
         <MainTitle />
         <Menu />
         <Introduction />
