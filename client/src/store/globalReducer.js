@@ -105,7 +105,15 @@ const reducer = (state, action) => {
         ...state,
         clientManagerInitialized: action.payload.clientManagerInitialized,
       };
-
+    case TYPES.SET_TOAST:
+      return {
+        ...state,
+        toast: {
+          open: action.payload.toast.open,
+          message: action.payload.toast.message,
+          toastType: action.payload.toast.toastType,
+        },
+      };
     default:
       throw new Error();
   }

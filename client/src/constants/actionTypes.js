@@ -2,6 +2,7 @@ const TYPES = {
   RESET: 'reset',
   ADD_CHATTING: 'addChatting',
   SET_QUIZ: 'setQuiz',
+  SET_TOAST: 'setToast',
   SET_STREAM: 'setStream',
   SET_GAME_STATUS: 'setGameStatus',
   SET_CURRENT_SET: 'setCurrentSet',
