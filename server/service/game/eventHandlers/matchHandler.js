@@ -5,14 +5,14 @@ const { NICKNAME_LENGTH } = require('../../../config');
 
 const emitEventsAfterJoin = socket => {
   socket.emit('startChatting');
-
-  /**
-   * sendRoodId : url 기능 추가를 위한 이벤트. 아직 사용하지 않음
-   */
   socket.emit('sendRoomId', { roomId: socket.roomId });
 };
 
-const matchHandler = (socket, { nickname }) => {
+const matchHandler = (
+  socket,
+  { nickname, insertedRoomId, isPrivateRoomCreation },
+) => {
+  let roomId;
   const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
   const player = new Player({
     nickname: slicedNickname,
@@ -20,10 +20,20 @@ const matchHandler = (socket, { nickname }) => {
     nicknameColor: getRandomColor(),
   });
 
-  const { isExistingRoom, roomId } = roomController.getRoomInformantionToJoin();
-  roomController.joinRoom({ socket, roomId, player });
+  const isRoomPrivate = !!insertedRoomId || isPrivateRoomCreation;
 
-  if (isExistingRoom) {
+  if (!!insertedRoomId || isPrivateRoomCreation) {
+    roomId = roomController.getPrivateRoomInformationToJoin(
+      insertedRoomId,
+      isPrivateRoomCreation,
+    );
+  } else {
+    roomId = roomController.getPublicRoomInformantionToJoin();
+  }
+
+  roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
+
+  if (roomId) {
     /**
      * 새로운 플레이어는 기존 플레이어의 정보들을 전달받고
      * 기존의 플레이어들은 새로운 플레이어의 정보를 전달받는다.
@@ -33,6 +43,10 @@ const matchHandler = (socket, { nickname }) => {
 
     socket.broadcast.to(roomId).emit('sendNewPlayer', player);
     socket.emit('sendPlayers', { players: otherPlayers });
+  } else {
+    /** @todo 토스터 완성되면 여기서 메인보내고 토스터로 없다고 알려줘야함 */
+    socket.disconnect();
+    return;
   }
   emitEventsAfterJoin(socket);
 };
