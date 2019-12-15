@@ -102,7 +102,7 @@ const useStyles = makeStyles(theme => ({
     right: '0',
     overflow: 'auto',
   },
-  mobileReadyButtonContainer: {
+  mobileBottomLeftButtonContainer: {
     width: '8rem',
     position: 'absolute',
     bottom: '2rem',
@@ -116,6 +116,9 @@ const useStyles = makeStyles(theme => ({
       position: 'relative',
       height: MOBILE_PANEL_HEIGHT,
     },
+  },
+  shareUrlButton: {
+    marginBottom: '1rem',
   },
 }));
 
