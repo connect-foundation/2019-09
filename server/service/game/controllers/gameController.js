@@ -137,6 +137,7 @@ const waitForPeerConnection = (gameManager, timer) => {
 };
 
 const preparePlayerTypes = gameManager => {
+  gameManager.updateRoundAndSet();
   gameManager.selectStreamer();
   assignPlayerType(gameManager);
 };
@@ -153,7 +154,6 @@ const prepareGame = (gameManager, timer) => {
   gameManager.prepareGame();
   io.in(gameManager.getRoomId()).emit('startGame');
 
-  gameManager.updateRoundAndSet();
   preparePlayerTypes(gameManager);
   waitForPeerConnection(gameManager, timer);
 };
@@ -210,7 +210,6 @@ const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
 };
 
 const repeatSet = (gameManager, timer) => {
-  gameManager.updateRoundAndSet();
   if (gameManager.isGameContinuable()) {
     endSet(gameManager, timer);
     goToNextSetAfterNSeconds({
