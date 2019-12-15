@@ -28,7 +28,6 @@ const sendChattingMessageHandler = (socket, { message }) => {
     io.in(socket.roomId).emit('sendChattingMessage', {
       nickname: '안내',
       message: `${playerNickname}님이 정답을 맞췄습니다!`,
-      nicknameColor: '#000000',
       id: short.generate(),
     });
     const score = player.getScore() + timer.getRemainingTime() + 50;
