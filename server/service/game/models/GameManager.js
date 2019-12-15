@@ -157,7 +157,8 @@ class GameManager {
   }
 
   getPlayersUnconnectedToStreamer() {
-    return this.players.filter(player => !player.getIsConnectedToStreamer());
+    const viewers = this.getOtherPlayers(this.getStreamer().getSocketId());
+    return viewers.filter(viewer => !viewer.getIsConnectedToStreamer());
   }
 
   checkAllConnectionsToStreamer() {
