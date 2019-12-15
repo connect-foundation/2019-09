@@ -38,7 +38,7 @@ const ChattingPanel = ({ clientManager }) => {
       </Box>
       <InputWindow
         clientManager={clientManager}
-        isChattingDisabled={chattingDisabled}
+        chattingDisabled={chattingDisabled}
       />
     </Box>
   );
