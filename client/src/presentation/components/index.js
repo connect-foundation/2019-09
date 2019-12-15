@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 export { default as Logo } from './Logo';
 export { default as TextInput } from './TextInput';
 export { default as Title } from './Title';
@@ -15,6 +14,7 @@ export { default as RankPodium } from './RankPodium';
 export { default as GameMessageBox } from './GameMessageBox';
 export { default as CenterTimer } from './CenterTimer';
 export { default as ScoreBoardScoreRow } from './ScoreBoardScoreRow';
+export { default as Toast } from './Toast';
 export {
   MenuButton,
   SendButton,

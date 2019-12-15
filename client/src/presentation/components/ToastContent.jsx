@@ -14,8 +14,11 @@ const IconImage = styled.img`
 const useStyles = makeStyles({
   toastContent: props => ({
     display: 'flex',
-    height: '2rem',
+    height: 'auto',
     alignItems: 'center',
+    padding: (() => {
+      return props.matches ? '0.5rem' : '0';
+    })(),
     maxWidth: (() => {
       return props.matches ? '60rem' : '28rem';
     })(),
@@ -23,9 +26,6 @@ const useStyles = makeStyles({
   message: {
     width: '100%',
     fontSize: '1.6rem',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
   },
 });
 

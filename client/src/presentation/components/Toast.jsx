@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   error: {
     backgroundColor: theme.palette.error.dark,
   },
-  information: {
+  info: {
     backgroundColor: theme.palette.primary.main,
   },
   warning: {
@@ -35,7 +35,6 @@ const useStyles = makeStyles(theme => ({
  * @param {*} toastType
  */
 const checkToastType = toastType => {
-  console.log('checkToastType :', toastType);
   const defaultType = TOAST_TPYES.SUCCESS;
   return Object.values(TOAST_TPYES).includes(toastType)
     ? toastType
