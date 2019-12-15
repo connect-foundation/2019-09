@@ -12,6 +12,7 @@ import {
   PlayerPanel,
   MobileChattingPanel,
 } from '../../containers';
+import exitImageSource from '../../../assets/exit.png';
 
 const GamePresentation = ({ gameProps }) => {
   const {
@@ -51,7 +52,7 @@ const GamePresentation = ({ gameProps }) => {
         <Grid item xs className={classes.topRightGrid}>
           <Box className={classes.exitButtonContainer}>
             <Link to="/" onClick={exitButtonHandler}>
-              <ExitButton />
+              <ExitButton imageSource={exitImageSource} />
             </Link>
           </Box>
         </Grid>

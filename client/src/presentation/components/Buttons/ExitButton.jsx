@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import exitImageSource from '../../../assets/exit.png';
 
 const StyledExitButton = styled.button`
   width: 3rem;
@@ -15,16 +14,17 @@ const StyledExitButton = styled.button`
   }
 `;
 
-const ExitButton = ({ onClick }) => {
+const ExitButton = ({ onClick, imageSource }) => {
   return (
     <StyledExitButton type="button" onClick={onClick}>
-      <img alt="exit" src={exitImageSource} />
+      <img alt="exit" src={imageSource} />
     </StyledExitButton>
   );
 };
 
 ExitButton.propTypes = {
   onClick: PropTypes.func.isRequired,
+  imageSource: PropTypes.string.isRequired,
 };
 
 export default ExitButton;
