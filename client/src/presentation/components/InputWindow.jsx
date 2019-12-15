@@ -7,14 +7,17 @@ import { SendButton } from './Buttons';
 import { CONSTANT_VALUES } from '../../utils';
 import { MAX_CHAT_LENGTH } from '../../config';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   InputWindow: {
     display: 'flex',
     padding: '1rem',
     height: '10%',
     boxSizing: 'border-box',
+    [theme.breakpoints.down('xs')]: {
+      height: '100%',
+    },
   },
-});
+}));
 
 const InputWindow = ({ clientManager, chattingDisabled }) => {
   const [value, setValue] = useState('');

@@ -14,7 +14,7 @@ const MAX_CHAT_LENGTH = 40;
 
 const WAITING_FOR_STREAMER = 'Waiting For Streamer...';
 
-const MOBILE_PANEL_HEIGHT = '50%';
+const MOBILE_PANEL_HEIGHT = '90%';
 
 const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
 

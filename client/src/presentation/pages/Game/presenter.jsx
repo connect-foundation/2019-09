@@ -114,7 +114,10 @@ const GamePresentation = ({ gameProps }) => {
               xs={3}
               className={[classes.bottomGridContent, classes.chattingContainer]}
             >
-              <ChattingPanel clientManager={clientManager} />
+              <ChattingPanel
+                clientManager={clientManager}
+                mobileChattingPanelVisibility={mobileChattingPanelVisibility}
+              />
             </Grid>
           </>
         ) : (

@@ -44,8 +44,6 @@ const Game = () => {
     clientManager.setClientManagerInitialized(true);
   }
 
-  const classes = useStyles();
-
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
   const [
@@ -53,7 +51,12 @@ const Game = () => {
     setMobileChattingPanelVisibility,
   ] = useState(isMobile);
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
+  const [gamePageRootHeight, setGamePageRootHeight] = useState(
+    window.innerHeight,
+  );
   let previousWindowInnerWidth = window.innerWidth;
+
+  const classes = useStyles(gamePageRootHeight);
 
   const playerPanelContainerClasses = (() => {
     return isPlayerListVisible
@@ -89,6 +92,8 @@ const Game = () => {
       setIsPlayerListVisible(true);
       previousWindowInnerWidth = event.target.innerWidth;
     }
+
+    setGamePageRootHeight(event.target.innerHeight);
   };
 
   const showPlayersButtonHandler = () => {
