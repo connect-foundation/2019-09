@@ -38,17 +38,24 @@ class GameManager {
     this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
     this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
     this.socket.on(EVENTS.CLEAR_WINDOW, this.clearWindowHandler.bind(this));
-    this.socket.on(
-      EVENTS.UPDATE_PROFILE_SCORE,
-      this.updateProfileScoreHandler.bind(this),
-    );
+    this.socket.on(EVENTS.UPDATE_PROFILE, this.updateProfileHandler.bind(this));
   }
 
   clearWindowHandler() {
     this.dispatch(actions.clearWindow());
   }
 
-  endSetHandler({ scoreList }) {
+  endSetHandler({ players, scoreList }) {
+    players.forEach(player => {
+      if (player.socketId === this.localPlayer.socketId) {
+        this.localPlayer.isCorrectPlayer = player.isCorrectPlayer;
+      } else {
+        this.remotePlayers[player.socketId].isCorrectPlayer =
+          player.isCorrectPlayer;
+      }
+    });
+    this.makeAndDispatchViewPlayerList();
+
     this.dispatch(actions.setGameStatus('scoreSharing'));
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
@@ -106,11 +113,14 @@ class GameManager {
     this.makeAndDispatchViewPlayerList();
   }
 
-  updateProfileScoreHandler({ player }) {
+  updateProfileHandler({ player }) {
     if (player.socketId === this.localPlayer.socketId) {
       this.localPlayer.score = player.score;
+      this.localPlayer.isCorrectPlayer = player.isCorrectPlayer;
     } else {
       this.remotePlayers[player.socketId].score = player.score;
+      this.remotePlayers[player.socketId].isCorrectPlayer =
+        player.isCorrectPlayer;
     }
     this.makeAndDispatchViewPlayerList();
   }

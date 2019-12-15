@@ -35,7 +35,7 @@ const sendChattingMessageHandler = (socket, { message }) => {
     player.setScore(score);
     player.setIsCorrectPlayer(true);
     io.to(socket.id).emit('correctAnswer');
-    io.in(socket.roomId).emit('updateProfileScore', { player });
+    io.in(socket.roomId).emit('updateProfile', { player });
 
     if (gameManager.checkAllPlayersAreCorrect()) {
       gameController.repeatSet(gameManager, timer);

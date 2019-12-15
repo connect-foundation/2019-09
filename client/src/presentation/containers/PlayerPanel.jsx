@@ -59,6 +59,7 @@ const PlayerPanel = ({ clientManager }) => {
             isReady={player.isReady}
             type={player.type}
             isLocalPlayer={player.isLocalPlayer}
+            isCorrectPlayer={player.isCorrectPlayer}
           />
         );
       })}

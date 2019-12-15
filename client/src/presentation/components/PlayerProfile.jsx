@@ -26,8 +26,11 @@ const useStyles = makeStyles({
       if (props.type === 'streamer') {
         return `0.2rem solid ${STYLE_COLORS.STREAMER_BORDER_COLOR}`;
       }
-      if (props.isReady || props.isCorrectPlayer) {
+      if (props.isReady) {
         return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
+      }
+      if (props.isCorrectPlayer) {
+        return `0.2rem solid ${STYLE_COLORS.THEME_BORDER_COLOR}`;
       }
       return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
     })(),
@@ -53,12 +56,19 @@ const useStyles = makeStyles({
   playerScore: {},
 });
 
-const PlayerProfile = ({ nickname, score, isReady, type, isLocalPlayer }) => {
+const PlayerProfile = ({
+  nickname,
+  score,
+  isReady,
+  type,
+  isLocalPlayer,
+  isCorrectPlayer,
+}) => {
   const classes = useStyles({
     isReady,
     type,
     isLocalPlayer,
-    isCorrectPlayer: false,
+    isCorrectPlayer,
   });
   return (
     <Box className={classes.PlayerProfile}>
@@ -79,6 +89,7 @@ PlayerProfile.propTypes = {
   isReady: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
   isLocalPlayer: PropTypes.bool.isRequired,
+  isCorrectPlayer: PropTypes.bool.isRequired,
 };
 
 export default PlayerProfile;
