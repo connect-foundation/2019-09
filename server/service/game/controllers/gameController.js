@@ -55,6 +55,8 @@ const pickQuizCandidates = async () => {
 
 const endSet = (gameManager, timer) => {
   io.in(gameManager.getRoomId()).emit('endSet', {
+    currentRound: gameManager.getCurrentRound(),
+    currentSet: gameManager.getCurrentSet(),
     scoreList: gameManager.getScoreList(),
   });
 
