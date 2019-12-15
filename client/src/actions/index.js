@@ -131,26 +131,26 @@ const setClientManagerInitialized = clientManagerInitialized => {
   };
 };
 
-const closeToast = () => {
+const closeToast = toastType => {
   return {
     type: TYPES.SET_TOAST,
     payload: {
       toast: {
         open: false,
-        catagory: '',
+        toastType,
         message: '',
       },
     },
   };
 };
 
-const openToast = (catagory, message) => {
+const openToast = (toastType, message) => {
   return {
     type: TYPES.SET_TOAST,
     payload: {
       toast: {
         open: true,
-        catagory,
+        toastType,
         message,
       },
     },
