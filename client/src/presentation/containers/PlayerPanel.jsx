@@ -16,7 +16,7 @@ const useStyle = makeStyles(theme => ({
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.5)',
     borderRadius: '0.3rem',
     [theme.breakpoints.down('xs')]: {
-      width: '15rem',
+      width: '20rem',
       height: 'auto',
       backgroundColor: 'rgba(255,255,255,0.5)',
       boxShadow: 'none',
