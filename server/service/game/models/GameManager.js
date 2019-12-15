@@ -88,7 +88,6 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = 'initializing';
   }
 
   updateRoundAndSet() {
