@@ -29,4 +29,10 @@ const TOAST_POSITION = {
 
 const TOAST_TIME = 3000;
 
-export { TOAST_TPYES, TOAST_ICONS, TOAST_POSITION, TOAST_TIME };
+const TOAST_MESSAGE = {
+  INACTIVE_PLAYER_BAN: '장기간 READY를 하지 않아 메인페이지로 이동합니다.',
+  INACTIVE_PLAYER_WARNING: banTime =>
+    `${banTime}초 뒤 메인페이지로 이동합니다. READY 버튼을 눌러주세요!`,
+};
+
+export { TOAST_TPYES, TOAST_ICONS, TOAST_POSITION, TOAST_TIME, TOAST_MESSAGE };

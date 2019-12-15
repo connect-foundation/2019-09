@@ -1,11 +1,13 @@
 import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
+import { DispatchContext, GlobalContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
 import { WAITING_FOR_STREAMER } from '../config';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';
 import { INACTIVE_PLAYER_BAN_TIME } from '../constants/timer';
+import { useToast } from '../hooks';
+import { TOAST_TPYES, TOAST_MESSAGE } from '../constants/toast';
 
 class GameManager {
   constructor(socket, localPlayer, remotePlayers) {
@@ -14,6 +16,8 @@ class GameManager {
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
+    const { toast } = useContext(GlobalContext);
+    this.toast = toast;
   }
 
   findMatch(nickname) {
@@ -143,15 +147,35 @@ class GameManager {
     this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
   }
 
+  inactivePlayerBanHandler() {
+    this.exitRoom();
+    useToast({
+      dispatch: this.dispatch,
+      toastType: TOAST_TPYES.INFORMATION,
+      open: this.toast.open,
+      message: TOAST_MESSAGE.INACTIVE_PLAYER_BAN,
+    });
+  }
+
+  inactivePlayerWarningHandler(time) {
+    if (this.localPlayer.isReady) {
+      this.timer.clear();
+    }
+    if (time === INACTIVE_PLAYER_BAN_TIME / 2) {
+      useToast({
+        dispatch: this.dispatch,
+        toastType: TOAST_TPYES.WARNING,
+        open: this.toast.open,
+        message: TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
+      });
+    }
+  }
+
   setInactivePlayerBanTimer() {
     this.timer.startIntegrationTimer(
       INACTIVE_PLAYER_BAN_TIME,
-      this.exitRoom.bind(this),
-      () => {
-        if (this.localPlayer.isReady) {
-          this.timer.clear();
-        }
-      },
+      this.inactivePlayerBanHandler.bind(this),
+      this.inactivePlayerWarningHandler.bind(this),
     );
   }
 
