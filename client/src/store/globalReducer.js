@@ -111,7 +111,9 @@ const reducer = (state, action) => {
         toast: {
           open: action.payload.toast.open,
           message: action.payload.toast.message,
-          toastType: action.payload.toast.toastType,
+          toastType: action.payload.toast.toastType
+            ? action.payload.toast.toastType
+            : state.toast.toastType,
         },
       };
     default:
