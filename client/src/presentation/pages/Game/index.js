@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ClientManager from '../../../service/ClientManager';
-import { browserLocalStorage } from '../../../utils';
 import { MOBILE_VIEW_BREAKPOINT } from '../../../config';
 import { GlobalContext } from '../../../contexts';
 import GamePresentation from './presenter';
@@ -9,7 +9,7 @@ import useStyles from './style';
 
 let clientManager;
 
-const Game = () => {
+const Game = ({ location, match }) => {
   const {
     gameStatus,
     viewPlayerList,
@@ -19,17 +19,21 @@ const Game = () => {
     clientManagerInitialized,
   } = useContext(GlobalContext);
 
+  const { isPrivateRoomCreation } = location;
+  const insertedRoomId = match.params.roomId;
+
   const exitButtonHandler = () => {
     clientManager.exitRoom();
   };
 
   const history = useHistory();
-  if (!browserLocalStorage.getNickname()) {
-    history.push('/');
-  }
 
   if (!clientManagerInitialized) {
-    clientManager = new ClientManager(history);
+    clientManager = new ClientManager({
+      history,
+      insertedRoomId,
+      isPrivateRoomCreation,
+    });
     clientManager
       .getMediaPermission()
       .then(() => {
@@ -61,9 +65,9 @@ const Game = () => {
       : [classes.playerPanelContainer, classes.mobileViewHide];
   })();
 
-  const readyButtonContainerClasses = (() => {
+  const bottomLeftButtonContainerClasses = (() => {
     return gameStatus === 'waiting'
-      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
+      ? [classes.mobileBottomLeftButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
   })();
 
@@ -113,7 +117,7 @@ const Game = () => {
     clientManager,
     showPlayersButtonHandler,
     playerPanelContainerClasses,
-    readyButtonContainerClasses,
+    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
@@ -124,6 +128,9 @@ const Game = () => {
   return <GamePresentation gameProps={gameProps} />;
 };
 
-Game.propTypes = {};
+Game.propTypes = {
+  location: PropTypes.shape.isRequired,
+  match: PropTypes.shape.isRequired,
+};
 
 export default Game;

@@ -8,16 +8,21 @@ import Timer from './Timer';
 import { INACTIVE_PLAYER_BAN_TIME } from '../constants/timer';
 
 class GameManager {
-  constructor(socket, localPlayer, remotePlayers) {
+  constructor({ socket, localPlayer, remotePlayers, insertedRoomId }) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
+    this.insertedRoomId = insertedRoomId;
   }
 
-  findMatch(nickname) {
-    this.socket.emit(EVENTS.MATCH, { nickname });
+  findMatch({ nickname, insertedRoomId, isPrivateRoomCreation }) {
+    this.socket.emit(EVENTS.MATCH, {
+      nickname,
+      insertedRoomId,
+      isPrivateRoomCreation,
+    });
     this.makeAndDispatchViewPlayerList();
   }
 
