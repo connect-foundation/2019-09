@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { makeStyles } from '@material-ui/core/styles';
-import { amber, green } from '@material-ui/core/colors';
+import { amber, green, deepPurple, red } from '@material-ui/core/colors';
 import ToastContent from './ToastContent';
 import {
   TOAST_TPYES,
@@ -12,15 +12,15 @@ import {
   TOAST_TIME,
 } from '../../constants/toast';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   success: {
     backgroundColor: green[600],
   },
   error: {
-    backgroundColor: theme.palette.error.dark,
+    backgroundColor: red[600],
   },
   info: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: deepPurple[600],
   },
   warning: {
     backgroundColor: amber[700],
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   test: {
     width: '10rem',
   },
-}));
+});
 
 /**
  * Toast 컴포넌트의 타입이 아닌 값이 들어왔을때, 기본값으로 SUCCESS타입을 반환

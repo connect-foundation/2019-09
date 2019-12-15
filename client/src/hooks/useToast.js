@@ -6,14 +6,14 @@ import actions from '../actions';
  * dispatch: global dispatch
  * @param {*} param0
  */
-const useToast = ({ toasType, message, open, dispatch }) => {
+const useToast = ({ toastType, message, open, dispatch }) => {
   if (open) {
     dispatch(actions.closeToast());
     setTimeout(() => {
-      dispatch(actions.openToast(toasType, message));
+      dispatch(actions.openToast(toastType, message));
     }, 100);
   } else {
-    dispatch(actions.openToast(toasType, message));
+    dispatch(actions.openToast(toastType, message));
   }
 };
 
