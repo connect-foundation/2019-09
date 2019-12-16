@@ -26,13 +26,12 @@ const Game = () => {
     quizLength,
     clientManagerInitialized,
   } = useContext(GlobalContext);
-  
-  const classes = useStyles();
+
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const initialIsMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
-  
+
   const [
     mobileChattingPanelVisibility,
     setMobileChattingPanelVisibility,
@@ -40,6 +39,10 @@ const Game = () => {
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(
     !initialIsMobile,
   );
+  const [gamePageRootHeight, setGamePageRootHeight] = useState(
+    window.innerHeight,
+  );
+  const classes = useStyles(gamePageRootHeight);
 
   if (!browserLocalStorage.getNickname()) {
     history.push('/');
@@ -60,7 +63,7 @@ const Game = () => {
       });
     clientManager.setClientManagerInitialized(true);
   }
-  
+
   const exitButtonHandler = () => {
     clientManager.exitRoom();
   };
@@ -81,6 +84,7 @@ const Game = () => {
 
   useEffect(() => {
     setMobileChattingPanelVisibility(currentIsMobile);
+    setGamePageRootHeight(window.innerHeight);
   }, [currentIsMobile]);
 
   useEffect(() => {
@@ -92,7 +96,7 @@ const Game = () => {
       setIsPlayerListVisible(true);
     }
   }, [shiftingToWhichView]);
-  
+
   const readyButtonContainerClasses = (() => {
     return gameStatus === WAITING_STATUS
       ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
@@ -104,7 +108,7 @@ const Game = () => {
       ? classes.playerPanelContainer
       : [classes.playerPanelContainer, classes.mobileViewHide];
   })();
-  
+
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const gameProps = {
