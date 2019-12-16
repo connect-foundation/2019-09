@@ -7,6 +7,7 @@ import { GlobalContext, DispatchContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
 import actions from '../../../actions';
+import { useToast } from '../../../hooks';
 
 let clientManager;
 
@@ -21,13 +22,10 @@ const Game = () => {
     toast,
   } = useContext(GlobalContext);
   const dispatch = useContext(DispatchContext);
+  const { closeToast } = useToast({ open: toast.open, dispatch, actions });
 
   const exitButtonHandler = () => {
     clientManager.exitRoom();
-  };
-
-  const toastCloseHandler = () => {
-    dispatch(actions.closeToast());
   };
 
   const history = useHistory();
@@ -127,7 +125,7 @@ const Game = () => {
     readyButtonHandler,
     mobileChattingPanelVisibility,
     toast,
-    toastCloseHandler,
+    closeToast,
   };
 
   return <GamePresentation gameProps={gameProps} />;

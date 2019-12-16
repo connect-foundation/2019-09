@@ -20,6 +20,15 @@ class GameManager {
     this.toast = toast;
   }
 
+  openToast(toastType, message) {
+    const { openToast } = useToast({
+      open: this.toast.open,
+      dispatch: this.dispatch,
+      actions,
+    });
+    openToast(toastType, message);
+  }
+
   findMatch(nickname) {
     this.socket.emit(EVENTS.MATCH, { nickname });
     this.makeAndDispatchViewPlayerList();
@@ -149,12 +158,7 @@ class GameManager {
 
   inactivePlayerBanHandler() {
     this.exitRoom();
-    useToast({
-      dispatch: this.dispatch,
-      toastType: TOAST_TPYES.INFORMATION,
-      open: this.toast.open,
-      message: TOAST_MESSAGE.INACTIVE_PLAYER_BAN,
-    });
+    this.openToast(TOAST_TPYES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
   }
 
   inactivePlayerWarningHandler(time) {
@@ -162,12 +166,10 @@ class GameManager {
       this.timer.clear();
     }
     if (time === INACTIVE_PLAYER_BAN_TIME / 2) {
-      useToast({
-        dispatch: this.dispatch,
-        toastType: TOAST_TPYES.WARNING,
-        open: this.toast.open,
-        message: TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
-      });
+      this.openToast(
+        TOAST_TPYES.WARNING,
+        TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
+      );
     }
   }
 

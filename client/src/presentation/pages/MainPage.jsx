@@ -8,6 +8,7 @@ import browserLocalStorage from '../../utils/browserLocalStorage';
 import Toast from '../components/Toast';
 import { GlobalContext, DispatchContext } from '../../contexts';
 import actions from '../../actions';
+import { useToast } from '../../hooks';
 
 const useStyle = makeStyles(theme => ({
   mainPage: {
@@ -34,10 +35,11 @@ const MainPage = () => {
 
   const dispatch = useContext(DispatchContext);
   const { toast } = useContext(GlobalContext);
-
-  const toastCloseHandler = () => {
-    dispatch(actions.closeToast());
-  };
+  const { closeToast } = useToast({
+    open: toast.open,
+    dispatch,
+    actions,
+  });
 
   useEffect(() => {
     browserLocalStorage.verifyNicknameInLocalStorage();
@@ -56,7 +58,9 @@ const MainPage = () => {
           open={toast.open}
           toastType={toast.toastType}
           message={toast.message}
-          closeHandler={toastCloseHandler}
+          closeHandler={() => {
+            closeToast();
+          }}
         />
         <MainTitle />
         <Menu />

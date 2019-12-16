@@ -34,7 +34,7 @@ const GamePresentation = ({ gameProps }) => {
     readyButtonHandler,
     mobileChattingPanelVisibility,
     toast,
-    toastCloseHandler,
+    closeToast,
   } = gameProps;
 
   return (
@@ -49,7 +49,7 @@ const GamePresentation = ({ gameProps }) => {
         open={toast.open}
         toastType={toast.toastType}
         message={toast.message}
-        closeHandler={toastCloseHandler}
+        closeHandler={closeToast}
       />
       <Grid container spacing={0} className={classes.gameHeader}>
         <Grid item xs>
