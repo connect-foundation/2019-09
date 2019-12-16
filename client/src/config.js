@@ -22,10 +22,17 @@ const MOBILE_PANEL_HEIGHT = '50%';
 
 const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
 
-
 const SOCKETIO_SERVER_URL =
   process.env.NODE_ENV === 'development' ? 'localhost:3001' : '';
 const GAME_END_SCOREBOARD_TITLE = '최종 점수';
+
+const WAITING_STATUS = 'waiting';
+
+const MOBILE_VIEW = 'mobile';
+
+const DESKTOP_VIEW = 'desktop';
+
+const ALLOW_CAMERA_MESSAGE = '카메라를 허용해주세요';
 
 export {
   MainIntroductionDescription,
@@ -41,4 +48,8 @@ export {
   LOCALSTORAGE_NICKNAME_KEY,
   SOCKETIO_SERVER_URL,
   GAME_END_SCOREBOARD_TITLE,
+  WAITING_STATUS,
+  MOBILE_VIEW,
+  DESKTOP_VIEW,
+  ALLOW_CAMERA_MESSAGE,
 };

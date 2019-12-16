@@ -27,6 +27,9 @@ const EVENTS = {
   // ChattingManager
   SEND_CHATTING_MESSAGE: 'sendChattingMessage',
   START_CHATTING: 'startChatting',
+  // DOM events
+  RESIZE: 'resize',
+  // 밑의 이벤트 맞는 곳으로 이동 필요
   RESET_GAME: 'resetGame',
   CLEAR_WINDOW: 'clearWindow',
 };
