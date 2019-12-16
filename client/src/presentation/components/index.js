@@ -21,4 +21,5 @@ export {
   ReadyButton,
   ExitButton,
   CandidateButton,
+  ShareUrlButton,
 } from './Buttons';

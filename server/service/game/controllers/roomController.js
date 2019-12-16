@@ -14,7 +14,7 @@ const getRoomByRoomId = roomId => {
  * 새로운 room일 경우 GameManager생성 및 room.gameManager에 할당
  * @param {object} param0
  */
-const joinRoom = ({ socket, roomId, player }) => {
+const joinRoom = ({ socket, roomId, player, isRoomPrivate }) => {
   socket.join(roomId);
   socket.roomId = roomId;
   const room = getRoomByRoomId(roomId);
@@ -24,6 +24,7 @@ const joinRoom = ({ socket, roomId, player }) => {
     room.timer = new Timer(roomId);
   }
   room.gameManager.addPlayer(player);
+  room.gameManager.setIsRoomPrivate(isRoomPrivate);
 };
 
 const generateRoomId = () => {
@@ -34,43 +35,62 @@ const generateRoomId = () => {
   return roomId;
 };
 
-const isRoomJoinable = gameManager => {
+const isRoomJoinable = (gameManager, urlRoomId) => {
   if (!gameManager) return false;
 
   const players = gameManager.getPlayers();
   if (players.length === 0) return false;
 
+  let isRoomAccessible = true;
+  if (gameManager.getIsRoomPrivate()) {
+    isRoomAccessible = gameManager.getRoomId() === urlRoomId;
+  }
+
   const isRoomFull = players.length >= MAX_PLAYER_COUNT;
   const isRoomWaiting = gameManager.getStatus() === 'waiting';
-  return !isRoomFull && isRoomWaiting;
+  return !isRoomFull && isRoomWaiting && isRoomAccessible;
 };
 
 /**
- * join할 방의 정보를 반환해주는 함수
- * @return {object} { roomId, isExistingRoom }
+ * join할 공개방의 정보를 반환해주는 함수
+ * @return {string} roomId
  */
-const getRoomInformantionToJoin = () => {
-  const roomInformation = {
-    isExistingRoom: false,
-    roomId: '',
-  };
+const getPublicRoomInformantionToJoin = () => {
   const roomIds = Object.keys(rooms);
-  /**
-   * @todo starvation 방지 로직 필요!
-   */
+
   const joinableRoomId = roomIds.find(roomId => {
     const room = getRoomByRoomId(roomId);
     return isRoomJoinable(room.gameManager);
   });
+  return joinableRoomId || generateRoomId();
+};
 
-  roomInformation.isExistingRoom = !!joinableRoomId;
-  roomInformation.roomId = joinableRoomId || generateRoomId();
-  return roomInformation;
+/**
+ * join할 비공개방의 정보를 반환해주는 함수
+ * @return {string} roomId
+ */
+const getPrivateRoomInformationToJoin = (
+  roomIdFromUrl,
+  isPrivateRoomCreation,
+) => {
+  if (isPrivateRoomCreation) {
+    return generateRoomId();
+  }
+
+  const room = getRoomByRoomId(roomIdFromUrl);
+  if (room) {
+    if (isRoomJoinable(room.gameManager, roomIdFromUrl)) {
+      return roomIdFromUrl;
+    }
+  }
+
+  return null;
 };
 
 module.exports = {
   joinRoom,
   generateRoomId,
   getRoomByRoomId,
-  getRoomInformantionToJoin,
+  getPublicRoomInformantionToJoin,
+  getPrivateRoomInformationToJoin,
 };

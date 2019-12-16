@@ -1,8 +1,13 @@
-const { MAX_ROUND_NUMBER, MIN_PLAYER_COUNT } = require('../../../config');
+const {
+  MAX_ROUND_NUMBER,
+  MIN_PLAYER_COUNT,
+  GAME_INITIAL_PREPARING,
+} = require('../../../config');
 
 class GameManager {
   constructor(roomId) {
     this.roomId = roomId;
+    this.isRoomPrivate = false;
     this.status = 'waiting';
     this.quiz = '';
     this.quizCandidates = [];
@@ -72,6 +77,14 @@ class GameManager {
     return otherPlayers;
   }
 
+  getIsRoomPrivate() {
+    return this.isRoomPrivate;
+  }
+
+  setIsRoomPrivate(isRoomPrivate) {
+    this.isRoomPrivate = isRoomPrivate;
+  }
+
   /**
    * 게임이 재시작되더라도 방에 유저는 남아있을 수 있기 때문에
    * players는 초기화하지 않는다.
@@ -88,7 +101,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = 'initializing';
+    this.status = GAME_INITIAL_PREPARING;
   }
 
   updateRoundAndSet() {
@@ -157,7 +170,8 @@ class GameManager {
   }
 
   getPlayersUnconnectedToStreamer() {
-    return this.players.filter(player => !player.getIsConnectedToStreamer());
+    const viewers = this.getOtherPlayers(this.getStreamer().getSocketId());
+    return viewers.filter(viewer => !viewer.getIsConnectedToStreamer());
   }
 
   checkAllConnectionsToStreamer() {

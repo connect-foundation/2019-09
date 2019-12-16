@@ -10,7 +10,7 @@ import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
 
 class ClientManager {
-  constructor(history) {
+  constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
     this.history = history;
     this.localPlayer = {
       isReady: false,
@@ -19,24 +19,29 @@ class ClientManager {
       socketId: '',
       score: 0,
     };
+    this.roomIdFromUrl = roomIdFromUrl;
+    this.isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
+    this.isPrivateRoomCreation = isPrivateRoomCreation;
     this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
-    this.gameManager = new GameManager(
-      this.socket,
-      this.localPlayer,
-      this.remotePlayers,
-    );
+    this.gameManager = new GameManager({
+      socket: this.socket,
+      localPlayer: this.localPlayer,
+      remotePlayers: this.remotePlayers,
+      isRoomPrivate: this.isRoomPrivate,
+    });
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
       this.localPlayer,
     );
-    this.chattingManager = new ChattingManager(this.socket);
+    this.chattingManager = new ChattingManager(this.socket, this.isRoomPrivate);
     this.dispatch = useContext(DispatchContext);
   }
 
   registerSocketEvents() {
     this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
+    this.socket.on(EVENTS.SEND_ROOMID, this.sendRoomIdHandler.bind(this));
     this.socket.on(
       EVENTS.SEND_LEFT_PLAYER,
       this.sendLeftPlayerHandler.bind(this),
@@ -71,13 +76,27 @@ class ClientManager {
     this.localPlayer.socketId = socketId;
   }
 
+  sendRoomIdHandler({ roomId }) {
+    this.localPlayer.roomId = roomId;
+    if (this.isRoomPrivate) {
+      this.history.push({
+        pathname: `/game/${roomId}`,
+        isPrivateRoomCreation: this.isPrivateRoomCreation,
+      });
+    }
+  }
+
   askSocketId() {
     this.socket.emit(EVENTS.ASK_SOCKET_ID);
   }
 
   findMatch(nickname) {
     this.localPlayer.nickname = nickname;
-    this.gameManager.findMatch(nickname);
+    this.gameManager.findMatch({
+      nickname,
+      roomIdFromUrl: this.roomIdFromUrl,
+      isPrivateRoomCreation: this.isPrivateRoomCreation,
+    });
   }
 
   toggleReady() {
@@ -90,7 +109,7 @@ class ClientManager {
     this.streamingManager.registerSocketEvents();
     this.askSocketId();
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
-    this.findMatch(browserLocalStorage.getNickname());
+    this.findMatch(browserLocalStorage.getNickname() || 'Anonymous');
     this.chattingManager.registerSocketEvents();
     this.gameManager.setInactivePlayerBanTimer();
   }
@@ -142,37 +161,8 @@ class ClientManager {
     this.gameManager.selectQuiz(quiz);
   }
 
-  /**
-   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
-   * remotePlayers 형태를 array 변경과 함께.
-   */
-  syncLocalPlayer(players) {
-    const localPlayer = players.find(player => {
-      return player.socketId === this.localPlayer.socketId;
-    });
-    Object.keys(localPlayer).forEach(key => {
-      this.localPlayer[key] = localPlayer[key];
-    });
-  }
-
-  syncRemotePlayers(players) {
-    const remotePlayers = [];
-    players.forEach(player => {
-      if (player.socketId !== this.localPlayer.socketId) {
-        remotePlayers.push(player);
-      }
-    });
-    remotePlayers.forEach(player => {
-      const { socketId } = player;
-      Object.keys(player).forEach(key => {
-        this.remotePlayers[socketId][key] = player[key];
-      });
-    });
-  }
-
   resetGameHandler({ players }) {
-    this.syncLocalPlayer(players);
-    this.syncRemotePlayers(players);
+    this.gameManager.syncAllPlayers(players);
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
     this.dispatch(actions.clearWindow());
@@ -191,6 +181,10 @@ class ClientManager {
     this.dispatch(
       actions.setClientManagerInitialized(clientManagerInitialized),
     );
+  }
+
+  getIsRoomPrivate() {
+    return this.isRoomPrivate;
   }
 }
 

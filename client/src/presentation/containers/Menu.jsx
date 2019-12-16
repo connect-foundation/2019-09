@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
 import { NICKNAME_LENGTH } from '../../config';
+import { PLAY_WITH_FRIENDS_BUTTON_TEXT } from '../../constants/button';
 
 import {
   browserLocalStorage,
@@ -98,6 +99,18 @@ const Menu = () => {
         onClick={playButtonClickHandler}
       >
         <MenuButton fontSize={menuButtonFontSize}>PLAY</MenuButton>
+      </Link>
+      <Link
+        to={{
+          pathname: '/game',
+          isPrivateRoomCreation: true,
+        }}
+        className={classes.fullAnchor}
+        onClick={playButtonClickHandler}
+      >
+        <MenuButton fontSize={menuButtonFontSize}>
+          {PLAY_WITH_FRIENDS_BUTTON_TEXT}
+        </MenuButton>
       </Link>
       <Link to="/ranking" className={classes.fullAnchor}>
         <MenuButton fontSize={menuButtonFontSize}>RANK</MenuButton>

@@ -6,6 +6,7 @@ import { TopRankPanel, BottomRankPanel } from '../../containers';
 import { ExitButton } from '../../components';
 import useStyle from './style';
 import { getRankings, getRankingInformation } from '../../../api';
+import exitImageSource from '../../../assets/exit-black.png';
 
 const getTopRankingList = totalRankingList => {
   return totalRankingList.slice(0, 3);
@@ -84,7 +85,7 @@ const Ranking = () => {
     <Box className={classes.mainPageWrapper}>
       <Box className={classes.exitButtonWrapper}>
         <Link to="/">
-          <ExitButton />
+          <ExitButton imageSource={exitImageSource} />
         </Link>
       </Box>
       <TopRankPanel rankingList={topRankingList} />

@@ -3,7 +3,9 @@ const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
 const {
   SECONDS_AFTER_GAME_END,
-  SECONDS_BETWEEN_SETS,
+  GAME_PLAYING,
+  GAME_INITIALIZING,
+  GAME_INITIAL_PREPARING,
   MIN_PLAYER_COUNT,
 } = require('../../../config');
 
@@ -32,7 +34,11 @@ const disconnectingHandler = socket => {
       return;
     }
 
-    if (roomStatus === 'initializing' || roomStatus === 'playing') {
+    if (
+      roomStatus === GAME_INITIALIZING ||
+      roomStatus === GAME_PLAYING ||
+      roomStatus === GAME_INITIAL_PREPARING
+    ) {
       if (!gameManager.isGameContinuable()) {
         gameController.endGame(gameManager, timer);
         gameController.resetGameAfterNSeconds({

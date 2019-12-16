@@ -3,13 +3,16 @@ import { STYLE_COLORS } from '../../../utils';
 import { MOBILE_PANEL_HEIGHT } from '../../../config';
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  root: props => ({
     flexGrow: 1,
     margin: 0,
     width: '100%',
     height: '100%',
+    [theme.breakpoints.down('xs')]: {
+      height: `${props.gamePageRootHeight / 10}rem`,
+    },
     overflow: 'auto',
-  },
+  }),
   timerBox: {
     padding: '1rem 2rem',
     textAlign: 'left',
@@ -23,9 +26,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: STYLE_COLORS.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
     height: '10%',
-    [theme.breakpoints.down('xs')]: {
-      height: 'auto',
-    },
   },
   videoBox: {
     padding: theme.spacing(2),
@@ -71,6 +71,9 @@ const useStyles = makeStyles(theme => ({
   },
   bottomGridContent: {
     padding: '1rem',
+    [theme.breakpoints.down('xs')]: {
+      padding: '0',
+    },
   },
   mobileFullWidth: {
     [theme.breakpoints.down('xs')]: {
@@ -82,9 +85,8 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
+      height: '10%',
       maxWidth: 'none',
-      position: 'fixed',
-      height: 'auto',
       bottom: '0',
     },
   },
@@ -102,7 +104,7 @@ const useStyles = makeStyles(theme => ({
     right: '0',
     overflow: 'auto',
   },
-  mobileReadyButtonContainer: {
+  mobileBottomLeftButtonContainer: {
     width: '8rem',
     position: 'absolute',
     bottom: '2rem',
@@ -116,6 +118,9 @@ const useStyles = makeStyles(theme => ({
       position: 'relative',
       height: MOBILE_PANEL_HEIGHT,
     },
+  },
+  shareUrlButton: {
+    marginBottom: '1rem',
   },
 }));
 

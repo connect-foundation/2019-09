@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const service = require('./service');
 const api = require('./routes/api');
@@ -16,10 +15,13 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, '../client/build')));
-app.get((req, res) => {
-  res.send('index');
-});
+
 app.use('/api', api);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
 app.use((req, res) => {
   res.redirect('/');
 });

@@ -14,31 +14,30 @@ const useStyle = makeStyles(theme => ({
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.5)',
     borderRadius: '0.3rem',
     [theme.breakpoints.down('xs')]: {
-      height: 'auto',
+      borderRadius: '0',
     },
   },
   chattingWindow: {
     height: '90%',
     overflow: 'auto',
     wordWrap: 'break-word',
-    [theme.breakpoints.down('xs')]: {
-      display: 'none',
-    },
   },
 }));
 
-const ChattingPanel = ({ clientManager }) => {
+const ChattingPanel = ({ clientManager, mobileChattingPanelVisibility }) => {
   const classes = useStyle();
   const { chattingList, chattingDisabled } = useContext(GlobalContext);
 
   return (
     <Box className={classes.chattingPanel}>
-      <Box className={classes.chattingWindow}>
-        <ChattingWindow chattingList={chattingList} />
-      </Box>
+      {!mobileChattingPanelVisibility && (
+        <Box className={classes.chattingWindow}>
+          <ChattingWindow chattingList={chattingList} />
+        </Box>
+      )}
       <InputWindow
         clientManager={clientManager}
-        isChattingDisabled={chattingDisabled}
+        chattingDisabled={chattingDisabled}
       />
     </Box>
   );
@@ -46,6 +45,7 @@ const ChattingPanel = ({ clientManager }) => {
 
 ChattingPanel.propTypes = {
   clientManager: PropTypes.shape.isRequired,
+  mobileChattingPanelVisibility: PropTypes.bool.isRequired,
 };
 
 export default ChattingPanel;

@@ -18,7 +18,8 @@ const App = () => {
         <DispatchContext.Provider value={dispatch}>
           <Router>
             <Route exact path="/" component={MainPage} />
-            <Route path="/game" component={Game} />
+            <Route exact path="/game" component={Game} />
+            <Route path="/game/:roomId" component={Game} />
             <Route path="/ranking" component={Ranking} />
           </Router>
         </DispatchContext.Provider>

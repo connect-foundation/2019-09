@@ -4,13 +4,17 @@ import { DispatchContext } from '../contexts';
 import { MAX_CHAT_LENGTH } from '../config';
 import EVENTS from '../constants/events';
 import WELCOME_MESSAGE from '../constants/chatting';
-import { INACTIVE_PLAYER_BAN_TIME } from '../constants/timer';
+import {
+  DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+  PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
+} from '../constants/timer';
 
 class ChattingManager {
-  constructor(socket) {
+  constructor(socket, isRoomPrivate) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.isAvailableChatting = false;
+    this.isRoomPrivate = isRoomPrivate;
   }
 
   sliceChattingMessage(chat) {
@@ -49,7 +53,11 @@ class ChattingManager {
     this.dispatch({
       type: 'addChatting',
       payload: {
-        newChatting: WELCOME_MESSAGE(INACTIVE_PLAYER_BAN_TIME),
+        newChatting: WELCOME_MESSAGE(
+          this.isRoomPrivate,
+          PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
+          DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+        ),
       },
     });
   }

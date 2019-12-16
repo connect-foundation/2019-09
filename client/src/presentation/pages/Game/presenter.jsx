@@ -11,6 +11,7 @@ import {
   ExitButton,
   ReadyButton,
   Toast,
+  ShareUrlButton,
 } from '../../components';
 import {
   StreamingPanel,
@@ -18,6 +19,8 @@ import {
   PlayerPanel,
   MobileChattingPanel,
 } from '../../containers';
+import { shareUrlButtonClickHandler } from '../../../utils';
+import exitImageSource from '../../../assets/exit.png';
 
 const GamePresentation = ({ gameProps }) => {
   const {
@@ -27,7 +30,7 @@ const GamePresentation = ({ gameProps }) => {
     clientManager,
     showPlayersButtonHandler,
     playerPanelContainerClasses,
-    readyButtonContainerClasses,
+    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
@@ -65,7 +68,7 @@ const GamePresentation = ({ gameProps }) => {
         <Grid item xs className={classes.topRightGrid}>
           <Box className={classes.exitButtonContainer}>
             <Link to="/" onClick={exitButtonHandler}>
-              <ExitButton />
+              <ExitButton imageSource={exitImageSource} />
             </Link>
           </Box>
         </Grid>
@@ -104,7 +107,14 @@ const GamePresentation = ({ gameProps }) => {
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          <Box className={readyButtonContainerClasses}>
+          <Box className={bottomLeftButtonContainerClasses}>
+            {clientManager.getIsRoomPrivate() && (
+              <ShareUrlButton
+                onClick={shareUrlButtonClickHandler}
+                classNames={[classes.shareUrlButton]}
+              />
+            )}
+
             <ReadyButton onClick={readyButtonHandler}>
               {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
             </ReadyButton>
@@ -127,7 +137,10 @@ const GamePresentation = ({ gameProps }) => {
               xs={3}
               className={[classes.bottomGridContent, classes.chattingContainer]}
             >
-              <ChattingPanel clientManager={clientManager} />
+              <ChattingPanel
+                clientManager={clientManager}
+                mobileChattingPanelVisibility={mobileChattingPanelVisibility}
+              />
             </Grid>
           </>
         ) : (

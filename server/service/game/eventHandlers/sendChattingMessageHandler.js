@@ -24,24 +24,30 @@ const sendChattingMessageHandler = (socket, { message }) => {
   const player = gameManager.getPlayerBySocketId(socket.id);
   const playerNickname = player.getNickname();
 
-  if (isCorrectAnswer(gameManager, message, socket.id)) {
+  if (player.getIsCorrectPlayer()) return;
+
+  if (
+    isCorrectAnswer(gameManager, message, socket.id) &&
+    gameManager.getStatus() === 'playing'
+  ) {
     io.in(socket.roomId).emit('sendChattingMessage', {
       nickname: '안내',
       message: `${playerNickname}님이 정답을 맞췄습니다!`,
-      nicknameColor: '#000000',
       id: short.generate(),
     });
+
     const score = player.getScore() + timer.getRemainingTime() + 50;
     player.setScore(score);
     player.setIsCorrectPlayer(true);
     io.to(socket.id).emit('correctAnswer');
-    io.in(socket.roomId).emit('updateProfileScore', { player });
+    io.in(socket.roomId).emit('updateProfile', { player });
 
     if (gameManager.checkAllPlayersAreCorrect()) {
       gameController.repeatSet(gameManager, timer);
     }
     return;
   }
+
   const processedChat = processChatWithSystemRule(message);
   if (processedChat) {
     io.in(socket.roomId).emit('sendChattingMessage', {
