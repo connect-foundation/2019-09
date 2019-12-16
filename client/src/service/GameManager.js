@@ -15,7 +15,7 @@ class GameManager {
     socket,
     localPlayer,
     remotePlayers,
-    insertedRoomId,
+    roomIdFromUrl,
     isRoomPrivate,
   }) {
     this.dispatch = useContext(DispatchContext);
@@ -23,14 +23,14 @@ class GameManager {
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
-    this.insertedRoomId = insertedRoomId;
+    this.roomIdFromUrl = roomIdFromUrl;
     this.isRoomPrivate = isRoomPrivate;
   }
 
-  findMatch({ nickname, insertedRoomId, isPrivateRoomCreation }) {
+  findMatch({ nickname, roomIdFromUrl, isPrivateRoomCreation }) {
     this.socket.emit(EVENTS.MATCH, {
       nickname,
-      insertedRoomId,
+      roomIdFromUrl,
       isPrivateRoomCreation,
     });
     this.makeAndDispatchViewPlayerList();

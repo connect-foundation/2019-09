@@ -41,12 +41,12 @@ const Game = ({ location, match }) => {
   );
 
   const { isPrivateRoomCreation } = location;
-  const insertedRoomId = match.params.roomId;
+  const roomIdFromUrl = match.params.roomId;
 
   if (!clientManagerInitialized) {
     clientManager = new ClientManager({
       history,
-      insertedRoomId,
+      roomIdFromUrl,
       isPrivateRoomCreation,
     });
     clientManager

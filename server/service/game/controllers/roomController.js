@@ -70,17 +70,17 @@ const getPublicRoomInformantionToJoin = () => {
  * @return {string} roomId
  */
 const getPrivateRoomInformationToJoin = (
-  insertedRoomId,
+  roomIdFromUrl,
   isPrivateRoomCreation,
 ) => {
   if (isPrivateRoomCreation) {
     return generateRoomId();
   }
 
-  const room = getRoomByRoomId(insertedRoomId);
+  const room = getRoomByRoomId(roomIdFromUrl);
   if (room) {
-    if (isRoomJoinable(room.gameManager, insertedRoomId)) {
-      return insertedRoomId;
+    if (isRoomJoinable(room.gameManager, roomIdFromUrl)) {
+      return roomIdFromUrl;
     }
   }
 

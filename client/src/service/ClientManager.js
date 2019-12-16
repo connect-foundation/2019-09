@@ -10,7 +10,7 @@ import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
 
 class ClientManager {
-  constructor({ history, insertedRoomId, isPrivateRoomCreation }) {
+  constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
     this.history = history;
     this.localPlayer = {
       isReady: false,
@@ -19,8 +19,8 @@ class ClientManager {
       socketId: '',
       score: 0,
     };
-    this.insertedRoomId = insertedRoomId;
-    this.isRoomPrivate = !!insertedRoomId || isPrivateRoomCreation;
+    this.roomIdFromUrl = roomIdFromUrl;
+    this.isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
     this.isPrivateRoomCreation = isPrivateRoomCreation;
     this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
@@ -28,7 +28,7 @@ class ClientManager {
       socket: this.socket,
       localPlayer: this.localPlayer,
       remotePlayers: this.remotePlayers,
-      insertedRoomId: this.insertedRoomId,
+      roomIdFromUrl: this.roomIdFromUrl,
       isRoomPrivate: this.isRoomPrivate,
     });
     this.streamingManager = new StreamingManager(
@@ -95,7 +95,7 @@ class ClientManager {
     this.localPlayer.nickname = nickname;
     this.gameManager.findMatch({
       nickname,
-      insertedRoomId: this.insertedRoomId,
+      roomIdFromUrl: this.roomIdFromUrl,
       isPrivateRoomCreation: this.isPrivateRoomCreation,
     });
   }
