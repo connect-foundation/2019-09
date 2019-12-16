@@ -9,7 +9,16 @@ const RankPodiumBar = styled.div`
     if (props.rank === '2') return '50%';
     return '25%';
   }};
-  border: 2px solid ${STYLE_COLORS.THEME_COLOR};
+  border-top: 2px solid ${STYLE_COLORS.THEME_COLOR};
+  border-bottom: 2px solid ${STYLE_COLORS.THEME_COLOR};
+  border-left: ${props => {
+    if (props.rank === '3') return 'none';
+    return `2px solid ${STYLE_COLORS.THEME_COLOR}`;
+  }};
+  border-right: ${props => {
+    if (props.rank === '2') return 'none%';
+    return `2px solid ${STYLE_COLORS.THEME_COLOR}`;
+  }};
   display: flex;
   font-size: 5rem;
   flex-direction: column;

@@ -19,6 +19,7 @@ import {
   MobileChattingPanel,
 } from '../../containers';
 import { shareUrlButtonClickHandler } from '../../../utils';
+import exitImageSource from '../../../assets/exit.png';
 
 const GamePresentation = ({ gameProps }) => {
   const {
@@ -58,7 +59,7 @@ const GamePresentation = ({ gameProps }) => {
         <Grid item xs className={classes.topRightGrid}>
           <Box className={classes.exitButtonContainer}>
             <Link to="/" onClick={exitButtonHandler}>
-              <ExitButton />
+              <ExitButton imageSource={exitImageSource} />
             </Link>
           </Box>
         </Grid>
@@ -127,7 +128,10 @@ const GamePresentation = ({ gameProps }) => {
               xs={3}
               className={[classes.bottomGridContent, classes.chattingContainer]}
             >
-              <ChattingPanel clientManager={clientManager} />
+              <ChattingPanel
+                clientManager={clientManager}
+                mobileChattingPanelVisibility={mobileChattingPanelVisibility}
+              />
             </Grid>
           </>
         ) : (

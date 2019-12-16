@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     position: 'absolute',
-    bottom: '2rem',
+    bottom: '3rem',
     left: 0,
     right: 0,
   },

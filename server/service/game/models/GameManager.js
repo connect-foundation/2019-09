@@ -1,4 +1,8 @@
-const { MAX_ROUND_NUMBER, MIN_PLAYER_COUNT } = require('../../../config');
+const {
+  MAX_ROUND_NUMBER,
+  MIN_PLAYER_COUNT,
+  GAME_INITIAL_PREPARING,
+} = require('../../../config');
 
 class GameManager {
   constructor(roomId) {
@@ -97,7 +101,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = 'initializing';
+    this.status = GAME_INITIAL_PREPARING;
   }
 
   updateRoundAndSet() {
@@ -166,7 +170,8 @@ class GameManager {
   }
 
   getPlayersUnconnectedToStreamer() {
-    return this.players.filter(player => !player.getIsConnectedToStreamer());
+    const viewers = this.getOtherPlayers(this.getStreamer().getSocketId());
+    return viewers.filter(viewer => !viewer.getIsConnectedToStreamer());
   }
 
   checkAllConnectionsToStreamer() {

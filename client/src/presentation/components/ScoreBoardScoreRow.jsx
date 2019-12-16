@@ -28,15 +28,19 @@ const useStyle = makeStyles({
     marginBottom: '1rem',
   },
   nickname: {
+    width: 'auto',
     color: STYLE_COLORS.PURE_WHITE_COLOR,
     textAlign: 'center',
     flex: '1',
     marginRight: '1rem',
+    whiteSpace: 'nowrap',
   },
   score: {
+    width: 'auto',
     color: STYLE_COLORS.THEME_COLOR,
     textAlign: 'center',
     flex: '1',
+    whiteSpace: 'nowrap',
   },
 });
 

@@ -27,7 +27,6 @@ const Game = ({ location, match }) => {
     clientManagerInitialized,
   } = useContext(GlobalContext);
 
-  const classes = useStyles();
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
@@ -39,6 +38,10 @@ const Game = ({ location, match }) => {
   const [isPlayerListVisible, setIsPlayerListVisible] = useState(
     !initialIsMobile,
   );
+  const [gamePageRootHeight, setGamePageRootHeight] = useState(
+    window.innerHeight,
+  );
+  const classes = useStyles(gamePageRootHeight);
 
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
@@ -83,6 +86,7 @@ const Game = ({ location, match }) => {
 
   useEffect(() => {
     setMobileChattingPanelVisibility(currentIsMobile);
+    setGamePageRootHeight(window.innerHeight);
   }, [currentIsMobile]);
 
   useEffect(() => {
