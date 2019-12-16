@@ -37,7 +37,7 @@ const ChattingPanel = ({ clientManager, mobileChattingPanelVisibility }) => {
       )}
       <InputWindow
         clientManager={clientManager}
-        isChattingDisabled={chattingDisabled}
+        chattingDisabled={chattingDisabled}
       />
     </Box>
   );
