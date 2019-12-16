@@ -142,37 +142,8 @@ class ClientManager {
     this.gameManager.selectQuiz(quiz);
   }
 
-  /**
-   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
-   * remotePlayers 형태를 array 변경과 함께.
-   */
-  syncLocalPlayer(players) {
-    const localPlayer = players.find(player => {
-      return player.socketId === this.localPlayer.socketId;
-    });
-    Object.keys(localPlayer).forEach(key => {
-      this.localPlayer[key] = localPlayer[key];
-    });
-  }
-
-  syncRemotePlayers(players) {
-    const remotePlayers = [];
-    players.forEach(player => {
-      if (player.socketId !== this.localPlayer.socketId) {
-        remotePlayers.push(player);
-      }
-    });
-    remotePlayers.forEach(player => {
-      const { socketId } = player;
-      Object.keys(player).forEach(key => {
-        this.remotePlayers[socketId][key] = player[key];
-      });
-    });
-  }
-
   resetGameHandler({ players }) {
-    this.syncLocalPlayer(players);
-    this.syncRemotePlayers(players);
+    this.gameManager.syncAllPlayers(players);
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
     this.dispatch(actions.clearWindow());
