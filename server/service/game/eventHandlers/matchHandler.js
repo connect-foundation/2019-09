@@ -2,10 +2,11 @@ const Player = require('../models/Player');
 const roomController = require('../controllers/roomController');
 const { getRandomColor } = require('../../../utils/colorGenerator');
 const { NICKNAME_LENGTH } = require('../../../config');
+const EVENTS = require('../../../constants/events');
 
 const emitEventsAfterJoin = socket => {
   socket.emit('startChatting');
-  socket.emit('sendRoomId', { roomId: socket.roomId });
+  socket.emit(EVENTS.SEND_ROOMID, { roomId: socket.roomId });
 };
 
 const matchHandler = (

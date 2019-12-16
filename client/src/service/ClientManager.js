@@ -42,7 +42,7 @@ class ClientManager {
 
   registerSocketEvents() {
     this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
-    this.socket.on('sendRoomId', this.sendRoomIdHandler.bind(this));
+    this.socket.on(EVENTS.SEND_ROOMID, this.sendRoomIdHandler.bind(this));
     this.socket.on(
       EVENTS.SEND_LEFT_PLAYER,
       this.sendLeftPlayerHandler.bind(this),
