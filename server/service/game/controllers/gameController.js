@@ -53,6 +53,9 @@ const pickQuizCandidates = async () => {
 };
 
 const endSet = (gameManager, timer) => {
+  gameManager.getPlayers().forEach(player => {
+    player.setIsConnectedToStreamer(false);
+  });
   io.in(gameManager.getRoomId()).emit('endSet', {
     currentRound: gameManager.getCurrentRound(),
     currentSet: gameManager.getCurrentSet(),
@@ -119,13 +122,34 @@ const prepareSet = async (gameManager, timer) => {
 };
 
 const disconnectPlayersAndStartGame = (gameManager, timer) => {
+  /**
+   * 스트리머가 접속을 허용하지 않았을 경우, 스트리머만 내보내고,
+   * 아닐 경우, 연결되지 않은 사람들을 내보낸다.
+   */
+  const streamer = gameManager.getStreamer();
+  const playersExceptStreamer = gameManager.getOtherPlayers(
+    streamer.getSocketId(),
+  );
   const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
+
+  // 스트리머가 카메라 허용을 하지 않았을 경우
+  if (playersToDisconnect.length === playersExceptStreamer.length) {
+    const socket = io.sockets.connected[streamer.getSocketId()];
+    socket.disconnect();
+    return;
+  }
+  // 스트리머 이외의 사람 중 카메라 허용을 안하는 경우가 있을 경우
   playersToDisconnect.forEach(player => {
     const socket = io.sockets.connected[player.getSocketId()];
     socket.disconnect();
   });
-
-  prepareSet(gameManager, timer);
+  /**
+   * 이후에 게임을 진행할 수 있으면, disconnectingHandler쪽에서는 처리하지 않으므로
+   * 해당 로직에서 게임을 진행한다.
+   */
+  if (gameManager.isGameContinuable()) {
+    prepareSet(gameManager, timer);
+  }
 };
 
 const waitForPeerConnection = (gameManager, timer) => {
