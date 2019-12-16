@@ -17,11 +17,12 @@ app.use(
 
 app.use(express.static(path.join(__dirname, '../client/build')));
 
+app.use('/api', api);
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-app.use('/api', api);
 app.use((req, res) => {
   res.redirect('/');
 });
