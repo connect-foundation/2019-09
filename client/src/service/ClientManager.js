@@ -29,13 +29,14 @@ class ClientManager {
       localPlayer: this.localPlayer,
       remotePlayers: this.remotePlayers,
       insertedRoomId: this.insertedRoomId,
+      isRoomPrivate: this.isRoomPrivate,
     });
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
       this.localPlayer,
     );
-    this.chattingManager = new ChattingManager(this.socket);
+    this.chattingManager = new ChattingManager(this.socket, this.isRoomPrivate);
     this.dispatch = useContext(DispatchContext);
   }
 

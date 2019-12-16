@@ -5,16 +5,26 @@ import { WAITING_FOR_STREAMER } from '../config';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';
-import { INACTIVE_PLAYER_BAN_TIME } from '../constants/timer';
+import {
+  DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+  PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME,
+} from '../constants/timer';
 
 class GameManager {
-  constructor({ socket, localPlayer, remotePlayers, insertedRoomId }) {
+  constructor({
+    socket,
+    localPlayer,
+    remotePlayers,
+    insertedRoomId,
+    isRoomPrivate,
+  }) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
     this.insertedRoomId = insertedRoomId;
+    this.isRoomPrivate = isRoomPrivate;
   }
 
   findMatch({ nickname, insertedRoomId, isPrivateRoomCreation }) {
@@ -149,8 +159,11 @@ class GameManager {
   }
 
   setInactivePlayerBanTimer() {
+    const inactivePlayerBanTime = this.isRoomPrivate
+      ? PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME
+      : DEFAULT_INACTIVE_PLAYER_BAN_TIME;
     this.timer.startIntegrationTimer(
-      INACTIVE_PLAYER_BAN_TIME,
+      inactivePlayerBanTime,
       this.exitRoom.bind(this),
       () => {
         if (this.localPlayer.isReady) {
