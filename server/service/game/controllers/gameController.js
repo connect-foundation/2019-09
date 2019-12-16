@@ -137,19 +137,19 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
     const socket =
       io.sockets.connected[gameManager.getStreamer().getSocketId()];
     socket.disconnect();
-  } else {
-    // 스트리머 이외의 사람 중 카메라 허용을 안하는 경우가 있을 경우
-    playersToDisconnect.forEach(player => {
-      const socket = io.sockets.connected[player.getSocketId()];
-      socket.disconnect();
-    });
-    /**
-     * 이후에 게임을 진행할 수 있으면, disconnectingHandler쪽에서는 처리하지 않으므로
-     * 해당 로직에서 게임을 진행한다.
-     */
-    if (gameManager.isGameContinuable()) {
-      prepareSet(gameManager, timer);
-    }
+    return;
+  }
+  // 스트리머 이외의 사람 중 카메라 허용을 안하는 경우가 있을 경우
+  playersToDisconnect.forEach(player => {
+    const socket = io.sockets.connected[player.getSocketId()];
+    socket.disconnect();
+  });
+  /**
+   * 이후에 게임을 진행할 수 있으면, disconnectingHandler쪽에서는 처리하지 않으므로
+   * 해당 로직에서 게임을 진행한다.
+   */
+  if (gameManager.isGameContinuable()) {
+    prepareSet(gameManager, timer);
   }
 };
 
