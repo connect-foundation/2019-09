@@ -2,6 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ClientManager from '../../../service/ClientManager';
+import { GlobalContext, DispatchContext } from '../../../contexts';
+import actions from '../../../actions';
+import { useToast } from '../../../hooks';
 import {
   MOBILE_VIEW_BREAKPOINT,
   WAITING_STATUS,
@@ -9,7 +12,6 @@ import {
   DESKTOP_VIEW,
   ALLOW_CAMERA_MESSAGE,
 } from '../../../config';
-import { GlobalContext } from '../../../contexts';
 import GamePresentation from './presenter';
 import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
@@ -25,7 +27,10 @@ const Game = ({ location, match }) => {
     quiz,
     quizLength,
     clientManagerInitialized,
+    toast,
   } = useContext(GlobalContext);
+  const dispatch = useContext(DispatchContext);
+  const { closeToast } = useToast({ open: toast.open, dispatch, actions });
 
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
@@ -123,6 +128,8 @@ const Game = ({ location, match }) => {
     classes,
     readyButtonHandler,
     mobileChattingPanelVisibility,
+    toast,
+    closeToast,
   };
 
   return <GamePresentation gameProps={gameProps} />;

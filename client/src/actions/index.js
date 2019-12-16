@@ -124,9 +124,34 @@ const clearWindow = () => {
 
 const setClientManagerInitialized = clientManagerInitialized => {
   return {
-    type: 'setClientManagerInitialized',
+    type: TYPES.SET_CLIENT_MANAGER_INITIALIZED,
     payload: {
       clientManagerInitialized,
+    },
+  };
+};
+
+const closeToast = () => {
+  return {
+    type: TYPES.SET_TOAST,
+    payload: {
+      toast: {
+        open: false,
+        message: '',
+      },
+    },
+  };
+};
+
+const openToast = (toastType, message) => {
+  return {
+    type: TYPES.SET_TOAST,
+    payload: {
+      toast: {
+        open: true,
+        toastType,
+        message,
+      },
     },
   };
 };
@@ -147,4 +172,6 @@ export default {
   setStream,
   clearWindow,
   setClientManagerInitialized,
+  openToast,
+  closeToast,
 };

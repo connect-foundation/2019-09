@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { MAX_CHAT_LENGTH } from '../config';
 import EVENTS from '../constants/events';
+import WELCOME_MESSAGE from '../constants/chatting';
 import {
   DEFAULT_INACTIVE_PLAYER_BAN_TIME,
   PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
@@ -52,14 +53,11 @@ class ChattingManager {
     this.dispatch({
       type: 'addChatting',
       payload: {
-        newChatting: {
-          nickname: '안내',
-          message: `채팅방에 입장하였습니다. ${
-            this.isRoomPrivate
-              ? `${PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE}분`
-              : `${DEFAULT_INACTIVE_PLAYER_BAN_TIME}초`
-          } 안에 READY버튼을 눌러주세요.🙌`,
-        },
+        newChatting: WELCOME_MESSAGE(
+          this.isRoomPrivate,
+          PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
+          DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+        ),
       },
     });
   }

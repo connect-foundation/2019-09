@@ -1,10 +1,12 @@
 import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
+import { DispatchContext, GlobalContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
 import { WAITING_FOR_STREAMER } from '../config';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';
+import { useToast } from '../hooks';
+import { TOAST_TPYES, TOAST_MESSAGE } from '../constants/toast';
 import {
   DEFAULT_INACTIVE_PLAYER_BAN_TIME,
   PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME,
@@ -18,6 +20,17 @@ class GameManager {
     this.localPlayer = localPlayer;
     this.timer = new Timer();
     this.isRoomPrivate = isRoomPrivate;
+    const { toast } = useContext(GlobalContext);
+    this.toast = toast;
+  }
+
+  openToast(toastType, message) {
+    const { openToast } = useToast({
+      open: this.toast.open,
+      dispatch: this.dispatch,
+      actions,
+    });
+    openToast(toastType, message);
   }
 
   findMatch({ nickname, roomIdFromUrl, isPrivateRoomCreation }) {
@@ -191,18 +204,31 @@ class GameManager {
     this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
   }
 
+  inactivePlayerBanHandler() {
+    this.exitRoom();
+    this.openToast(TOAST_TPYES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
+  }
+
+  inactivePlayerWarningHandler(inactivePlayerBanTime, time) {
+    if (this.localPlayer.isReady) {
+      this.timer.clear();
+    }
+    if (time === inactivePlayerBanTime / 2) {
+      this.openToast(
+        TOAST_TPYES.WARNING,
+        TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
+      );
+    }
+  }
+
   setInactivePlayerBanTimer() {
     const inactivePlayerBanTime = this.isRoomPrivate
       ? PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME
       : DEFAULT_INACTIVE_PLAYER_BAN_TIME;
     this.timer.startIntegrationTimer(
       inactivePlayerBanTime,
-      this.exitRoom.bind(this),
-      () => {
-        if (this.localPlayer.isReady) {
-          this.timer.clear();
-        }
-      },
+      this.inactivePlayerBanHandler.bind(this),
+      this.inactivePlayerWarningHandler.bind(this, inactivePlayerBanTime),
     );
   }
 

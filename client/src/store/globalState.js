@@ -34,6 +34,12 @@ const initialState = {
   },
 
   clientManagerInitialized: false,
+
+  toast: {
+    open: false,
+    message: '',
+    toastType: '',
+  },
 };
 
 export default initialState;

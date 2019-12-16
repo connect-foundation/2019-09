@@ -10,6 +10,7 @@ import {
   QuizDisplay,
   ExitButton,
   ReadyButton,
+  Toast,
   ShareUrlButton,
 } from '../../components';
 import {
@@ -35,6 +36,8 @@ const GamePresentation = ({ gameProps }) => {
     classes,
     readyButtonHandler,
     mobileChattingPanelVisibility,
+    toast,
+    closeToast,
   } = gameProps;
 
   return (
@@ -45,6 +48,12 @@ const GamePresentation = ({ gameProps }) => {
           content="initial-scale=1.0, user-scalable=no, width=device-width"
         />
       </MetaTags>
+      <Toast
+        open={toast.open}
+        toastType={toast.toastType}
+        message={toast.message}
+        closeHandler={closeToast}
+      />
       <Grid container spacing={0} className={classes.gameHeader}>
         <Grid item xs>
           <Box className={classes.timerBox}>
