@@ -97,7 +97,7 @@ const Game = ({ location, match }) => {
 
   const bottomLeftButtonContainerClasses =
     gameStatus === WAITING_STATUS
-      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
+      ? [classes.mobileBottomLeftButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
 
   const playerPanelContainerClasses = isPlayerListVisible
