@@ -6,7 +6,7 @@ import { STYLE_COLORS } from '../../utils';
 const NicknameContent = styled.span`
   font-size: 1.6rem;
   color: ${props => {
-    return props.nicknameColor || STYLE_COLORS.BASE_BLACK_COLOR;
+    return props.nicknameColor || STYLE_COLORS.INFORMATION_COLOR;
   }};
 `;
 

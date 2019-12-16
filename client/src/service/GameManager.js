@@ -85,10 +85,9 @@ class GameManager {
     });
   }
 
-  endSetHandler({ players, scoreList }) {
+  endSetHandler({ players, currentRound, currentSet, scoreList }) {
     this.syncAllPlayers(players);
     this.makeAndDispatchViewPlayerList();
-
     this.dispatch(actions.setGameStatus('scoreSharing'));
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
@@ -97,7 +96,7 @@ class GameManager {
     this.dispatch(
       actions.setScoreNotice({
         isVisible: true,
-        message: '중간 점수',
+        message: `${currentRound} - ${currentSet}`,
         scoreList,
       }),
     );
