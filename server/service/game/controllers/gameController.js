@@ -132,7 +132,6 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
   const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
 
   // 스트리머가 카메라 허용을 하지 않았을 경우
-  console.log('players to disconnect Length : ', playersToDisconnect.length);
   if (playersToDisconnect.length === playersExceptStreamer.length) {
     const socket =
       io.sockets.connected[gameManager.getStreamer().getSocketId()];
