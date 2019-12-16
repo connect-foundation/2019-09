@@ -131,14 +131,14 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
   );
   const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
 
-  //스트리머가 카메라 허용을 하지 않았을 경우
+  // 스트리머가 카메라 허용을 하지 않았을 경우
   console.log('players to disconnect Length : ', playersToDisconnect.length);
   if (playersToDisconnect.length === playersExceptStreamer.length) {
     const socket =
       io.sockets.connected[gameManager.getStreamer().getSocketId()];
     socket.disconnect();
   } else {
-    //스트리머 이외의 사람 중 카메라 허용을 안하는 경우가 있을 경우
+    // 스트리머 이외의 사람 중 카메라 허용을 안하는 경우가 있을 경우
     playersToDisconnect.forEach(player => {
       const socket = io.sockets.connected[player.getSocketId()];
       socket.disconnect();
