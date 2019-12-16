@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { GlobalContext } from '../../contexts';
-import { PlayerProfile, ReadyButton } from '../components';
-import { STYLE_COLORS } from '../../utils';
+import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
+import { STYLE_COLORS, shareUrlButtonClickHandler } from '../../utils';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -23,7 +23,7 @@ const useStyle = makeStyles(theme => ({
       borderRadius: '0.5rem',
     },
   },
-  readyButtonWrapper: {
+  bottomLeftButtonContainer: {
     position: 'absolute',
     left: '1rem',
     right: '1rem',
@@ -35,6 +35,9 @@ const useStyle = makeStyles(theme => ({
   gameStartHide: {
     display: 'none',
   },
+  shareUrlButton: {
+    marginBottom: '1rem',
+  },
 }));
 
 const PlayerPanel = ({ clientManager }) => {
@@ -42,9 +45,9 @@ const PlayerPanel = ({ clientManager }) => {
   const { viewPlayerList, gameStatus } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
-  const readyButtonContainerClasses = () => {
+  const bottomLeftButtonContainerClasses = () => {
     if (gameStatus === 'waiting') {
-      return classes.readyButtonWrapper;
+      return classes.bottomLeftButtonContainer;
     }
     return classes.gameStartHide;
   };
@@ -63,7 +66,13 @@ const PlayerPanel = ({ clientManager }) => {
           />
         );
       })}
-      <Box className={readyButtonContainerClasses()}>
+      <Box className={bottomLeftButtonContainerClasses()}>
+        {clientManager.getIsRoomPrivate() && (
+          <ShareUrlButton
+            onClick={shareUrlButtonClickHandler}
+            classNames={[classes.shareUrlButton]}
+          />
+        )}
         <ReadyButton
           onClick={() => {
             clientManager.toggleReady();

@@ -7,6 +7,7 @@ const {
 class GameManager {
   constructor(roomId) {
     this.roomId = roomId;
+    this.isRoomPrivate = false;
     this.status = 'waiting';
     this.quiz = '';
     this.quizCandidates = [];
@@ -74,6 +75,14 @@ class GameManager {
       player => player.socketId !== socketId,
     );
     return otherPlayers;
+  }
+
+  getIsRoomPrivate() {
+    return this.isRoomPrivate;
+  }
+
+  setIsRoomPrivate(isRoomPrivate) {
+    this.isRoomPrivate = isRoomPrivate;
   }
 
   /**

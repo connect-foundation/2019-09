@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ClientManager from '../../../service/ClientManager';
-import { browserLocalStorage } from '../../../utils';
 import {
   MOBILE_VIEW_BREAKPOINT,
   WAITING_STATUS,
@@ -17,7 +17,7 @@ import useIsMobile from '../../../hooks/useIsMobile';
 
 let clientManager;
 
-const Game = () => {
+const Game = ({ location, match }) => {
   const {
     gameStatus,
     viewPlayerList,
@@ -31,7 +31,6 @@ const Game = () => {
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const initialIsMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
-
   const [
     mobileChattingPanelVisibility,
     setMobileChattingPanelVisibility,
@@ -44,12 +43,15 @@ const Game = () => {
   );
   const classes = useStyles(gamePageRootHeight);
 
-  if (!browserLocalStorage.getNickname()) {
-    history.push('/');
-  }
+  const { isPrivateRoomCreation } = location;
+  const roomIdFromUrl = match.params.roomId;
 
   if (!clientManagerInitialized) {
-    clientManager = new ClientManager(history);
+    clientManager = new ClientManager({
+      history,
+      roomIdFromUrl,
+      isPrivateRoomCreation,
+    });
     clientManager
       .getMediaPermission()
       .then(() => {
@@ -97,17 +99,14 @@ const Game = () => {
     }
   }, [shiftingToWhichView]);
 
-  const readyButtonContainerClasses = (() => {
-    return gameStatus === WAITING_STATUS
-      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
+  const bottomLeftButtonContainerClasses =
+    gameStatus === WAITING_STATUS
+      ? [classes.mobileBottomLeftButtonContainer, classes.desktopViewHide]
       : classes.gameStartHide;
-  })();
 
-  const playerPanelContainerClasses = (() => {
-    return isPlayerListVisible
-      ? classes.playerPanelContainer
-      : [classes.playerPanelContainer, classes.mobileViewHide];
-  })();
+  const playerPanelContainerClasses = isPlayerListVisible
+    ? classes.playerPanelContainer
+    : [classes.playerPanelContainer, classes.mobileViewHide];
 
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
@@ -118,7 +117,7 @@ const Game = () => {
     clientManager,
     showPlayersButtonHandler,
     playerPanelContainerClasses,
-    readyButtonContainerClasses,
+    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
@@ -129,6 +128,9 @@ const Game = () => {
   return <GamePresentation gameProps={gameProps} />;
 };
 
-Game.propTypes = {};
+Game.propTypes = {
+  location: PropTypes.shape.isRequired,
+  match: PropTypes.shape.isRequired,
+};
 
 export default Game;

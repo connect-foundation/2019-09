@@ -5,13 +5,20 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import MetaTags from 'react-meta-tags';
-import { Timer, QuizDisplay, ExitButton, ReadyButton } from '../../components';
+import {
+  Timer,
+  QuizDisplay,
+  ExitButton,
+  ReadyButton,
+  ShareUrlButton,
+} from '../../components';
 import {
   StreamingPanel,
   ChattingPanel,
   PlayerPanel,
   MobileChattingPanel,
 } from '../../containers';
+import { shareUrlButtonClickHandler } from '../../../utils';
 import exitImageSource from '../../../assets/exit.png';
 
 const GamePresentation = ({ gameProps }) => {
@@ -22,7 +29,7 @@ const GamePresentation = ({ gameProps }) => {
     clientManager,
     showPlayersButtonHandler,
     playerPanelContainerClasses,
-    readyButtonContainerClasses,
+    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
@@ -91,7 +98,14 @@ const GamePresentation = ({ gameProps }) => {
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          <Box className={readyButtonContainerClasses}>
+          <Box className={bottomLeftButtonContainerClasses}>
+            {clientManager.getIsRoomPrivate() && (
+              <ShareUrlButton
+                onClick={shareUrlButtonClickHandler}
+                classNames={[classes.shareUrlButton]}
+              />
+            )}
+
             <ReadyButton onClick={readyButtonHandler}>
               {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
             </ReadyButton>
