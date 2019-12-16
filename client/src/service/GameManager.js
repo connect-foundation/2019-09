@@ -11,19 +11,12 @@ import {
 } from '../constants/timer';
 
 class GameManager {
-  constructor({
-    socket,
-    localPlayer,
-    remotePlayers,
-    roomIdFromUrl,
-    isRoomPrivate,
-  }) {
+  constructor({ socket, localPlayer, remotePlayers, isRoomPrivate }) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
-    this.roomIdFromUrl = roomIdFromUrl;
     this.isRoomPrivate = isRoomPrivate;
   }
 

@@ -28,7 +28,6 @@ class ClientManager {
       socket: this.socket,
       localPlayer: this.localPlayer,
       remotePlayers: this.remotePlayers,
-      roomIdFromUrl: this.roomIdFromUrl,
       isRoomPrivate: this.isRoomPrivate,
     });
     this.streamingManager = new StreamingManager(
