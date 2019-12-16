@@ -1,4 +1,3 @@
-import actions from '../actions';
 /**
  * toasType: contants에 있는 toast 타입,
  * message: toast에 보여줄 메시지,
@@ -6,15 +5,21 @@ import actions from '../actions';
  * dispatch: global dispatch
  * @param {*} param0
  */
-const useToast = ({ toastType, message, open, dispatch }) => {
-  if (open) {
-    dispatch(actions.closeToast());
-    setTimeout(() => {
+const useToast = ({ open, dispatch, actions }) => {
+  const openToast = (toastType, message) => {
+    if (open) {
+      dispatch(actions.closeToast());
+      setTimeout(() => {
+        dispatch(actions.openToast(toastType, message));
+      }, 100);
+    } else {
       dispatch(actions.openToast(toastType, message));
-    }, 100);
-  } else {
-    dispatch(actions.openToast(toastType, message));
-  }
+    }
+  };
+  const closeToast = () => {
+    dispatch(actions.closeToast());
+  };
+  return { openToast, closeToast };
 };
 
 export default useToast;
