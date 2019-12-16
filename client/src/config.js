@@ -24,7 +24,7 @@ const LOCALSTORAGE_NICKNAME_KEY = 'trycatch-nickname';
 
 const SOCKETIO_SERVER_URL =
   process.env.NODE_ENV === 'development' ? 'localhost:3001' : '';
-const GAME_END_SCOREBOARD_TITLE = '최종 점수';
+const GAME_END_SCOREBOARD_TITLE = '게임 종료';
 
 const WAITING_STATUS = 'waiting';
 
