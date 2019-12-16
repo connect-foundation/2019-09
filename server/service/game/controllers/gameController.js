@@ -54,9 +54,12 @@ const pickQuizCandidates = async () => {
 
 const endSet = (gameManager, timer) => {
   gameManager.getPlayers().forEach(player => {
+    player.setIsCorrectPlayer(false);
     player.setIsConnectedToStreamer(false);
   });
+
   io.in(gameManager.getRoomId()).emit('endSet', {
+    players: gameManager.getPlayers(),
     currentRound: gameManager.getCurrentRound(),
     currentSet: gameManager.getCurrentSet(),
     scoreList: gameManager.getScoreList(),

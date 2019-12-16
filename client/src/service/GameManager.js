@@ -46,17 +46,56 @@ class GameManager {
     this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
     this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
     this.socket.on(EVENTS.CLEAR_WINDOW, this.clearWindowHandler.bind(this));
-    this.socket.on(
-      EVENTS.UPDATE_PROFILE_SCORE,
-      this.updateProfileScoreHandler.bind(this),
-    );
+    this.socket.on(EVENTS.UPDATE_PROFILE, this.updateProfileHandler.bind(this));
   }
 
   clearWindowHandler() {
     this.dispatch(actions.clearWindow());
   }
 
-  endSetHandler({ currentRound, currentSet, scoreList }) {
+  syncAllPlayers(players) {
+    const localPlayer = this.findLocalPlayer(players);
+    const remotePlayers = this.findRemotePlayers(players);
+    this.syncLocalPlayer(localPlayer);
+    this.syncRemotePlayers(remotePlayers);
+  }
+
+  findLocalPlayer(players) {
+    const localPlayer = players.find(player => {
+      return player.socketId === this.localPlayer.socketId;
+    });
+    return localPlayer;
+  }
+
+  findRemotePlayers(players) {
+    const remotePlayers = players.filter(player => {
+      return player.socketId !== this.localPlayer.socketId;
+    });
+    return remotePlayers;
+  }
+
+  /**
+   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
+   * remotePlayers 형태를 array 변경과 함께.
+   */
+  syncLocalPlayer(localPlayer) {
+    Object.keys(localPlayer).forEach(key => {
+      this.localPlayer[key] = localPlayer[key];
+    });
+  }
+
+  syncRemotePlayers(remotePlayers) {
+    remotePlayers.forEach(player => {
+      const { socketId } = player;
+      Object.keys(player).forEach(key => {
+        this.remotePlayers[socketId][key] = player[key];
+      });
+    });
+  }
+
+  endSetHandler({ players, currentRound, currentSet, scoreList }) {
+    this.syncAllPlayers(players);
+    this.makeAndDispatchViewPlayerList();
     this.dispatch(actions.setGameStatus('scoreSharing'));
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
@@ -114,11 +153,12 @@ class GameManager {
     this.makeAndDispatchViewPlayerList();
   }
 
-  updateProfileScoreHandler({ player }) {
+  updateProfileHandler({ player }) {
     if (player.socketId === this.localPlayer.socketId) {
-      this.localPlayer.score = player.score;
+      this.syncLocalPlayer(player);
     } else {
-      this.remotePlayers[player.socketId].score = player.score;
+      // 해당 함수에서 인자를 배열로 받기 때문에 [player]식으로 전달
+      this.syncRemotePlayers([player]);
     }
     this.makeAndDispatchViewPlayerList();
   }

@@ -12,7 +12,7 @@ const EVENTS = {
   END_SET: 'endSet',
   DISCONNECT: 'disconnect',
   SELECT_QUIZ: 'selectQuiz',
-  UPDATE_PROFILE_SCORE: 'updateProfileScore',
+  UPDATE_PROFILE: 'updateProfile',
   // StreamerManager
   ASSIGN_STREAMER: 'assignStreamer',
   ASSING_VIEWER: 'assignViewer',
