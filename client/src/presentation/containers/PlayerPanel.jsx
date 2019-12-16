@@ -4,8 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
-import { STYLE_COLORS, copyUrlToClipoard } from '../../utils';
-import { SHARE_URL_BUTTON_TEXT } from '../../constants/button';
+import { STYLE_COLORS, shareUrlButtonClickHandler } from '../../utils';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -69,11 +68,9 @@ const PlayerPanel = ({ clientManager }) => {
       <Box className={bottomLeftButtonContainerClasses()}>
         {clientManager.getIsRoomPrivate() && (
           <ShareUrlButton
-            onClick={copyUrlToClipoard}
+            onClick={shareUrlButtonClickHandler}
             classNames={[classes.shareUrlButton]}
-          >
-            {SHARE_URL_BUTTON_TEXT}
-          </ShareUrlButton>
+          />
         )}
         <ReadyButton
           onClick={() => {

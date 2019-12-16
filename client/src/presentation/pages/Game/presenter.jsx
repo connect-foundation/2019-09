@@ -18,8 +18,7 @@ import {
   PlayerPanel,
   MobileChattingPanel,
 } from '../../containers';
-import { SHARE_URL_BUTTON_TEXT } from '../../../constants/button';
-import { copyUrlToClipoard } from '../../../utils';
+import { shareUrlButtonClickHandler } from '../../../utils';
 
 const GamePresentation = ({ gameProps }) => {
   const {
@@ -101,11 +100,9 @@ const GamePresentation = ({ gameProps }) => {
           <Box className={bottomLeftButtonContainerClasses}>
             {clientManager.getIsRoomPrivate() && (
               <ShareUrlButton
-                onClick={copyUrlToClipoard}
+                onClick={shareUrlButtonClickHandler}
                 classNames={[classes.shareUrlButton]}
-              >
-                {SHARE_URL_BUTTON_TEXT}
-              </ShareUrlButton>
+              />
             )}
 
             <ReadyButton onClick={readyButtonHandler}>
