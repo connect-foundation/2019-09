@@ -98,8 +98,7 @@ const pickQuizCandidates = async () => {
 const endSet = (gameManager, timer) => {
   timer.clear();
   gameManager.resetStreamerConnectionOfAllPlayers();
-  gameManager.resetAnswerCorrectionOfAllPlayers();
-
+  gameManager.resetCorrectionOfAllPlayers();
   sendEndSetByGameManager(gameManager);
 };
 
