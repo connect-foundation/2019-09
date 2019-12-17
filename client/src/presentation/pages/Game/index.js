@@ -39,36 +39,17 @@ const Game = ({ location, match }) => {
     actions,
   });
   const [gameState, gameDispatch] = useReducer(gameReducer, gameInitialState);
-
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
-
+  const classes = useStyles({
+    gamePageRootHeight: gameState.gamePageRootHeight,
+    isPlayerListVisible: gameState.isPlayerListVisible,
+  });
+  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
-
-  const getMediaPermissionHandler = () => {
-    clientManager.init();
-  };
-
-  const getMediaPermissionErrorHandler = () => {
-    history.push('/');
-    openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
-    globalDispatch(actions.setClientManagerInitialized(false));
-  };
-
-  if (!clientManagerInitialized) {
-    clientManager = new ClientManager({
-      history,
-      roomIdFromUrl,
-      isPrivateRoomCreation,
-    });
-    clientManager
-      .getMediaPermission()
-      .then(getMediaPermissionHandler)
-      .catch(getMediaPermissionErrorHandler);
-    globalDispatch(actions.setClientManagerInitialized(true));
-  }
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const exitButtonHandler = () => {
     clientManager.exitRoom();
@@ -109,19 +90,33 @@ const Game = ({ location, match }) => {
     gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
   };
 
+  const getMediaPermissionHandler = () => {
+    clientManager.init();
+  };
+
+  const getMediaPermissionErrorHandler = () => {
+    history.push('/');
+    openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
+    globalDispatch(actions.setClientManagerInitialized(false));
+  };
+
+  if (!clientManagerInitialized) {
+    clientManager = new ClientManager({
+      history,
+      roomIdFromUrl,
+      isPrivateRoomCreation,
+    });
+    clientManager
+      .getMediaPermission()
+      .then(getMediaPermissionHandler)
+      .catch(getMediaPermissionErrorHandler);
+    globalDispatch(actions.setClientManagerInitialized(true));
+  }
+
   useEffect(attachPopstateEvent, []);
   useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
   useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
   useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
-
-  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
-
-  const classes = useStyles({
-    gamePageRootHeight: gameState.gamePageRootHeight,
-    isPlayerListVisible: gameState.isPlayerListVisible,
-  });
-
-  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
   const gameProps = {
     quiz,
