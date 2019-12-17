@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
-import { STYLE_COLORS, shareUrlButtonClickHandler } from '../../utils';
-import { WAITING_STATUS } from '../../config';
+import { shareUrlButtonClickHandler } from '../../utils';
+import styleColors from '../../constants/styleColors';
+import { WAITING_STATUS } from '../../constants/game';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {

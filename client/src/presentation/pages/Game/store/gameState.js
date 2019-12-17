@@ -1,4 +1,4 @@
-import { MOBILE_VIEW_BREAKPOINT } from '../../../../config';
+import { MOBILE_VIEW_BREAKPOINT } from '../../../../constants/responsiveView';
 
 const initialIsMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
 
