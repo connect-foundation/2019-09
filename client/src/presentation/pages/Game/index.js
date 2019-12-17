@@ -84,19 +84,14 @@ const Game = ({ location, match }) => {
     clientManager.toggleReady();
   };
 
-  useEffect(() => {
+  const attachPopstateEvent = () => {
     window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
     return () => {
       window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
     };
-  }, []);
+  };
 
-  useEffect(() => {
-    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
-    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
-  }, [currentIsMobile]);
-
-  useEffect(() => {
+  const showPlayerListByViewShifting = () => {
     if (shiftingToWhichView === MOBILE_VIEW) {
       gameDispatch(actions.setIsPlayerListVisible(false));
       return;
@@ -104,7 +99,20 @@ const Game = ({ location, match }) => {
     if (shiftingToWhichView === DESKTOP_VIEW) {
       gameDispatch(actions.setIsPlayerListVisible(true));
     }
-  }, [shiftingToWhichView]);
+  };
+
+  const dispatchMobileChattingPanelVisibility = () => {
+    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
+  };
+
+  const dispatchGamePageRootHeight = () => {
+    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
+  };
+
+  useEffect(attachPopstateEvent, []);
+  useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
+  useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
+  useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
 
   const isGameStatusWaiting = gameStatus === WAITING_STATUS;
 
