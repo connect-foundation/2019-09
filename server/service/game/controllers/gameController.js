@@ -168,6 +168,15 @@ const sendStartGameToRoom = roomId => {
   io.in(roomId).emit('startGame');
 };
 
+const sendEndGameToRoom = gameManager => {
+  const roomId = gameManager.getRoomId();
+  const scoreList = gameManager.getScoreList();
+
+  io.in(roomId).emit('endGame', {
+    scoreList,
+  });
+};
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -267,18 +276,15 @@ const goToNextSetAfterNSeconds = ({ seconds, gameManager, timer }) => {
 };
 
 const endGame = async (gameManager, timer) => {
-  /**
-   * 동시 접근하면 문제 발생
-   */
-  if (gameManager.getStatus() === 'ending') {
+  const roomStatus = gameManager.getStatus();
+  const players = gameManager.getPlayers();
+
+  if (roomStatus === 'ending') {
     return;
   }
   gameManager.setStatus('ending');
 
-  const players = gameManager.getPlayers();
-  io.in(gameManager.getRoomId()).emit('endGame', {
-    scoreList: gameManager.getScoreList(),
-  });
+  sendEndGameToRoom(gameManager);
   timer.clear();
   await rankingRepository.insertRankings(players);
 };
