@@ -51,6 +51,17 @@ const Game = ({ location, match }) => {
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
 
+  const initializeClientManager = () => {
+    clientManager.init();
+    clientManager.setClientManagerInitialized(true);
+  };
+
+  const getMediaPermissionErrorHandler = () => {
+    history.push('/');
+    clientManager.setClientManagerInitialized(false);
+    alert(ALLOW_CAMERA_MESSAGE);
+  };
+
   if (!clientManagerInitialized) {
     clientManager = new ClientManager({
       history,
@@ -59,15 +70,8 @@ const Game = ({ location, match }) => {
     });
     clientManager
       .getMediaPermission()
-      .then(() => {
-        clientManager.init();
-        clientManager.setClientManagerInitialized(true);
-      })
-      .catch(() => {
-        history.push('/');
-        clientManager.setClientManagerInitialized(false);
-        alert(ALLOW_CAMERA_MESSAGE);
-      });
+      .then(initializeClientManager)
+      .catch(getMediaPermissionErrorHandler);
     clientManager.setClientManagerInitialized(true);
   }
 
