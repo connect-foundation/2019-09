@@ -64,6 +64,21 @@ const runInGameTimer = (gameManager, timer) => {
   );
 };
 
+const sendEndSetToPlayers = gameManager => {
+  const roomId = gameManager.getRoomId();
+  const players = gameManager.getPlayers();
+  const currentRound = gameManager.getCurrentRound();
+  const currentSet = gameManager.getCurrentSet();
+  const scoreList = gameManager.getScoreList();
+
+  io.in(roomId).emit('endSet', {
+    players,
+    currentRound,
+    currentSet,
+    scoreList,
+  });
+};
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -81,19 +96,11 @@ const pickQuizCandidates = async () => {
 };
 
 const endSet = (gameManager, timer) => {
-  gameManager.getPlayers().forEach(player => {
-    player.setIsCorrectPlayer(false);
-    player.setIsConnectedToStreamer(false);
-  });
-
-  io.in(gameManager.getRoomId()).emit('endSet', {
-    players: gameManager.getPlayers(),
-    currentRound: gameManager.getCurrentRound(),
-    currentSet: gameManager.getCurrentSet(),
-    scoreList: gameManager.getScoreList(),
-  });
-
   timer.clear();
+  gameManager.resetStreamerConnectionOfAllPlayers();
+  gameManager.resetAnswerCorrectionOfAllPlayers();
+
+  sendEndSetToPlayers(gameManager);
 };
 
 const startSet = (gameManager, timer, quiz) => {
