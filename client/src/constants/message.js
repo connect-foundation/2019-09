@@ -7,6 +7,8 @@ const WAITING_FOR_STREAMER = 'Waiting For Streamer...';
 const GAME_END_SCOREBOARD_TITLE = '게임 종료';
 const ALLOW_CAMERA_MESSAGE = '카메라를 허용해주세요';
 
+const COPY_TO_CLIPBOARD_MESSAGE = 'is copied to your clipboard';
+
 export {
   MAIN_HOW_TO_PLAY_TITLE,
   MAIN_HOW_TO_PLAY_DESCRIPTION,
@@ -15,4 +17,5 @@ export {
   WAITING_FOR_STREAMER,
   GAME_END_SCOREBOARD_TITLE,
   ALLOW_CAMERA_MESSAGE,
+  COPY_TO_CLIPBOARD_MESSAGE,
 };

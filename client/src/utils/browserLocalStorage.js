@@ -1,4 +1,4 @@
-import { LOCALSTORAGE_NICKNAME_KEY } from '../config';
+import { LOCALSTORAGE_NICKNAME_KEY } from '../constants/browser';
 import { NICKNAME_LENGTH } from '../constants/inputConstraints';
 
 const getNickname = () => {
