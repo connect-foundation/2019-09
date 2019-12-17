@@ -50,7 +50,6 @@ const Game = ({ location, match }) => {
   const [gamePageRootHeight, setGamePageRootHeight] = useState(
     window.innerHeight,
   );
-  const classes = useStyles(gamePageRootHeight);
 
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
@@ -111,14 +110,13 @@ const Game = ({ location, match }) => {
     }
   }, [shiftingToWhichView]);
 
-  const bottomLeftButtonContainerClasses =
-    gameStatus === WAITING_STATUS
-      ? [classes.mobileBottomLeftButtonContainer, classes.desktopViewHide]
-      : classes.gameStartHide;
+  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
 
-  const playerPanelContainerClasses = isPlayerListVisible
-    ? classes.playerPanelContainer
-    : [classes.playerPanelContainer, classes.mobileViewHide];
+  const classes = useStyles({
+    gamePageRootHeight,
+    isPlayerListVisible,
+    isGameStatusWaiting,
+  });
 
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
@@ -128,8 +126,6 @@ const Game = ({ location, match }) => {
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    playerPanelContainerClasses,
-    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,

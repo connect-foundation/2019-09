@@ -29,8 +29,6 @@ const GamePresentation = ({ gameProps }) => {
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    playerPanelContainerClasses,
-    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
@@ -80,7 +78,7 @@ const GamePresentation = ({ gameProps }) => {
           xs={2}
           className={[classes.bottomGridContent, classes.leftGridContent]}
         >
-          <Box className={playerPanelContainerClasses}>
+          <Box className={classes.playerPanelContainer}>
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
@@ -107,7 +105,7 @@ const GamePresentation = ({ gameProps }) => {
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          <Box className={bottomLeftButtonContainerClasses}>
+          <Box className={classes.bottomLeftButtonContainer}>
             {clientManager.getIsRoomPrivate() && (
               <ShareUrlButton
                 onClick={shareUrlButtonClickHandler}

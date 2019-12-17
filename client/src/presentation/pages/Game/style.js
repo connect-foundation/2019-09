@@ -38,10 +38,10 @@ const useStyles = makeStyles(theme => ({
       zIndex: '1',
     },
   },
-  playerPanelContainer: {
+  playerPanelContainer: props => ({
     height: '100%',
-    display: 'block',
-  },
+    display: props.isPlayerListVisible ? 'block' : 'none',
+  }),
   playerPanelButton: {
     display: 'none',
     [theme.breakpoints.down('xs')]: {
@@ -104,12 +104,16 @@ const useStyles = makeStyles(theme => ({
     right: '0',
     overflow: 'auto',
   },
-  mobileBottomLeftButtonContainer: {
+  bottomLeftButtonContainer: props => ({
     width: '8rem',
     position: 'absolute',
     bottom: '2rem',
     left: '2rem',
-  },
+    display: props.isGameStatusWaiting ? 'none' : 'block',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+    },
+  }),
   gameStartHide: {
     display: 'none',
   },
