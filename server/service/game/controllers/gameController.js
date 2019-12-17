@@ -73,13 +73,11 @@ const assignPlayerType = gameManager => {
 };
 
 const pickQuizCandidates = async () => {
-  const quizCandidates = await quizRepository.findRandomQuizzes();
+  const quizzes = await quizRepository.findRandomQuizzes();
 
-  const quizWords = quizCandidates.map(quiz => {
-    return quiz.word;
-  });
+  const quizCandidates = quizzes.map(quiz => quiz.word);
 
-  return quizWords;
+  return quizCandidates;
 };
 
 const endSet = (gameManager, timer) => {
