@@ -16,6 +16,7 @@ import GamePresentation from './presenter';
 import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
+import { TOAST_TPYES } from '../../../constants/toast';
 
 let clientManager;
 
@@ -30,7 +31,11 @@ const Game = ({ location, match }) => {
     toast,
   } = useContext(GlobalContext);
   const dispatch = useContext(DispatchContext);
-  const { closeToast } = useToast({ open: toast.open, dispatch, actions });
+  const { openToast, closeToast } = useToast({
+    open: toast.open,
+    dispatch,
+    actions,
+  });
 
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
@@ -57,9 +62,10 @@ const Game = ({ location, match }) => {
   };
 
   const getMediaPermissionErrorHandler = () => {
-    history.push('/');
     clientManager.setClientManagerInitialized(false);
-    alert(ALLOW_CAMERA_MESSAGE);
+    history.push('/');
+    clientManager = null;
+    openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
   };
 
   if (!clientManagerInitialized) {
