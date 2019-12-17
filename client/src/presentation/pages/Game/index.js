@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ClientManager from '../../../service/ClientManager';
@@ -18,6 +18,7 @@ import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { TOAST_TPYES } from '../../../constants/toast';
 import EVENTS from '../../../constants/events';
+import { gameReducer, gameState as gameInitialState } from './store';
 
 let clientManager;
 
@@ -30,27 +31,17 @@ const Game = ({ location, match }) => {
     quizLength,
     toast,
   } = useContext(GlobalContext);
-  const dispatch = useContext(DispatchContext);
+  const globalDispatch = useContext(DispatchContext);
   const { openToast, closeToast } = useToast({
     open: toast.open,
-    dispatch,
+    dispatch: globalDispatch,
     actions,
   });
+  const [gameState, gameDispatch] = useReducer(gameReducer, gameInitialState);
 
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
-  const initialIsMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
-  const [
-    mobileChattingPanelVisibility,
-    setMobileChattingPanelVisibility,
-  ] = useState(initialIsMobile);
-  const [isPlayerListVisible, setIsPlayerListVisible] = useState(
-    !initialIsMobile,
-  );
-  const [gamePageRootHeight, setGamePageRootHeight] = useState(
-    window.innerHeight,
-  );
 
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
@@ -83,7 +74,9 @@ const Game = ({ location, match }) => {
   };
 
   const showPlayersButtonHandler = () => {
-    setIsPlayerListVisible(!isPlayerListVisible);
+    gameDispatch(
+      actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
+    );
   };
 
   const readyButtonHandler = () => {
@@ -98,25 +91,25 @@ const Game = ({ location, match }) => {
   }, []);
 
   useEffect(() => {
-    setMobileChattingPanelVisibility(currentIsMobile);
-    setGamePageRootHeight(window.innerHeight);
+    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
+    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
   }, [currentIsMobile]);
 
   useEffect(() => {
     if (shiftingToWhichView === MOBILE_VIEW) {
-      setIsPlayerListVisible(false);
+      gameDispatch(actions.setIsPlayerListVisible(false));
       return;
     }
     if (shiftingToWhichView === DESKTOP_VIEW) {
-      setIsPlayerListVisible(true);
+      gameDispatch(actions.setIsPlayerListVisible(true));
     }
   }, [shiftingToWhichView]);
 
   const isGameStatusWaiting = gameStatus === WAITING_STATUS;
 
   const classes = useStyles({
-    gamePageRootHeight,
-    isPlayerListVisible,
+    gamePageRootHeight: gameState.gamePageRootHeight,
+    isPlayerListVisible: gameState.isPlayerListVisible,
     isGameStatusWaiting,
   });
 
@@ -132,7 +125,7 @@ const Game = ({ location, match }) => {
     currentSeconds,
     classes,
     readyButtonHandler,
-    mobileChattingPanelVisibility,
+    mobileChattingPanelVisibility: gameState.mobileChattingPanelVisibility,
     toast,
     closeToast,
   };
