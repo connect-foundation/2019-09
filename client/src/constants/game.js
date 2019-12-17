@@ -1,3 +1,7 @@
 const WAITING_STATUS = 'waiting';
 
-export { WAITING_STATUS };
+const READY_BUTTON_TEXT = {
+  READY: 'Ready',
+  CANCEL: 'Cancel',
+};
+export { WAITING_STATUS, READY_BUTTON_TEXT };
