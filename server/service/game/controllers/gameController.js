@@ -32,6 +32,12 @@ const assignViewer = (viewer, streamer) => {
   });
 };
 
+const assignViewers = (viewers, streamer) => {
+  viewers.forEach(viewer => {
+    assignViewer(viewer, streamer);
+  });
+};
+
 const sendQuizToStreamer = (streamer, quiz) => {
   const streamerSocketId = streamer.getSocketId();
   io.to(streamerSocketId).emit('clearWindow');
@@ -63,9 +69,7 @@ const assignPlayerType = gameManager => {
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
 
   assignStreamer(streamer);
-  viewers.forEach(viewer => {
-    assignViewer(viewer, streamer);
-  });
+  assignViewers(viewers, streamer);
 };
 
 const pickQuizCandidates = async () => {
