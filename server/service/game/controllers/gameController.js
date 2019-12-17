@@ -16,6 +16,14 @@ const {
 const quizRepository = new QuizRepository();
 const rankingRepository = new RankingRepository();
 
+const sendClearWindowToPlayer = playerSocketId => {
+  io.to(playerSocketId).emit('clearWindow');
+};
+
+const sendClearWindowToRoom = roomId => {
+  io.in(roomId).emit('clearWindow');
+};
+
 const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
   io.in(roomId).emit('sendCurrentSeconds', {
     currentSeconds,
@@ -40,7 +48,7 @@ const assignViewers = (viewers, streamer) => {
 
 const sendQuizToStreamer = (streamer, quiz) => {
   const streamerSocketId = streamer.getSocketId();
-  io.to(streamerSocketId).emit('clearWindow');
+  sendClearWindowToPlayer(streamerSocketId);
   io.to(streamerSocketId).emit('startSet', {
     quiz,
   });
@@ -49,7 +57,7 @@ const sendQuizToStreamer = (streamer, quiz) => {
 const sendQuizLengthToViewers = (viewers, quizLength) => {
   viewers.forEach(viewer => {
     const viewerSocketId = viewer.getSocketId();
-    io.to(viewerSocketId).emit('clearWindow');
+    sendClearWindowToPlayer(viewerSocketId);
     io.to(viewerSocketId).emit('startSet', {
       quizLength,
     });
@@ -256,11 +264,10 @@ const prepareGame = (gameManager, timer) => {
 };
 
 const goToNextSet = (gameManager, timer) => {
-  io.in(gameManager.getRoomId()).emit('clearWindow');
+  const roomId = gameManager.getRoomId();
+
+  sendClearWindowToRoom(roomId);
   preparePlayerTypes(gameManager, timer);
-  gameManager.getPlayers().forEach(player => {
-    player.setIsCorrectPlayer(false);
-  });
   waitForPeerConnection(gameManager, timer);
 };
 
