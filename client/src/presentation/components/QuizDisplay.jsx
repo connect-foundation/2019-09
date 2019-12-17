@@ -14,13 +14,15 @@ const QuizDisplay = ({ quiz, quizLength }) => {
     },
   }));
   const classes = useStyles();
-  const quizToDisplay = quiz;
+  const quizToDisplay = typeof quiz === 'undefined' ? '' : quiz;
   const letters =
-    quiz !== '' ? quizToDisplay.split() : new Array(quizLength).fill(' ');
+    quizToDisplay !== ''
+      ? quizToDisplay.split()
+      : new Array(quizLength).fill(' ');
 
   return (
     <div className={classes.quizDisplay}>
-      {quiz === ''
+      {quizToDisplay === ''
         ? letters.map((letter, index) => {
             const key = `${letter}${index}`;
             return <UnderlinedSpace key={key} />;

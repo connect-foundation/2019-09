@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const Row = styled.div`
   height: 4rem;
   display: flex;
   align-items: center;
-  background-color: ${STYLE_COLORS.THEME_COLOR};
-  color: ${STYLE_COLORS.BASE_WHITE_COLOR};
+  background-color: ${styleColors.THEME_COLOR};
+  color: ${styleColors.BASE_WHITE_COLOR};
   margin-bottom: ${props => (props.isHeader ? '0.4rem' : '0.2rem')};
 `;
 
