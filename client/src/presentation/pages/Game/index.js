@@ -5,12 +5,12 @@ import ClientManager from '../../../service/ClientManager';
 import { GlobalContext, DispatchContext } from '../../../contexts';
 import actions from '../../../actions';
 import { useToast } from '../../../hooks';
+import { ALLOW_CAMERA_MESSAGE } from '../../../constants/message';
 import {
   MOBILE_VIEW_BREAKPOINT,
   WAITING_STATUS,
   MOBILE_VIEW,
   DESKTOP_VIEW,
-  ALLOW_CAMERA_MESSAGE,
 } from '../../../config';
 import GamePresentation from './presenter';
 import useStyles from './style';

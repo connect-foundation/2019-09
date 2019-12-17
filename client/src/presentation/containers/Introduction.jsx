@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Title, Description, Slogan } from '../components';
 import {
-  MainIntroductionTitle,
-  MainIntroductionDescription,
-  MainSlogan,
-} from '../../config';
+  MAIN_HOW_TO_PLAY_TITLE,
+  MAIN_HOW_TO_PLAY_DESCRIPTION,
+  MAIN_SLOGAN,
+} from '../../constants/message';
 import { STYLE_COLORS } from '../../utils';
 
 const useStyle = makeStyles({
@@ -34,13 +34,13 @@ const Introduction = () => {
   const classes = useStyle();
   return (
     <Container maxWidth="md" className={classes.menu}>
-      <Title content={MainIntroductionTitle} fontSize={titleFontSize} />
+      <Title content={MAIN_HOW_TO_PLAY_TITLE} fontSize={titleFontSize} />
       <Description
-        content={MainIntroductionDescription}
+        content={MAIN_HOW_TO_PLAY_DESCRIPTION}
         fontSize={descriptionFontSize}
       />
       <br />
-      <Slogan content={MainSlogan} />
+      <Slogan content={MAIN_SLOGAN} />
     </Container>
   );
 };
