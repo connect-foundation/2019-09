@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { ScoreBoardScoreRow } from '../components';
 import { STYLE_COLORS } from '../../utils';
-import { DEFAULT_SCOREBOARD_TITLE } from '../../config';
+import { DEFAULT_SCOREBOARD_TITLE } from '../../constants/message';
 
 const useStyle = makeStyles({
   scoreBoard: {
