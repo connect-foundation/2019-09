@@ -7,4 +7,6 @@ const WELCOME_MESSAGE = (isRoomPrivate, minutes, seconds) => ({
 
 const DEFAULT_NICKNAME = 'Guest';
 
-export { WELCOME_MESSAGE, DEFAULT_NICKNAME };
+const CHATTING_INPUT_PLACEHOLER = 'Please enter a message.';
+
+export { WELCOME_MESSAGE, DEFAULT_NICKNAME, CHATTING_INPUT_PLACEHOLER };
