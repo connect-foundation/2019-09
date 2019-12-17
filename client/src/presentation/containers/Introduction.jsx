@@ -7,14 +7,14 @@ import {
   MAIN_HOW_TO_PLAY_DESCRIPTION,
   MAIN_SLOGAN,
 } from '../../constants/message';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const useStyle = makeStyles({
   menu: {
     backgroundColor: '#FFFFFF',
     width: '100%',
     padding: '2rem',
-    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
+    border: `0.3rem solid ${styleColors.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

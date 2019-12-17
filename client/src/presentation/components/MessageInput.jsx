@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 import { DEFAULT_TEXT_INPUT_MAX_LENGTH } from '../../constants/inputConstraints';
 
 const useStyles = makeStyles({
   input: {
-    color: STYLE_COLORS.BASE_BLACK_COLOR,
+    color: styleColors.BASE_BLACK_COLOR,
     fontSize: '1.5rem ',
     flex: 8,
   },
