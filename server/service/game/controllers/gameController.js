@@ -64,7 +64,7 @@ const runInGameTimer = (gameManager, timer) => {
   );
 };
 
-const sendEndSetByGameManager = gameManager => {
+const sendEndSet = gameManager => {
   const roomId = gameManager.getRoomId();
   const players = gameManager.getPlayers();
   const currentRound = gameManager.getCurrentRound();
@@ -99,7 +99,7 @@ const endSet = (gameManager, timer) => {
   timer.clear();
   gameManager.resetStreamerConnectionOfAllPlayers();
   gameManager.resetCorrectionOfAllPlayers();
-  sendEndSetByGameManager(gameManager);
+  sendEndSet(gameManager);
 };
 
 const startSet = (gameManager, timer, quiz) => {
