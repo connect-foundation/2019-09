@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Message from './Message';
 import Nickname from './Nickname';
+import { DEFAULT_NICKNAME } from '../../constants/chatting';
 
 const ChattingRowWrapper = styled.li`
   margin-top: 0.5rem;
@@ -13,7 +14,7 @@ const ChattingRowWrapper = styled.li`
 `;
 
 const ChattingRow = ({ nickname, nicknameColor, message }) => {
-  const newNickname = nickname ? `${nickname} : ` : 'Guest : ';
+  const newNickname = nickname ? `${nickname} : ` : `${DEFAULT_NICKNAME} : `;
   return (
     <li>
       <ChattingRowWrapper>
