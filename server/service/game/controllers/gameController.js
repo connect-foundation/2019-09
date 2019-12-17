@@ -79,6 +79,62 @@ const sendEndSet = gameManager => {
   });
 };
 
+const sendQuizCandidatesToStreamer = (gameManager, quizCandidates) => {
+  const streamer = gameManager.getStreamer();
+  const currentRound = gameManager.getCurrentRound();
+  const currentSet = gameManager.getCurrentSet();
+
+  io.to(streamer.getSocketId()).emit('prepareSet', {
+    currentRound,
+    currentSet,
+    quizCandidates,
+  });
+};
+
+const sendEmptyQuizCandidatesToViewers = gameManager => {
+  const streamer = gameManager.getStreamer();
+  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+  const currentRound = gameManager.getCurrentRound();
+  const currentSet = gameManager.getCurrentSet();
+  const quizCandidates = [];
+
+  viewers.forEach(viewer => {
+    io.to(viewer.getSocketId()).emit('prepareSet', {
+      currentRound,
+      currentSet,
+      quizCandidates,
+    });
+  });
+};
+
+const startSet = (gameManager, timer, quiz) => {
+  timer.clear();
+  gameManager.setQuiz(quiz);
+  gameManager.setStatus(GAME_PLAYING);
+
+  const streamer = gameManager.getStreamer();
+  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+
+  sendQuizToStreamer(streamer, quiz);
+  sendQuizLengthToViewers(viewers, quiz.length);
+
+  runInGameTimer(gameManager, timer);
+};
+
+const quizSelectionTimeoutHandler = (gameManager, timer) => {
+  const quiz = gameManager.selectRandomQuiz();
+  gameManager.setQuiz(quiz);
+  startSet(gameManager, timer, quiz);
+};
+
+const runQuizSelectionTimer = (gameManager, timer) => {
+  timer.startIntegrationTimer(
+    MAX_QUIZ_SELECTION_WAITING_SECONDS,
+    quizSelectionTimeoutHandler.bind(null, gameManager, timer),
+    sendCurrentSecondsHandler,
+  );
+};
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -102,24 +158,14 @@ const endSet = (gameManager, timer) => {
   sendEndSet(gameManager);
 };
 
-const startSet = (gameManager, timer, quiz) => {
-  timer.clear();
-  gameManager.setQuiz(quiz);
-  gameManager.setStatus(GAME_PLAYING);
+const prepareQuizSelection = async (gameManager, timer) => {
+  const quizCandidates = await pickQuizCandidates();
+  gameManager.setQuizCandidates(quizCandidates);
 
-  const streamer = gameManager.getStreamer();
-  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+  sendQuizCandidatesToStreamer(gameManager, quizCandidates);
+  sendEmptyQuizCandidatesToViewers(gameManager);
 
-  sendQuizToStreamer(streamer, quiz);
-  sendQuizLengthToViewers(viewers, quiz.length);
-
-  runInGameTimer(gameManager, timer);
-};
-
-const quizSelectionTimeoutHandler = (gameManager, timer) => {
-  const quiz = gameManager.selectRandomQuiz();
-  gameManager.setQuiz(quiz);
-  startSet(gameManager, timer, quiz);
+  runQuizSelectionTimer(gameManager, timer);
 };
 
 const prepareSet = async (gameManager, timer) => {
@@ -128,28 +174,8 @@ const prepareSet = async (gameManager, timer) => {
    */
   gameManager.updateRoundAndSet();
   gameManager.setQuiz(QUIZ_NOT_SELECTED);
-  /**
-   * @todo 추후 DB 연결시 async await 필요
-   */
-  const quizCandidates = await pickQuizCandidates();
-  gameManager.setQuizCandidates(quizCandidates);
-  gameManager.getPlayers().forEach(player => {
-    const socketId = player.getSocketId();
 
-    io.to(socketId).emit('prepareSet', {
-      currentRound: gameManager.getCurrentRound(),
-      currentSet: gameManager.getCurrentSet(),
-      quizCandidates: gameManager.isStreamer(socketId)
-        ? gameManager.getQuizCandidates()
-        : [],
-    });
-  });
-
-  timer.startIntegrationTimer(
-    MAX_QUIZ_SELECTION_WAITING_SECONDS,
-    quizSelectionTimeoutHandler.bind(null, gameManager, timer),
-    sendCurrentSecondsHandler,
-  );
+  await prepareQuizSelection(gameManager, timer);
 };
 
 const disconnectPlayersAndStartGame = (gameManager, timer) => {
