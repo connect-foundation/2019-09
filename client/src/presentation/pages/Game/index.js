@@ -19,6 +19,7 @@ import useIsMobile from '../../../hooks/useIsMobile';
 import { TOAST_TPYES } from '../../../constants/toast';
 import EVENTS from '../../../constants/events';
 import { gameReducer, gameState as gameInitialState } from './store';
+import LINK_PATH from '../../../constants/path';
 
 let clientManager;
 
@@ -52,7 +53,7 @@ const Game = ({ location, match }) => {
   };
 
   const getMediaPermissionErrorHandler = () => {
-    history.push('/');
+    history.push(LINK_PATH.MAIN_PAGE);
     openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
     globalDispatch(actions.setClientManagerInitialized(false));
   };
