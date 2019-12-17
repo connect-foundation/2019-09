@@ -196,6 +196,16 @@ class GameManager {
     });
   }
 
+  resetStreamerConnectionOfAllPlayers() {
+    const players = this.getPlayers();
+    players.forEach(player => player.setIsConnectedToStreamer(false));
+  }
+
+  resetCorrectionOfAllPlayers() {
+    const players = this.getPlayers();
+    players.forEach(player => player.setIsCorrectPlayer(false));
+  }
+
   getScoreList() {
     const scoreList = this.players.map(player => {
       return {
