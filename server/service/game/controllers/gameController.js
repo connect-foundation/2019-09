@@ -79,6 +79,8 @@ const sendEndSetByGameManager = gameManager => {
   });
 };
 
+const sendQuizCandidatesToStreamer = ()
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -98,8 +100,7 @@ const pickQuizCandidates = async () => {
 const endSet = (gameManager, timer) => {
   timer.clear();
   gameManager.resetStreamerConnectionOfAllPlayers();
-  gameManager.resetAnswerCorrectionOfAllPlayers();
-
+  gameManager.resetCorrectionOfAllPlayers();
   sendEndSetByGameManager(gameManager);
 };
 
