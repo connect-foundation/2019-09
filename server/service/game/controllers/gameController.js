@@ -177,6 +177,15 @@ const sendEndGameToRoom = gameManager => {
   });
 };
 
+const sendResetGameToRoom = gameManager => {
+  const roomId = gameManager.getRoomId();
+  const players = gameManager.getPlayers();
+
+  io.in(roomId).emit('resetGame', {
+    players,
+  });
+};
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -292,9 +301,7 @@ const endGame = async (gameManager, timer) => {
 const resetGame = gameManager => {
   gameManager.reset();
   gameManager.resetAllPlayers();
-  io.in(gameManager.getRoomId()).emit('resetGame', {
-    players: gameManager.getPlayers(),
-  });
+  sendResetGameToRoom(gameManager);
 };
 
 const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
