@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../../contexts';
@@ -7,6 +6,7 @@ import { CenterTimer } from '../../components';
 import walkingCatImageSource from '../../../assets/cat.gif';
 import StreamingPanelPresentation from './presenter';
 import useStyles from './style';
+import { STREAMING_PANEL_MESSAGE_TYPE } from '../../../constants/game';
 
 const makeGameMessageContent = ({
   messageType,
@@ -16,13 +16,13 @@ const makeGameMessageContent = ({
   loadingMessage,
   quizCandidateButtonHandler,
 }) => {
-  if (messageType === 'streamerLoading') {
+  if (messageType === STREAMING_PANEL_MESSAGE_TYPE.STREAMER_LOADING) {
     return {
       center: <img alt="loading" src={loadingImageSource} />,
       bottom: <p>{loadingMessage}</p>,
     };
   }
-  if (messageType === 'quizSelection') {
+  if (messageType === STREAMING_PANEL_MESSAGE_TYPE.QUIZ_SELECTION) {
     return {
       center: <CenterTimer currentSeconds={currentSeconds} />,
       bottom: (
@@ -53,17 +53,17 @@ const StreamingPanel = ({ clientManager }) => {
   };
 
   if (quizCandidatesNotice.isVisible) {
-    messageType = 'quizSelection';
+    messageType = STREAMING_PANEL_MESSAGE_TYPE.QUIZ_SELECTION;
     showGameMessageBox = true;
   }
 
   if (scoreNotice.isVisible) {
-    messageType = 'scoreBoard';
+    messageType = STREAMING_PANEL_MESSAGE_TYPE.SCORE_BOARD;
     showScoreBoard = true;
   }
 
   if (messageNotice.isVisible) {
-    messageType = 'streamerLoading';
+    messageType = STREAMING_PANEL_MESSAGE_TYPE.STREAMER_LOADING;
     showGameMessageBox = true;
   }
 
