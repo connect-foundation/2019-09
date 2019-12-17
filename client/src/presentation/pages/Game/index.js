@@ -22,6 +22,25 @@ import { gameReducer, gameState as gameInitialState } from './store';
 
 let clientManager;
 
+const readyButtonHandler = () => {
+  clientManager.toggleReady();
+};
+
+const exitButtonHandler = () => {
+  clientManager.exitRoom();
+};
+
+const getMediaPermissionHandler = () => {
+  clientManager.init();
+};
+
+const attachPopstateEvent = () => {
+  window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
+  return () => {
+    window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
+  };
+};
+
 const Game = ({ location, match }) => {
   const {
     gameStatus,
@@ -51,25 +70,10 @@ const Game = ({ location, match }) => {
   const roomIdFromUrl = match.params.roomId;
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
-  const exitButtonHandler = () => {
-    clientManager.exitRoom();
-  };
-
   const showPlayersButtonHandler = () => {
     gameDispatch(
       actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
     );
-  };
-
-  const readyButtonHandler = () => {
-    clientManager.toggleReady();
-  };
-
-  const attachPopstateEvent = () => {
-    window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
-    return () => {
-      window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
-    };
   };
 
   const showPlayerListByViewShifting = () => {
@@ -88,10 +92,6 @@ const Game = ({ location, match }) => {
 
   const dispatchGamePageRootHeight = () => {
     gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
-  };
-
-  const getMediaPermissionHandler = () => {
-    clientManager.init();
   };
 
   const getMediaPermissionErrorHandler = () => {
