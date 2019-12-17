@@ -8,7 +8,7 @@ import { browserLocalStorage, makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
-import { SOCKETIO_SERVER_URL } from '../config';
+import { SOCKETIO_SERVER_URL } from '../constants/socket';
 
 class ClientManager {
   constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
