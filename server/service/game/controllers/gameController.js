@@ -147,6 +147,19 @@ const disconnectPlayers = players => {
   });
 };
 
+const sendReadyPlayersToRoom = (roomId, players) => {
+  players.forEach(player => {
+    io.in(roomId).emit('sendReady', {
+      socketId: player.getSocketId(),
+      isReady: player.getIsReady(),
+    });
+  });
+};
+
+const sendStartGameToRoom = roomId => {
+  io.in(roomId).emit('startGame');
+};
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -229,16 +242,14 @@ const preparePlayerTypes = gameManager => {
 };
 
 const prepareGame = (gameManager, timer) => {
+  const roomId = gameManager.getRoomId();
+  const players = gameManager.getPlayers();
+
   gameManager.cancelReadyAllPlayers();
-  gameManager.getPlayers().forEach(player => {
-    io.in(gameManager.getRoomId()).emit('sendReady', {
-      socketId: player.getSocketId(),
-      isReady: player.getIsReady(),
-    });
-  });
+  sendReadyPlayersToRoom(roomId, players);
 
   gameManager.prepareGame();
-  io.in(gameManager.getRoomId()).emit('startGame');
+  sendStartGameToRoom(roomId);
 
   preparePlayerTypes(gameManager);
   waitForPeerConnection(gameManager, timer);
@@ -279,7 +290,6 @@ const endGame = async (gameManager, timer) => {
 };
 
 const resetGame = gameManager => {
-  /** @todo 점수와 닉네임을 DB에 저장하는 로직 필요 */
   gameManager.reset();
   gameManager.resetAllPlayers();
   io.in(gameManager.getRoomId()).emit('resetGame', {
