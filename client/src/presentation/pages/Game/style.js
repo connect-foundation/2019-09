@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { STYLE_COLORS } from '../../../utils';
-import { MOBILE_PANEL_HEIGHT } from '../../../config';
+import { MOBILE_PANEL_HEIGHT } from '../../../constants/responsiveView';
 
 const useStyles = makeStyles(theme => ({
   root: props => ({

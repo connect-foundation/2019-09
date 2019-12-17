@@ -8,10 +8,10 @@ import { useToast } from '../../../hooks';
 import { ALLOW_CAMERA_MESSAGE } from '../../../constants/message';
 import {
   MOBILE_VIEW_BREAKPOINT,
-  WAITING_STATUS,
   MOBILE_VIEW,
   DESKTOP_VIEW,
-} from '../../../config';
+} from '../../../constants/responsiveView';
+import { WAITING_STATUS } from '../../../config';
 import GamePresentation from './presenter';
 import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
