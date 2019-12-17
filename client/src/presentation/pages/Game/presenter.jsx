@@ -36,6 +36,7 @@ const GamePresentation = ({ gameProps }) => {
     mobileChattingPanelVisibility,
     toast,
     closeToast,
+    isGameStatusWaiting,
   } = gameProps;
 
   return (
@@ -105,18 +106,20 @@ const GamePresentation = ({ gameProps }) => {
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          <Box className={classes.bottomLeftButtonContainer}>
-            {clientManager.getIsRoomPrivate() && (
-              <ShareUrlButton
-                onClick={shareUrlButtonClickHandler}
-                classNames={[classes.shareUrlButton]}
-              />
-            )}
+          {isGameStatusWaiting && (
+            <Box className={classes.bottomLeftButtonContainer}>
+              {clientManager.getIsRoomPrivate() && (
+                <ShareUrlButton
+                  onClick={shareUrlButtonClickHandler}
+                  classNames={[classes.shareUrlButton]}
+                />
+              )}
 
-            <ReadyButton onClick={readyButtonHandler}>
-              {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
-            </ReadyButton>
-          </Box>
+              <ReadyButton onClick={readyButtonHandler}>
+                {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
+              </ReadyButton>
+            </Box>
+          )}
         </Grid>
         {mobileChattingPanelVisibility ? (
           <>

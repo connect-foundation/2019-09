@@ -104,16 +104,16 @@ const useStyles = makeStyles(theme => ({
     right: '0',
     overflow: 'auto',
   },
-  bottomLeftButtonContainer: props => ({
+  bottomLeftButtonContainer: {
     width: '8rem',
     position: 'absolute',
     bottom: '2rem',
     left: '2rem',
-    display: props.isGameStatusWaiting ? 'none' : 'block',
+    display: 'none',
     [theme.breakpoints.down('xs')]: {
       display: 'block',
     },
-  }),
+  },
   gameStartHide: {
     display: 'none',
   },

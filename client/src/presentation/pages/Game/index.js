@@ -111,7 +111,6 @@ const Game = ({ location, match }) => {
   const classes = useStyles({
     gamePageRootHeight: gameState.gamePageRootHeight,
     isPlayerListVisible: gameState.isPlayerListVisible,
-    isGameStatusWaiting,
   });
 
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
@@ -129,6 +128,7 @@ const Game = ({ location, match }) => {
     mobileChattingPanelVisibility: gameState.mobileChattingPanelVisibility,
     toast,
     closeToast,
+    isGameStatusWaiting,
   };
 
   return <GamePresentation gameProps={gameProps} />;
