@@ -202,27 +202,16 @@ const prepareQuizSelection = async (gameManager, timer) => {
 };
 
 const prepareSet = async (gameManager, timer) => {
-  /**
-   * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
-   */
   gameManager.updateRoundAndSet();
   gameManager.setQuiz(QUIZ_NOT_SELECTED);
 
   await prepareQuizSelection(gameManager, timer);
 };
 
-/**
- * 스트리머가 접속을 허용하지 않았을 경우, 스트리머만 내보내고,
- * 아닐 경우, 연결되지 않은 사람들을 내보낸다.
- * 이후에 게임이 진행 가능하다면, disconnectPlayer쪽에서 처리하지 않기에
- * set를 다시 준비하면서 게임을 진행한다.
- */
 const disconnectPlayersAndStartGame = (gameManager, timer) => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
-
   const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
-
   const isAllPlayerDisconnected = playersToDisconnect.length === viewers.length;
 
   if (isAllPlayerDisconnected) {
