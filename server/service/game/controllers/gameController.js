@@ -278,10 +278,6 @@ module.exports = {
   startSet,
   endSet,
   endGame,
-  preparePlayerTypes,
-  waitForPeerConnection,
-  goToNextSet,
-  goToNextSetAfterNSeconds,
   resetGameAfterNSeconds,
   repeatSet,
 };
