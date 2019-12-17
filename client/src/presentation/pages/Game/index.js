@@ -11,7 +11,7 @@ import {
   MOBILE_VIEW,
   DESKTOP_VIEW,
 } from '../../../constants/responsiveView';
-import { WAITING_STATUS } from '../../../config';
+import { WAITING_STATUS } from '../../../constants/game';
 import GamePresentation from './presenter';
 import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
