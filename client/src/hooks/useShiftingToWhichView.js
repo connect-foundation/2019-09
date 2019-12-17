@@ -13,9 +13,7 @@ const useShiftingToWhichView = mobileViewBreakpoint => {
   useEffect(() => {
     if (!isViewShiftingToMobile(isMobile)) {
       setShiftingTo(DESKTOP_VIEW);
-      return;
-    }
-    if (isViewShiftingToMobile(isMobile)) {
+    } else if (isViewShiftingToMobile(isMobile)) {
       setShiftingTo(MOBILE_VIEW);
     }
   }, [isMobile]);
