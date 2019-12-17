@@ -32,6 +32,32 @@ const assignViewer = (viewer, streamer) => {
   });
 };
 
+const sendQuizToStreamer = (streamer, quiz) => {
+  const streamerSocketId = streamer.getSocketId();
+  io.to(streamerSocketId).emit('clearWindow');
+  io.to(streamerSocketId).emit('startSet', {
+    quiz,
+  });
+};
+
+const sendQuizLengthToViewers = (viewers, quizLength) => {
+  viewers.forEach(viewer => {
+    const viewerSocketId = viewer.getSocketId();
+    io.to(viewerSocketId).emit('clearWindow');
+    io.to(viewerSocketId).emit('startSet', {
+      quizLength,
+    });
+  });
+};
+
+const runInGameTimer = (gameManager, timer) => {
+  timer.startIntegrationTimer(
+    ONE_SET_SECONDS,
+    repeatSet.bind(null, gameManager, timer),
+    sendCurrentSecondsHandler,
+  );
+};
+
 const assignPlayerType = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -72,20 +98,14 @@ const startSet = (gameManager, timer, quiz) => {
   timer.clear();
   gameManager.setQuiz(quiz);
   gameManager.setStatus(GAME_PLAYING);
-  gameManager.getPlayers().forEach(player => {
-    const socketId = player.getSocketId();
-    io.to(socketId).emit('clearWindow');
-    io.to(socketId).emit('startSet', {
-      quiz: gameManager.isStreamer(socketId) ? quiz : QUIZ_NOT_SELECTED,
-      quizLength: quiz.length,
-    });
-  });
 
-  timer.startIntegrationTimer(
-    ONE_SET_SECONDS,
-    repeatSet.bind(null, gameManager, timer),
-    sendCurrentSecondsHandler,
-  );
+  const streamer = gameManager.getStreamer();
+  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+
+  sendQuizToStreamer(streamer, quiz);
+  sendQuizLengthToViewers(viewers, quiz.length);
+
+  runInGameTimer(gameManager, timer);
 };
 
 const quizSelectionTimeoutHandler = (gameManager, timer) => {
