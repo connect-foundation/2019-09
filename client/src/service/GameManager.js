@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { DispatchContext, GlobalContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
-import { WAITING_FOR_STREAMER } from '../config';
+import { WAITING_FOR_STREAMER } from '../constants/message';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';

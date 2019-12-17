@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
-import { DEFAULT_TEXT_INPUT_MAX_LENGTH } from '../../config';
+import { DEFAULT_TEXT_INPUT_MAX_LENGTH } from '../../constants/inputConstraints';
 
 const TextInput = ({
   label,

@@ -1,0 +1,11 @@
+const MOBILE_PANEL_HEIGHT = '90%';
+const MOBILE_VIEW = 'mobile';
+const MOBILE_VIEW_BREAKPOINT = 600;
+const DESKTOP_VIEW = 'desktop';
+
+export {
+  MOBILE_PANEL_HEIGHT,
+  MOBILE_VIEW,
+  MOBILE_VIEW_BREAKPOINT,
+  DESKTOP_VIEW,
+};

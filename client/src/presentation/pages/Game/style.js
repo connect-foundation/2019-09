@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { STYLE_COLORS } from '../../../utils';
-import { MOBILE_PANEL_HEIGHT } from '../../../config';
+import styleColors from '../../../constants/styleColors';
+import { MOBILE_PANEL_HEIGHT } from '../../../constants/responsiveView';
 
 const useStyles = makeStyles(theme => ({
   root: props => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   gameHeader: {
-    backgroundColor: STYLE_COLORS.THEME_COLOR,
+    backgroundColor: styleColors.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
     height: '10%',
   },

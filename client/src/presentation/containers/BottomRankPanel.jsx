@@ -5,7 +5,7 @@ import { Container, Box } from '@material-ui/core';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { BeatLoader } from 'react-spinners';
 import { RankingRow } from '../components';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const useStyle = makeStyles(theme => ({
   bottomRankContainer: {
@@ -41,8 +41,8 @@ const BottomRankPanel = ({ rankingList, loading }) => {
 
       {rankingList.length === 0 ? (
         <SkeletonTheme
-          color={STYLE_COLORS.SKELETON_COMPONENT_COLOR}
-          highlightColor={STYLE_COLORS.SKELETON_HIGHLIGHT_COLOR}
+          color={styleColors.SKELETON_COMPONENT_COLOR}
+          highlightColor={styleColors.SKELETON_HIGHLIGHT_COLOR}
         >
           <Box className={classes.skeleton}>
             <Skeleton height={30} count={10} />
@@ -65,7 +65,7 @@ const BottomRankPanel = ({ rankingList, loading }) => {
           sizeUnit="rem"
           size={1.5}
           margin={2}
-          color={STYLE_COLORS.LOADING_DOT_COLOR}
+          color={styleColors.LOADING_DOT_COLOR}
           loading={loading}
         />
       </Box>
