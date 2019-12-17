@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
-import { MAX_CHAT_LENGTH } from '../config';
+import { MAX_CHAT_LENGTH } from '../constants/inputConstraints';
 import EVENTS from '../constants/events';
 import WELCOME_MESSAGE from '../constants/chatting';
 import {

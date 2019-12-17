@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
-import { NICKNAME_LENGTH } from '../../config';
+import { NICKNAME_LENGTH } from '../../constants/inputConstraints';
 import { PLAY_WITH_FRIENDS_BUTTON_TEXT } from '../../constants/button';
 import { browserLocalStorage, STYLE_COLORS } from '../../utils';
 import { ENTER_KEYCODE } from '../../constants/browser';
