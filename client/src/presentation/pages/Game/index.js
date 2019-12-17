@@ -29,6 +29,7 @@ const Game = ({ location, match }) => {
     currentSeconds,
     quiz,
     quizLength,
+    clientManagerInitialized,
     toast,
   } = useContext(GlobalContext);
   const globalDispatch = useContext(DispatchContext);
@@ -52,11 +53,11 @@ const Game = ({ location, match }) => {
 
   const getMediaPermissionErrorHandler = () => {
     history.push('/');
-    clientManager = null;
     openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
+    globalDispatch(actions.setClientManagerInitialized(false));
   };
 
-  if (!clientManager) {
+  if (!clientManagerInitialized) {
     clientManager = new ClientManager({
       history,
       roomIdFromUrl,
@@ -66,11 +67,11 @@ const Game = ({ location, match }) => {
       .getMediaPermission()
       .then(getMediaPermissionHandler)
       .catch(getMediaPermissionErrorHandler);
+    globalDispatch(actions.setClientManagerInitialized(true));
   }
 
   const exitButtonHandler = () => {
     clientManager.exitRoom();
-    clientManager = null;
   };
 
   const showPlayersButtonHandler = () => {
