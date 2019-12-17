@@ -216,13 +216,11 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
 
   if (isAllPlayerDisconnected) {
     disconnectPlayer(streamer);
-    return;
-  }
-
-  disconnectPlayers(playersToDisconnect);
-
-  if (gameManager.isGameContinuable()) {
-    prepareSet(gameManager, timer);
+  } else {
+    disconnectPlayers(playersToDisconnect);
+    if (gameManager.isGameContinuable()) {
+      prepareSet(gameManager, timer);
+    }
   }
 };
 
