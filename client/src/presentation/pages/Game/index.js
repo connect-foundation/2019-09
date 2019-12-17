@@ -17,6 +17,7 @@ import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { TOAST_TPYES } from '../../../constants/toast';
+import EVENTS from '../../../constants/events';
 
 let clientManager;
 
@@ -90,8 +91,9 @@ const Game = ({ location, match }) => {
   };
 
   useEffect(() => {
-    window.onpopstate = () => {
-      exitButtonHandler();
+    window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
+    return () => {
+      window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
     };
   }, []);
 
