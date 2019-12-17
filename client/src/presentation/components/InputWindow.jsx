@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
 import { SendButton } from './Buttons';
-import { CONSTANT_VALUES } from '../../utils';
+import { ENTER_KEYCODE } from '../../constants/browser';
 import { MAX_CHAT_LENGTH } from '../../config';
 
 const useStyles = makeStyles(theme => ({
@@ -38,7 +38,7 @@ const InputWindow = ({ clientManager, chattingDisabled }) => {
   };
 
   const messageInputOnKeyPressHandler = event => {
-    if (event.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
+    if (event.charCode === ENTER_KEYCODE) {
       sendChattingMessageHandler();
     }
   };

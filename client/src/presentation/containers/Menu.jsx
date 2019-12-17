@@ -5,12 +5,8 @@ import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
 import { NICKNAME_LENGTH } from '../../config';
 import { PLAY_WITH_FRIENDS_BUTTON_TEXT } from '../../constants/button';
-
-import {
-  browserLocalStorage,
-  CONSTANT_VALUES,
-  STYLE_COLORS,
-} from '../../utils';
+import { browserLocalStorage, STYLE_COLORS } from '../../utils';
+import { ENTER_KEYCODE } from '../../constants/browser';
 
 const useStyle = makeStyles({
   menu: {
@@ -59,7 +55,7 @@ const Menu = () => {
   };
 
   const nicknameInputKeypressHandler = event => {
-    if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
+    if (event.charCode !== ENTER_KEYCODE) return;
     const trimmedNickname = nickname.trim();
     if (checkNicknameValidity(trimmedNickname)) {
       const slicedNickname = sliceNicknameLength(trimmedNickname);
