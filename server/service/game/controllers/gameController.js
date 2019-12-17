@@ -334,7 +334,6 @@ module.exports = {
   prepareGame,
   prepareSet,
   startSet,
-  endSet,
   endGame,
   resetGameAfterNSeconds,
   repeatSet,
