@@ -11,7 +11,7 @@ import styleColors from '../../constants/styleColors';
 
 const useStyle = makeStyles({
   menu: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: styleColors.PURE_WHITE_COLOR,
     width: '100%',
     height: 'auto',
     padding: '2rem',
