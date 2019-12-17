@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 // eslint-disable-next-line no-unused-vars
 import adapter from 'webrtc-adapter';
-import { PEER_CONNECTION_CONFIG, MEDIA_CONSTRAINTS } from './config';
+import { PEER_CONNECTION_CONFIG, MEDIA_CONSTRAINTS } from '../constants/webRTC';
 /**
  * stream 관리
  * rtcPeerConnection 관리
