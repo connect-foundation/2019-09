@@ -8,6 +8,7 @@ import { PLAY_WITH_FRIENDS_BUTTON_TEXT } from '../../constants/button';
 import { browserLocalStorage } from '../../utils';
 import { ENTER_KEYCODE } from '../../constants/browser';
 import styleColors from '../../constants/styleColors';
+import LINK_PATH from '../../constants/path';
 
 const useStyle = makeStyles({
   menu: {
@@ -61,7 +62,7 @@ const Menu = () => {
     if (checkNicknameValidity(trimmedNickname)) {
       const slicedNickname = sliceNicknameLength(trimmedNickname);
       browserLocalStorage.setNickname(slicedNickname);
-      history.push('/game');
+      history.push(LINK_PATH.GAME_PAGE);
     }
   };
 
@@ -91,7 +92,7 @@ const Menu = () => {
       />
 
       <Link
-        to="/game"
+        to={LINK_PATH.GAME_PAGE}
         className={classes.fullAnchor}
         onClick={playButtonClickHandler}
       >
@@ -99,7 +100,7 @@ const Menu = () => {
       </Link>
       <Link
         to={{
-          pathname: '/game',
+          pathname: LINK_PATH.GAME_PAGE,
           isPrivateRoomCreation: true,
         }}
         className={classes.fullAnchor}
@@ -109,7 +110,7 @@ const Menu = () => {
           {PLAY_WITH_FRIENDS_BUTTON_TEXT}
         </MenuButton>
       </Link>
-      <Link to="/ranking" className={classes.fullAnchor}>
+      <Link to={LINK_PATH.RANKING_PAGE} className={classes.fullAnchor}>
         <MenuButton fontSize={menuButtonFontSize}>RANK</MenuButton>
       </Link>
     </Container>
