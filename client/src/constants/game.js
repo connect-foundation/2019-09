@@ -1,5 +1,3 @@
-const WAITING_STATUS = 'waiting';
-
 const READY_BUTTON_TEXT = {
   READY: 'Ready',
   CANCEL: 'Cancel',
@@ -11,4 +9,10 @@ const STREAMING_PANEL_MESSAGE_TYPE = {
   SCORE_BOARD: 'scoreBoard',
 };
 
-export { WAITING_STATUS, READY_BUTTON_TEXT, STREAMING_PANEL_MESSAGE_TYPE };
+const GAME_STATUS = {
+  WAITING: 'waiting',
+  PLAYING: 'playing',
+  SCORE_SHARING: 'scoreSharing',
+};
+
+export { READY_BUTTON_TEXT, STREAMING_PANEL_MESSAGE_TYPE, GAME_STATUS };

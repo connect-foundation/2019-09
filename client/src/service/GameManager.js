@@ -11,6 +11,7 @@ import {
   DEFAULT_INACTIVE_PLAYER_BAN_TIME,
   PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME,
 } from '../constants/timer';
+import { GAME_STATUS } from '../constants/game';
 
 class GameManager {
   constructor({ socket, localPlayer, remotePlayers, isRoomPrivate }) {
@@ -109,7 +110,7 @@ class GameManager {
   endSetHandler({ players, currentRound, currentSet, scoreList }) {
     this.syncAllPlayers(players);
     this.makeAndDispatchViewPlayerList();
-    this.dispatch(actions.setGameStatus('scoreSharing'));
+    this.dispatch(actions.setGameStatus(GAME_STATUS.SCORE_SHARING));
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
     this.dispatch(actions.setChattingDisabled(false));
@@ -150,7 +151,7 @@ class GameManager {
 
   startGameHandler() {
     this.timer.clear();
-    this.dispatch(actions.setGameStatus('playing'));
+    this.dispatch(actions.setGameStatus(GAME_STATUS.PLAYING));
   }
 
   sendPlayersHandler({ players }) {

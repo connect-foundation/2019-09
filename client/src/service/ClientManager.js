@@ -9,6 +9,7 @@ import EVENTS from '../constants/events';
 import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
 import { SOCKETIO_SERVER_URL } from '../constants/socket';
+import { GAME_STATUS } from '../constants/game';
 
 class ClientManager {
   constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
@@ -167,7 +168,7 @@ class ClientManager {
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
     this.dispatch(actions.clearWindow());
-    this.dispatch(actions.setGameStatus('waiting'));
+    this.dispatch(actions.setGameStatus(GAME_STATUS.WAITING));
     this.gameManager.setInactivePlayerBanTimer();
   }
 

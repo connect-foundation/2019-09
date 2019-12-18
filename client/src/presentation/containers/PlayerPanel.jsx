@@ -6,7 +6,7 @@ import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
 import { shareUrlButtonClickHandler } from '../../utils';
 import styleColors from '../../constants/styleColors';
-import { WAITING_STATUS, READY_BUTTON_TEXT } from '../../constants/game';
+import { READY_BUTTON_TEXT, GAME_STATUS } from '../../constants/game';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -46,7 +46,7 @@ const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
   const { viewPlayerList, gameStatus } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
 
   return (
     <Box className={classes.playerPanel}>
