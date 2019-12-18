@@ -299,6 +299,8 @@ const endGame = async (gameManager, timer) => {
   }
   gameManager.setStatus('ending');
 
+  gameManager.resetStreamerConnectionOfAllPlayers();
+  gameManager.resetCorrectionOfAllPlayers();
   sendEndGameToRoom(gameManager);
   timer.clear();
   await rankingRepository.insertRankings(players);
