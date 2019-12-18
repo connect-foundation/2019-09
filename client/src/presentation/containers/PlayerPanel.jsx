@@ -6,7 +6,7 @@ import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
 import { shareUrlButtonClickHandler } from '../../utils';
 import styleColors from '../../constants/styleColors';
-import { WAITING_STATUS } from '../../constants/game';
+import { WAITING_STATUS, READY_BUTTON_TEXT } from '../../constants/game';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -76,7 +76,9 @@ const PlayerPanel = ({ clientManager }) => {
               clientManager.toggleReady();
             }}
           >
-            {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
+            {localPlayer && localPlayer.isReady
+              ? READY_BUTTON_TEXT.CANCEL
+              : READY_BUTTON_TEXT.READY}
           </ReadyButton>
         </Box>
       )}

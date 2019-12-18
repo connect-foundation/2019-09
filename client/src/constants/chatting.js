@@ -5,4 +5,8 @@ const WELCOME_MESSAGE = (isRoomPrivate, minutes, seconds) => ({
   } 안에 READY버튼을 눌러주세요.🙌`,
 });
 
-export default WELCOME_MESSAGE;
+const DEFAULT_NICKNAME = 'Guest';
+
+const CHATTING_INPUT_PLACEHOLER = 'Please enter a message.';
+
+export { WELCOME_MESSAGE, DEFAULT_NICKNAME, CHATTING_INPUT_PLACEHOLER };

@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
 import { RankPodium } from '../components';
+import {
+  DEFAULT_SCORE,
+  DEFAULT_NICKNAMES,
+  FIRST_PLACE,
+  SECOND_PLACE,
+  THIRD_PLACE,
+} from '../../constants/ranking';
 
 const useStyle = makeStyles(theme => ({
   topRankContainer: {
@@ -24,25 +31,31 @@ const findRanker = (rank, rankingList) => {
 
 const TopRankPanel = ({ rankingList }) => {
   const classes = useStyle();
-  const firstPlace = findRanker('1', rankingList);
-  const secondPlace = findRanker('2', rankingList);
-  const thirdPlace = findRanker('3', rankingList);
+  const firstPlace = findRanker(FIRST_PLACE, rankingList);
+  const secondPlace = findRanker(SECOND_PLACE, rankingList);
+  const thirdPlace = findRanker(THIRD_PLACE, rankingList);
   return (
     <Container className={classes.topRankContainer}>
       <RankPodium
-        rank={secondPlace ? secondPlace.rank : '2'}
-        rankerScore={secondPlace ? secondPlace.score : '0'}
-        rankerNickname={secondPlace ? secondPlace.nickname : '2등'}
+        rank={secondPlace ? secondPlace.rank : SECOND_PLACE}
+        rankerScore={secondPlace ? secondPlace.score : DEFAULT_SCORE}
+        rankerNickname={
+          secondPlace ? secondPlace.nickname : DEFAULT_NICKNAMES.SECOND_PLACEC
+        }
       />
       <RankPodium
-        rank={firstPlace ? firstPlace.rank : '1'}
-        rankerScore={firstPlace ? firstPlace.score : '0'}
-        rankerNickname={firstPlace ? firstPlace.nickname : '1등'}
+        rank={firstPlace ? firstPlace.rank : FIRST_PLACE}
+        rankerScore={firstPlace ? firstPlace.score : DEFAULT_SCORE}
+        rankerNickname={
+          firstPlace ? firstPlace.nickname : DEFAULT_NICKNAMES.FIRST_PLACE
+        }
       />
       <RankPodium
-        rank={thirdPlace ? thirdPlace.rank : '3'}
-        rankerScore={thirdPlace ? thirdPlace.score : '0'}
-        rankerNickname={thirdPlace ? thirdPlace.nickname : '3등'}
+        rank={thirdPlace ? thirdPlace.rank : THIRD_PLACE}
+        rankerScore={thirdPlace ? thirdPlace.score : DEFAULT_SCORE}
+        rankerNickname={
+          thirdPlace ? thirdPlace.nickname : DEFAULT_NICKNAMES.THIRD_PLACE
+        }
       />
     </Container>
   );
