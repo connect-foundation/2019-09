@@ -9,20 +9,8 @@ const emitEventsAfterJoin = socket => {
   socket.emit(EVENTS.SEND_ROOMID, { roomId: socket.roomId });
 };
 
-const matchHandler = (
-  socket,
-  { nickname, roomIdFromUrl, isPrivateRoomCreation },
-) => {
+const getRoomId = (roomIdFromUrl, isPrivateRoomCreation) => {
   let roomId;
-  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
-  const player = new Player({
-    nickname: slicedNickname,
-    socketId: socket.id,
-    nicknameColor: getRandomColor(),
-  });
-
-  const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
-
   if (!!roomIdFromUrl || isPrivateRoomCreation) {
     roomId = roomController.getPrivateRoomInformationToJoin(
       roomIdFromUrl,
@@ -31,6 +19,21 @@ const matchHandler = (
   } else {
     roomId = roomController.getPublicRoomInformantionToJoin();
   }
+  return roomId;
+};
+
+const matchHandler = (
+  socket,
+  { nickname, roomIdFromUrl, isPrivateRoomCreation },
+) => {
+  const roomId = getRoomId(roomIdFromUrl, isPrivateRoomCreation);
+  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
+  const player = new Player({
+    nickname: slicedNickname,
+    socketId: socket.id,
+    nicknameColor: getRandomColor(),
+  });
+  const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
 
   roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
 
