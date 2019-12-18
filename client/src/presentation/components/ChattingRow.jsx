@@ -15,18 +15,21 @@ const ChattingRowWrapper = styled.li`
 const ChattingRow = ({ nickname, nicknameColor, message }) => {
   const newNickname = nickname ? `${nickname} : ` : 'Guest : ';
   return (
-    <li>
-      <ChattingRowWrapper>
-        <Nickname nicknameColor={nicknameColor}>{newNickname}</Nickname>
-        <Message>{message}</Message>
-      </ChattingRowWrapper>
-    </li>
+    <ChattingRowWrapper>
+      <Nickname nicknameColor={nicknameColor}>{newNickname}</Nickname>
+      <Message>{message}</Message>
+    </ChattingRowWrapper>
   );
 };
 
+ChattingRow.defaultProps = {
+  nickname: '',
+  nicknameColor: '',
+};
+
 ChattingRow.propTypes = {
-  nickname: PropTypes.string.isRequired,
-  nicknameColor: PropTypes.string.isRequired,
+  nickname: PropTypes.string,
+  nicknameColor: PropTypes.string,
   message: PropTypes.string.isRequired,
 };
 

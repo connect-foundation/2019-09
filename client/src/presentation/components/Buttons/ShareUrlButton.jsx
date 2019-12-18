@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,15 +20,22 @@ const useStyles = makeStyles({
 const ShareUrlButton = ({ onClick, classNames }) => {
   const classes = useStyles();
   return (
-    <Button onClick={onClick} className={[...classNames, classes.button]}>
+    <Button
+      onClick={onClick}
+      className={`${classNames.join(' ')} ${classes.button}`}
+    >
       <img alt="share" src={shareButtonImageSource} />
     </Button>
   );
 };
 
+ShareUrlButton.defaultProps = {
+  classNames: [],
+};
+
 ShareUrlButton.propTypes = {
   onClick: PropTypes.func.isRequired,
-  classNames: PropTypes.shape.isRequired,
+  classNames: PropTypes.array,
 };
 
 export default ShareUrlButton;

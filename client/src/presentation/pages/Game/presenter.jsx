@@ -36,7 +36,7 @@ const GamePresentation = ({ gameProps }) => {
     mobileChattingPanelVisibility,
     toast,
     closeToast,
-    isGameStatusWaiting,
+    isReadyButtonVisible,
   } = gameProps;
 
   return (
@@ -77,7 +77,7 @@ const GamePresentation = ({ gameProps }) => {
         <Grid
           item
           xs={2}
-          className={[classes.bottomGridContent, classes.leftGridContent]}
+          className={`${classes.bottomGridContent} ${classes.leftGridContent}`}
         >
           <Box className={classes.playerPanelContainer}>
             <PlayerPanel clientManager={clientManager} />
@@ -96,17 +96,13 @@ const GamePresentation = ({ gameProps }) => {
         <Grid
           item
           xs={7}
-          className={[
-            classes.bottomGridContent,
-            classes.mobileFullWidth,
-            classes.streamingPanelGrid,
-          ]}
+          className={`${classes.bottomGridContent} ${classes.mobileFullWidth} ${classes.streamingPanelGrid}`}
         >
           <StreamingPanel
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          {isGameStatusWaiting && (
+          {isReadyButtonVisible && (
             <Box className={classes.bottomLeftButtonContainer}>
               {clientManager.getIsRoomPrivate() && (
                 <ShareUrlButton
@@ -114,7 +110,6 @@ const GamePresentation = ({ gameProps }) => {
                   classNames={[classes.shareUrlButton]}
                 />
               )}
-
               <ReadyButton onClick={readyButtonHandler}>
                 {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
               </ReadyButton>
@@ -126,17 +121,14 @@ const GamePresentation = ({ gameProps }) => {
             <Grid
               item
               xs={4}
-              className={[
-                classes.bottomGridContent,
-                classes.mobileChattingPanel,
-              ]}
+              className={`${classes.bottomGridContent} ${classes.mobileChattingPanel}`}
             >
               <MobileChattingPanel clientManager={clientManager} />
             </Grid>
             <Grid
               item
               xs={3}
-              className={[classes.bottomGridContent, classes.chattingContainer]}
+              className={`${classes.bottomGridContent} ${classes.chattingContainer}`}
             >
               <ChattingPanel
                 clientManager={clientManager}
@@ -148,7 +140,7 @@ const GamePresentation = ({ gameProps }) => {
           <Grid
             item
             xs={3}
-            className={[classes.bottomGridContent, classes.chattingContainer]}
+            className={`${classes.bottomGridContent} ${classes.chattingContainer}`}
           >
             <ChattingPanel clientManager={clientManager} />
           </Grid>

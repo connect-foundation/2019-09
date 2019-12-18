@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -58,6 +59,7 @@ const Game = ({ location, match }) => {
     isPlayerListVisible: gameState.isPlayerListVisible,
   });
   const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isReadyButtonVisible = isGameStatusWaiting && currentIsMobile;
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
@@ -130,15 +132,15 @@ const Game = ({ location, match }) => {
     mobileChattingPanelVisibility: gameState.mobileChattingPanelVisibility,
     toast,
     closeToast,
-    isGameStatusWaiting,
+    isReadyButtonVisible,
   };
 
   return <GamePresentation gameProps={gameProps} />;
 };
 
 Game.propTypes = {
-  location: PropTypes.shape.isRequired,
-  match: PropTypes.shape.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Game;

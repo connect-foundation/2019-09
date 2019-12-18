@@ -36,12 +36,16 @@ const MessageInput = ({
   );
 };
 
+MessageInput.defaultProps = {
+  maxLength: 0,
+};
+
 MessageInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onKeyPress: PropTypes.func.isRequired,
   chattingDisabled: PropTypes.bool.isRequired,
-  maxLength: PropTypes.string.isRequired,
+  maxLength: PropTypes.number,
 };
 
 export default MessageInput;

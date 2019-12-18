@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,6 +8,8 @@ import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
 import { shareUrlButtonClickHandler } from '../../utils';
 import styleColors from '../../constants/styleColors';
 import { WAITING_STATUS } from '../../constants/game';
+import useIsMobile from '../../hooks/useIsMobile';
+import { MOBILE_VIEW_BREAKPOINT } from '../../constants/responsiveView';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -45,14 +48,18 @@ const useStyle = makeStyles(theme => ({
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
   const { viewPlayerList, gameStatus } = useContext(GlobalContext);
+  const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isReadyButtonVisible = !currentIsMobile && isGameStatusWaiting;
 
   return (
     <Box className={classes.playerPanel}>
       {viewPlayerList.map((player, index) => {
+        const key = `${player.nickname}${index}`;
         return (
           <PlayerProfile
+            key={key}
             order={index}
             nickname={player.nickname}
             score={player.score}
@@ -63,7 +70,7 @@ const PlayerPanel = ({ clientManager }) => {
           />
         );
       })}
-      {isGameStatusWaiting && (
+      {isReadyButtonVisible && (
         <Box className={classes.bottomLeftButtonContainer}>
           {clientManager.getIsRoomPrivate() && (
             <ShareUrlButton
@@ -84,8 +91,12 @@ const PlayerPanel = ({ clientManager }) => {
   );
 };
 
+PlayerPanel.defaultProps = {
+  clientManager: {},
+};
+
 PlayerPanel.propTypes = {
-  clientManager: PropTypes.shape.isRequired,
+  clientManager: PropTypes.object,
 };
 
 export default PlayerPanel;
