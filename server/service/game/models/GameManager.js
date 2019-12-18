@@ -1,7 +1,7 @@
 const {
   MAX_ROUND_NUMBER,
   MIN_PLAYER_COUNT,
-  GAME_INITIAL_PREPARING,
+  CONNECTING,
 } = require('../../../config');
 
 class GameManager {
@@ -101,7 +101,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = GAME_INITIAL_PREPARING;
+    this.status = CONNECTING;
   }
 
   updateRoundAndSet() {

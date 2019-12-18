@@ -5,7 +5,7 @@ const {
   SECONDS_AFTER_GAME_END,
   GAME_PLAYING,
   GAME_INITIALIZING,
-  GAME_INITIAL_PREPARING,
+  CONNECTING,
   MIN_PLAYER_COUNT,
 } = require('../../../config');
 
@@ -37,7 +37,7 @@ const disconnectingHandler = socket => {
     if (
       roomStatus === GAME_INITIALIZING ||
       roomStatus === GAME_PLAYING ||
-      roomStatus === GAME_INITIAL_PREPARING
+      roomStatus === CONNECTING
     ) {
       if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
         gameController.repeatSet(gameManager, timer);
