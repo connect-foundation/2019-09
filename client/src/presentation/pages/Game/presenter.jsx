@@ -77,7 +77,7 @@ const GamePresentation = ({ gameProps }) => {
         <Grid
           item
           xs={2}
-          className={[classes.bottomGridContent, classes.leftGridContent]}
+          className={`${classes.bottomGridContent} ${classes.leftGridContent}`}
         >
           <Box className={classes.playerPanelContainer}>
             <PlayerPanel clientManager={clientManager} />
@@ -96,11 +96,7 @@ const GamePresentation = ({ gameProps }) => {
         <Grid
           item
           xs={7}
-          className={[
-            classes.bottomGridContent,
-            classes.mobileFullWidth,
-            classes.streamingPanelGrid,
-          ]}
+          className={`${classes.bottomGridContent} ${classes.mobileFullWidth} ${classes.streamingPanelGrid}`}
         >
           <StreamingPanel
             className={classes.mobileFullWidth}
@@ -136,7 +132,7 @@ const GamePresentation = ({ gameProps }) => {
             <Grid
               item
               xs={3}
-              className={[classes.bottomGridContent, classes.chattingContainer]}
+              className={`${classes.bottomGridContent} ${classes.chattingContainer}`}
             >
               <ChattingPanel
                 clientManager={clientManager}
@@ -148,7 +144,7 @@ const GamePresentation = ({ gameProps }) => {
           <Grid
             item
             xs={3}
-            className={[classes.bottomGridContent, classes.chattingContainer]}
+            className={`${classes.bottomGridContent} ${classes.chattingContainer}`}
           >
             <ChattingPanel clientManager={clientManager} />
           </Grid>
