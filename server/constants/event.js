@@ -1,4 +1,4 @@
-const EVENTS = {
+const EVENT = {
   SEND_ROOMID: 'sendRoomId',
   SEND_CURRENT_SECONDS: 'sendCurrentSeconds',
   ASSIGN_STREAMER: 'assignStreamer',
@@ -24,4 +24,4 @@ const EVENTS = {
   SEND_LEFT_PLAYER: 'sendLeftPlayer',
 };
 
-module.exports = EVENTS;
+module.exports = EVENT;

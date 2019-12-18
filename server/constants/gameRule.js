@@ -1,4 +1,4 @@
-const GAME_RULES = {
+const GAME_RULE = {
   INITIAL_ROUND: 1,
   MIN_PLAYER_COUNT: 2,
   MAX_PLAYER_COUNT: 4,
@@ -14,4 +14,4 @@ const GAME_RULES = {
   DEFAULT_QUIZ: '',
 };
 
-module.exports = GAME_RULES;
+module.exports = GAME_RULE;
