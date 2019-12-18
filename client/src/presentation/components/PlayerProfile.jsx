@@ -84,13 +84,17 @@ const PlayerProfile = ({
   );
 };
 
+PlayerProfile.defaultProps = {
+  isCorrectPlayer: false,
+};
+
 PlayerProfile.propTypes = {
   nickname: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   isReady: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
   isLocalPlayer: PropTypes.bool.isRequired,
-  isCorrectPlayer: PropTypes.bool.isRequired,
+  isCorrectPlayer: PropTypes.bool,
 };
 
 export default PlayerProfile;

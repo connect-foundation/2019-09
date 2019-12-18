@@ -1,58 +1,50 @@
 const { io } = require('../../io');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
-const {
-  PLAYING,
-  INITIALIZING,
-  INITIAL_PREPARING,
-  WAITING,
-} = require('../../../constants/gameStatus');
-const {
-  MIN_PLAYER_COUNT,
-  SECONDS_AFTER_GAME_END,
-} = require('../../../constants/gameRule');
+const GAME_STATUS = require('../../../constants/gameStatus');
+const { MIN_PLAYER_COUNT } = require('../../../constants/gameRule');
 const { SEND_LEFT_PLAYER } = require('../../../constants/event');
+
+const leavePlayer = (gameManager, socket) => {
+  gameManager.leaveRoom(socket.id);
+  socket.leave(gameManager.getRoomId());
+};
+
+const sendLeftPlayerToRoom = (roomId, socketId) => {
+  io.in(roomId).emit(SEND_LEFT_PLAYER, {
+    socketId,
+  });
+};
 
 const disconnectingHandler = socket => {
   try {
     const room = roomController.getRoomByRoomId(socket.roomId);
+    console.log('disconnectingHandler :', room);
     if (!room) {
       return;
     }
     const { gameManager, timer } = room;
-    gameManager.leaveRoom(socket.id);
-    socket.leave(gameManager.getRoomId());
     const roomStatus = gameManager.getStatus();
+    leavePlayer(gameManager, socket);
+    sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
-    io.in(gameManager.getRoomId()).emit(SEND_LEFT_PLAYER, {
-      socketId: socket.id,
-    });
+    const isGamePreparable =
+      roomStatus === GAME_STATUS.WAITING &&
+      gameManager.checkAllPlayersAreReady() &&
+      gameManager.getPlayers().length >= MIN_PLAYER_COUNT;
 
-    if (roomStatus === WAITING) {
-      if (
-        gameManager.checkAllPlayersAreReady() &&
-        gameManager.getPlayers().length >= MIN_PLAYER_COUNT
-      ) {
-        gameController.prepareGame(gameManager, timer);
-      }
+    if (isGamePreparable) {
+      gameController.prepareGame(gameManager, timer);
       return;
     }
 
     if (
-      roomStatus === INITIALIZING ||
-      roomStatus === PLAYING ||
-      roomStatus === INITIAL_PREPARING
+      roomStatus === GAME_STATUS.INITIALIZING ||
+      roomStatus === GAME_STATUS.PLAYING ||
+      roomStatus === GAME_STATUS.CONNECTING ||
+      roomStatus === GAME_STATUS.SCORE_SHARING
     ) {
-      if (!gameManager.isGameContinuable()) {
-        gameController.endGame(gameManager, timer);
-        gameController.resetGameAfterNSeconds({
-          seconds: SECONDS_AFTER_GAME_END,
-          gameManager,
-          timer,
-        });
-        return;
-      }
-      if (!gameManager.getStreamer()) {
+      if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
         gameController.repeatSet(gameManager, timer);
       }
     }

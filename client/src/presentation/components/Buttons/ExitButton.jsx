@@ -22,8 +22,12 @@ const ExitButton = ({ onClick, imageSource }) => {
   );
 };
 
+ExitButton.defaultProps = {
+  onClick: () => {},
+};
+
 ExitButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   imageSource: PropTypes.string.isRequired,
 };
 

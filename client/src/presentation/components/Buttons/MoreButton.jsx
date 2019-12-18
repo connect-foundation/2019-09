@@ -12,18 +12,29 @@ const useStyles = makeStyles({
   },
 });
 
-const MoreButton = ({ onClick, children }) => {
+const MoreButton = ({ onClick, children, isMoreButtomVisibile }) => {
   const classes = useStyles();
   return (
-    <Button onClick={onClick} variant="contained" className={classes.button}>
-      {children}
-    </Button>
+    <>
+      {isMoreButtomVisibile ? (
+        <Button
+          onClick={onClick}
+          variant="contained"
+          className={classes.button}
+        >
+          {children}
+        </Button>
+      ) : (
+        ''
+      )}
+    </>
   );
 };
 
 MoreButton.propTypes = {
   children: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
+  isMoreButtomVisibile: PropTypes.bool.isRequired,
 };
 
 export default MoreButton;

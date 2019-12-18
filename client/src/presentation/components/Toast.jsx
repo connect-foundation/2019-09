@@ -66,7 +66,7 @@ Toast.propTypes = {
   open: PropTypes.bool.isRequired,
   toastType: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
-  closeHandler: PropTypes.shape.isRequired,
+  closeHandler: PropTypes.func.isRequired,
 };
 
 export default Toast;

@@ -10,7 +10,7 @@ const initialState = {
   gameStatus: 'waiting',
   currentRound: 0,
   currentSet: 0,
-  currentSeconds: 0,
+  currentSeconds: '', // string
   quiz: '',
   quizLength: 0,
 

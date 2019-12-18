@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -17,11 +18,22 @@ import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { TOAST_TYPES } from '../../../constants/toast';
-import EVENTS from '../../../constants/events';
 import { gameReducer, gameState as gameInitialState } from './store';
 import LINK_PATH from '../../../constants/path';
 
 let clientManager;
+
+const readyButtonHandler = () => {
+  clientManager.toggleReady();
+};
+
+const exitButtonHandler = () => {
+  clientManager.exitRoom();
+};
+
+const getMediaPermissionHandler = () => {
+  clientManager.init();
+};
 
 const Game = ({ location, match }) => {
   const {
@@ -40,16 +52,48 @@ const Game = ({ location, match }) => {
     actions,
   });
   const [gameState, gameDispatch] = useReducer(gameReducer, gameInitialState);
-
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
-
+  const classes = useStyles({
+    gamePageRootHeight: gameState.gamePageRootHeight,
+    isPlayerListVisible: gameState.isPlayerListVisible,
+  });
+  const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
+  const isReadyButtonVisible = isGameStatusWaiting && currentIsMobile;
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
-  const getMediaPermissionHandler = () => {
-    clientManager.init();
+  const showPlayersButtonHandler = () => {
+    gameDispatch(
+      actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
+    );
+  };
+
+  const gamePageLifecycleHandler = () => {
+    closeToast();
+    return () => {
+      clientManager.exitRoom();
+    };
+  };
+
+  const showPlayerListByViewShifting = () => {
+    if (shiftingToWhichView === MOBILE_VIEW) {
+      gameDispatch(actions.setIsPlayerListVisible(false));
+      return;
+    }
+    if (shiftingToWhichView === DESKTOP_VIEW) {
+      gameDispatch(actions.setIsPlayerListVisible(true));
+    }
+  };
+
+  const dispatchMobileChattingPanelVisibility = () => {
+    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
+  };
+
+  const dispatchGamePageRootHeight = () => {
+    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
   };
 
   const getMediaPermissionErrorHandler = () => {
@@ -70,51 +114,10 @@ const Game = ({ location, match }) => {
       .catch(getMediaPermissionErrorHandler);
     globalDispatch(actions.setClientManagerInitialized(true));
   }
-
-  const exitButtonHandler = () => {
-    clientManager.exitRoom();
-  };
-
-  const showPlayersButtonHandler = () => {
-    gameDispatch(
-      actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
-    );
-  };
-
-  const readyButtonHandler = () => {
-    clientManager.toggleReady();
-  };
-
-  useEffect(() => {
-    window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
-    return () => {
-      window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
-    };
-  }, []);
-
-  useEffect(() => {
-    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
-    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
-  }, [currentIsMobile]);
-
-  useEffect(() => {
-    if (shiftingToWhichView === MOBILE_VIEW) {
-      gameDispatch(actions.setIsPlayerListVisible(false));
-      return;
-    }
-    if (shiftingToWhichView === DESKTOP_VIEW) {
-      gameDispatch(actions.setIsPlayerListVisible(true));
-    }
-  }, [shiftingToWhichView]);
-
-  const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
-
-  const classes = useStyles({
-    gamePageRootHeight: gameState.gamePageRootHeight,
-    isPlayerListVisible: gameState.isPlayerListVisible,
-  });
-
-  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+  useEffect(gamePageLifecycleHandler, []);
+  useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
+  useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
+  useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
 
   const gameProps = {
     quiz,
@@ -129,15 +132,15 @@ const Game = ({ location, match }) => {
     mobileChattingPanelVisibility: gameState.mobileChattingPanelVisibility,
     toast,
     closeToast,
-    isGameStatusWaiting,
+    isReadyButtonVisible,
   };
 
   return <GamePresentation gameProps={gameProps} />;
 };
 
 Game.propTypes = {
-  location: PropTypes.shape.isRequired,
-  match: PropTypes.shape.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Game;

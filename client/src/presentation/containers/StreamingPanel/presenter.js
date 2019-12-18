@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
@@ -14,34 +15,34 @@ const StreamingPanelPresentation = ({ streamingPanelProps }) => {
     videoVisibility,
     scoreList,
     message,
-    // quizCandidates,
-    // quizCandidateButtonHandler,
   } = streamingPanelProps;
   return (
     <Box className={classes.container}>
       {videoVisibility ? <StreamerVideo stream={stream} /> : ''}
       {showScoreBoard && <ScoreBoard scoreRows={scoreList} title={message} />}
-      {showGameMessageBox && (
-        <GameMessageBox
-          content={gameMessageContent}
-          // quizCandidates={quizCandidates}
-          // quizCandidateButtonHandler={quizCandidateButtonHandler}
-        />
-      )}
+      {showGameMessageBox && <GameMessageBox content={gameMessageContent} />}
     </Box>
   );
 };
 
+StreamingPanelPresentation.defaultProps = {
+  streamingPanelProps: {},
+  classes: {},
+  showScoreBoard: false,
+  showGameMessageBox: false,
+  gameMessageContent: {},
+  stream: {},
+  videoVisibility: false,
+};
+
 StreamingPanelPresentation.propTypes = {
-  streamingPanelProps: PropTypes.shape.isRequired,
-  classes: PropTypes.shape.isRequired,
-  showScoreBoard: PropTypes.bool.isRequired,
-  showGameMessageBox: PropTypes.bool.isRequired,
-  gameMessageContent: PropTypes.shape.isRequired,
-  stream: PropTypes.shape.isRequired,
-  videoVisibility: PropTypes.bool.isRequired,
-  // quizCandidates: PropTypes.arrayOf.isRequired,
-  // quizCandidateButtonHandler: PropTypes.func.isRequired,
+  streamingPanelProps: PropTypes.object,
+  classes: PropTypes.object,
+  showScoreBoard: PropTypes.bool,
+  showGameMessageBox: PropTypes.bool,
+  gameMessageContent: PropTypes.object,
+  stream: PropTypes.object,
+  videoVisibility: PropTypes.bool,
 };
 
 export default StreamingPanelPresentation;

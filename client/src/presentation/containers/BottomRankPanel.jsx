@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -27,7 +28,7 @@ const useStyle = makeStyles(theme => ({
   },
 }));
 
-const BottomRankPanel = ({ rankingList, loading }) => {
+const BottomRankPanel = ({ rankingList, loading, isBottomRankingVisible }) => {
   const classes = useStyle();
   return (
     <Container className={classes.bottomRankContainer}>
@@ -39,16 +40,7 @@ const BottomRankPanel = ({ rankingList, loading }) => {
         isHeader
       />
 
-      {rankingList.length === 0 ? (
-        <SkeletonTheme
-          color={styleColors.SKELETON_COMPONENT_COLOR}
-          highlightColor={styleColors.SKELETON_HIGHLIGHT_COLOR}
-        >
-          <Box className={classes.skeleton}>
-            <Skeleton height={30} count={10} />
-          </Box>
-        </SkeletonTheme>
-      ) : (
+      {isBottomRankingVisible ? (
         rankingList.map(ranking => {
           return (
             <RankingRow
@@ -59,6 +51,15 @@ const BottomRankPanel = ({ rankingList, loading }) => {
             />
           );
         })
+      ) : (
+        <SkeletonTheme
+          color={styleColors.SKELETON_COMPONENT_COLOR}
+          highlightColor={styleColors.SKELETON_HIGHLIGHT_COLOR}
+        >
+          <Box className={classes.skeleton}>
+            <Skeleton height={30} count={10} />
+          </Box>
+        </SkeletonTheme>
       )}
       <Box className={classes.loading}>
         <BeatLoader
@@ -73,9 +74,14 @@ const BottomRankPanel = ({ rankingList, loading }) => {
   );
 };
 
+BottomRankPanel.defaultProps = {
+  rankingList: [],
+};
+
 BottomRankPanel.propTypes = {
-  rankingList: PropTypes.shape.isRequired,
+  rankingList: PropTypes.array,
   loading: PropTypes.bool.isRequired,
+  isBottomRankingVisible: PropTypes.bool.isRequired,
 };
 
 export default BottomRankPanel;

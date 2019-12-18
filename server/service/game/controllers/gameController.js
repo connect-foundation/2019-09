@@ -1,7 +1,9 @@
 const { io } = require('../../io');
+
 const GAME_RULE = require('../../../constants/gameRule');
 const EVENT = require('../../../constants/event');
 const GAME_STATUS = require('../../../constants/gameStatus');
+
 const {
   QuizRepository,
   RankingRepository,
@@ -150,7 +152,7 @@ const disconnectPlayerSocket = player => {
 
 const disconnectPlayersSocket = players => {
   players.forEach(player => {
-    disconnectPlayer(player);
+    disconnectPlayerSocket(player);
   });
 };
 
@@ -272,6 +274,7 @@ const prepareGame = (gameManager, timer) => {
 const goToNextSet = (gameManager, timer) => {
   const roomId = gameManager.getRoomId();
 
+  gameManager.setStatus(GAME_STATUS.CONNECTING);
   sendClearWindowToRoom(roomId);
   preparePlayerTypes(gameManager, timer);
   waitForPeerConnection(gameManager, timer);

@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
@@ -62,9 +63,14 @@ const InputWindow = ({ clientManager, chattingDisabled }) => {
   );
 };
 
+InputWindow.defaultProps = {
+  clientManager: {},
+  chattingDisabled: false,
+};
+
 InputWindow.propTypes = {
-  clientManager: PropTypes.shape.isRequired,
-  chattingDisabled: PropTypes.bool.isRequired,
+  clientManager: PropTypes.object,
+  chattingDisabled: PropTypes.bool,
 };
 
 export default InputWindow;

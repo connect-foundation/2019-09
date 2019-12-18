@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../../contexts';
@@ -95,8 +96,12 @@ const StreamingPanel = ({ clientManager }) => {
   );
 };
 
+StreamingPanel.defaultProps = {
+  clientManager: {},
+};
+
 StreamingPanel.propTypes = {
-  clientManager: PropTypes.shape.isRequired,
+  clientManager: PropTypes.object,
 };
 
 export default StreamingPanel;
