@@ -3,6 +3,7 @@ import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 import { makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
+import actions from '../actions';
 
 class StreamingManager {
   constructor(socket, remotePlayers, localPlayer) {
@@ -47,12 +48,7 @@ class StreamingManager {
     });
 
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
-    dispatch({
-      type: 'setViewPlayerList',
-      payload: {
-        viewPlayerList,
-      },
-    });
+    dispatch(actions.setViewPlayerList(viewPlayerList));
 
     // const socketIds = Object.keys(remotePlayers);
     webRTCManager.closeAllConnections();
@@ -73,7 +69,7 @@ class StreamingManager {
       });
     });
     const stream = webRTCManager.getStream();
-    this.dispatch({ type: 'setStream', payload: { stream } });
+    this.dispatch(actions.setStream(stream));
   }
 
   async assignViewerHandler({ streamerSocketId }) {
@@ -95,12 +91,7 @@ class StreamingManager {
     });
     localPlayer.type = 'viewer';
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
-    dispatch({
-      type: 'setViewPlayerList',
-      payload: {
-        viewPlayerList,
-      },
-    });
+    dispatch(actions.setViewPlayerList(viewPlayerList));
     webRTCManager.closeAllConnections();
     webRTCManager.createConnection(streamerSocketId);
     webRTCManager.registerIceCandidate(
@@ -133,7 +124,7 @@ class StreamingManager {
 
   // eslint-disable-next-line class-methods-use-this
   trackHandler(stream) {
-    this.dispatch({ type: 'setStream', payload: { stream } });
+    this.dispatch(actions.setStream(stream));
     this.socket.emit(EVENTS.CONNECT_PEER);
   }
 

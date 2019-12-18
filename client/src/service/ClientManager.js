@@ -167,10 +167,7 @@ class ClientManager {
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
     this.dispatch(actions.clearWindow());
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'waiting' },
-    });
+    this.dispatch(actions.setGameStatus('waiting'));
     this.gameManager.setInactivePlayerBanTimer();
   }
 
