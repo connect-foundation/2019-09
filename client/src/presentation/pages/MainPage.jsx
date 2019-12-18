@@ -41,9 +41,12 @@ const MainPage = () => {
     actions,
   });
 
-  useEffect(() => {
+  const mainPageLifecycleHandler = () => {
+    closeToast();
     browserLocalStorage.verifyNicknameInLocalStorage();
-  }, []);
+  };
+
+  useEffect(mainPageLifecycleHandler, []);
 
   return (
     <Box className={classes.mainPageWrapper}>

@@ -17,7 +17,6 @@ import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { TOAST_TPYES } from '../../../constants/toast';
-import EVENTS from '../../../constants/events';
 import { gameReducer, gameState as gameInitialState } from './store';
 
 let clientManager;
@@ -32,13 +31,6 @@ const exitButtonHandler = () => {
 
 const getMediaPermissionHandler = () => {
   clientManager.init();
-};
-
-const attachPopstateEvent = () => {
-  window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
-  return () => {
-    window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
-  };
 };
 
 const Game = ({ location, match }) => {
@@ -74,6 +66,13 @@ const Game = ({ location, match }) => {
     gameDispatch(
       actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
     );
+  };
+
+  const gamePageLifecycleHandler = () => {
+    closeToast();
+    return () => {
+      clientManager.exitRoom();
+    };
   };
 
   const showPlayerListByViewShifting = () => {
@@ -113,7 +112,7 @@ const Game = ({ location, match }) => {
     globalDispatch(actions.setClientManagerInitialized(true));
   }
 
-  useEffect(attachPopstateEvent, []);
+  useEffect(gamePageLifecycleHandler, []);
   useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
   useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
   useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
