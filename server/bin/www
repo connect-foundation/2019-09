@@ -10,7 +10,7 @@ require('dotenv').config();
 const debug = require('debug')('server:server');
 const http = require('http');
 const connection = require('../databaseFiles/connection');
-const { initializeQuizzes } = require('../databaseFiles/databaseModels/seeder');
+// const { initializeQuizzes } = require('../databaseFiles/databaseModels/seeder');
 const app = require('../app');
 const { PING_INTERVAL, PING_TIMEOUT } = require('../config');
 
@@ -91,8 +91,8 @@ function onListening() {
   /**
    * @todo 추후 DB 용
    */
-  await connection.sync({ force: true });
-  await initializeQuizzes();
+  await connection.sync();
+  // await initializeQuizzes();
 
   app.service.attach(server, {
     pingInterval: PING_INTERVAL,

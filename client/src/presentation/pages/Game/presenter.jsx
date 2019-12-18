@@ -29,8 +29,6 @@ const GamePresentation = ({ gameProps }) => {
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    playerPanelContainerClasses,
-    bottomLeftButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
@@ -38,6 +36,7 @@ const GamePresentation = ({ gameProps }) => {
     mobileChattingPanelVisibility,
     toast,
     closeToast,
+    isGameStatusWaiting,
   } = gameProps;
 
   return (
@@ -80,7 +79,7 @@ const GamePresentation = ({ gameProps }) => {
           xs={2}
           className={[classes.bottomGridContent, classes.leftGridContent]}
         >
-          <Box className={playerPanelContainerClasses}>
+          <Box className={classes.playerPanelContainer}>
             <PlayerPanel clientManager={clientManager} />
           </Box>
           <Box className={classes.playerPanelButton}>
@@ -107,18 +106,20 @@ const GamePresentation = ({ gameProps }) => {
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          <Box className={bottomLeftButtonContainerClasses}>
-            {clientManager.getIsRoomPrivate() && (
-              <ShareUrlButton
-                onClick={shareUrlButtonClickHandler}
-                classNames={[classes.shareUrlButton]}
-              />
-            )}
+          {isGameStatusWaiting && (
+            <Box className={classes.bottomLeftButtonContainer}>
+              {clientManager.getIsRoomPrivate() && (
+                <ShareUrlButton
+                  onClick={shareUrlButtonClickHandler}
+                  classNames={[classes.shareUrlButton]}
+                />
+              )}
 
-            <ReadyButton onClick={readyButtonHandler}>
-              {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
-            </ReadyButton>
-          </Box>
+              <ReadyButton onClick={readyButtonHandler}>
+                {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
+              </ReadyButton>
+            </Box>
+          )}
         </Grid>
         {mobileChattingPanelVisibility ? (
           <>

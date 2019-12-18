@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { ScoreBoardScoreRow } from '../components';
-import { STYLE_COLORS } from '../../utils';
-import { DEFAULT_SCOREBOARD_TITLE } from '../../config';
+import styleColors from '../../constants/styleColors';
+import { DEFAULT_SCOREBOARD_TITLE } from '../../constants/message';
 
 const useStyle = makeStyles({
   scoreBoard: {
@@ -23,7 +23,7 @@ const useStyle = makeStyles({
   title: {
     fontSize: '4rem',
     textAlign: 'center',
-    color: STYLE_COLORS.PURE_WHITE_COLOR,
+    color: styleColors.PURE_WHITE_COLOR,
   },
 });
 

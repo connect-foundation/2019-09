@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { STYLE_COLORS } from '../../../utils';
-import { MOBILE_PANEL_HEIGHT } from '../../../config';
+import styleColors from '../../../constants/styleColors';
+import { MOBILE_PANEL_HEIGHT } from '../../../constants/responsiveView';
 
 const useStyles = makeStyles(theme => ({
   root: props => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   gameHeader: {
-    backgroundColor: STYLE_COLORS.THEME_COLOR,
+    backgroundColor: styleColors.THEME_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.7)',
     height: '10%',
   },
@@ -38,10 +38,10 @@ const useStyles = makeStyles(theme => ({
       zIndex: '1',
     },
   },
-  playerPanelContainer: {
+  playerPanelContainer: props => ({
     height: '100%',
-    display: 'block',
-  },
+    display: props.isPlayerListVisible ? 'block' : 'none',
+  }),
   playerPanelButton: {
     display: 'none',
     [theme.breakpoints.down('xs')]: {
@@ -104,11 +104,15 @@ const useStyles = makeStyles(theme => ({
     right: '0',
     overflow: 'auto',
   },
-  mobileBottomLeftButtonContainer: {
+  bottomLeftButtonContainer: {
     width: '8rem',
     position: 'absolute',
     bottom: '2rem',
     left: '2rem',
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+    },
   },
   gameStartHide: {
     display: 'none',

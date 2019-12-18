@@ -1,4 +1,4 @@
-const TYPES = {
+const globalTypes = {
   RESET: 'reset',
   ADD_CHATTING: 'addChatting',
   SET_QUIZ: 'setQuiz',
@@ -18,4 +18,10 @@ const TYPES = {
   SET_CLIENT_MANAGER_INITIALIZED: 'setClientManagerInitialized',
 };
 
-export default TYPES;
+const gameTypes = {
+  SET_MOBILE_CHATTING_PANEL_VISIBILITY: 'setMobileChattingPanelVisibility',
+  SET_IS_PLAYER_LIST_VISIBLE: 'setIsPlayerListVisible',
+  SET_GAME_PAGE_ROOT_HEIGHT: 'setGamePageRootHeight',
+};
+
+export default { ...globalTypes, ...gameTypes };

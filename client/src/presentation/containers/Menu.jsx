@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
-import { NICKNAME_LENGTH } from '../../config';
+import { NICKNAME_LENGTH } from '../../constants/inputConstraints';
 import { PLAY_WITH_FRIENDS_BUTTON_TEXT } from '../../constants/button';
-import { browserLocalStorage, STYLE_COLORS } from '../../utils';
+import { browserLocalStorage } from '../../utils';
 import { ENTER_KEYCODE } from '../../constants/browser';
+import styleColors from '../../constants/styleColors';
 
 const useStyle = makeStyles({
   menu: {
@@ -14,7 +15,7 @@ const useStyle = makeStyles({
     width: '100%',
     height: 'auto',
     padding: '2rem',
-    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
+    border: `0.3rem solid ${styleColors.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

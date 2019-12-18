@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const NicknameContent = styled.span`
   font-size: 1.6rem;
   color: ${props => {
-    return props.nicknameColor || STYLE_COLORS.INFORMATION_COLOR;
+    return props.nicknameColor || styleColors.INFORMATION_COLOR;
   }};
 `;
 

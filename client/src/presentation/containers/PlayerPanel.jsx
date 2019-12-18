@@ -4,7 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
-import { STYLE_COLORS, shareUrlButtonClickHandler } from '../../utils';
+import { shareUrlButtonClickHandler } from '../../utils';
+import styleColors from '../../constants/styleColors';
+import { WAITING_STATUS } from '../../constants/game';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -12,7 +14,7 @@ const useStyle = makeStyles(theme => ({
     position: 'relative',
     padding: '1rem',
     boxSizing: 'border-box',
-    backgroundColor: STYLE_COLORS.PANEL_COLOR,
+    backgroundColor: styleColors.PANEL_COLOR,
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.5)',
     borderRadius: '0.3rem',
     [theme.breakpoints.down('xs')]: {
@@ -44,13 +46,7 @@ const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
   const { viewPlayerList, gameStatus } = useContext(GlobalContext);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-
-  const bottomLeftButtonContainerClasses = () => {
-    if (gameStatus === 'waiting') {
-      return classes.bottomLeftButtonContainer;
-    }
-    return classes.gameStartHide;
-  };
+  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
 
   return (
     <Box className={classes.playerPanel}>
@@ -67,21 +63,23 @@ const PlayerPanel = ({ clientManager }) => {
           />
         );
       })}
-      <Box className={bottomLeftButtonContainerClasses()}>
-        {clientManager.getIsRoomPrivate() && (
-          <ShareUrlButton
-            onClick={shareUrlButtonClickHandler}
-            classNames={[classes.shareUrlButton]}
-          />
-        )}
-        <ReadyButton
-          onClick={() => {
-            clientManager.toggleReady();
-          }}
-        >
-          {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
-        </ReadyButton>
-      </Box>
+      {isGameStatusWaiting && (
+        <Box className={classes.bottomLeftButtonContainer}>
+          {clientManager.getIsRoomPrivate() && (
+            <ShareUrlButton
+              onClick={shareUrlButtonClickHandler}
+              classNames={[classes.shareUrlButton]}
+            />
+          )}
+          <ReadyButton
+            onClick={() => {
+              clientManager.toggleReady();
+            }}
+          >
+            {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
+          </ReadyButton>
+        </Box>
+      )}
     </Box>
   );
 };

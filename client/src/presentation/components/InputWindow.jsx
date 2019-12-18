@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
 import { SendButton } from './Buttons';
 import { ENTER_KEYCODE } from '../../constants/browser';
-import { MAX_CHAT_LENGTH } from '../../config';
+import { MAX_CHAT_LENGTH } from '../../constants/inputConstraints';
 
 const useStyles = makeStyles(theme => ({
   InputWindow: {
