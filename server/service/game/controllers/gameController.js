@@ -16,6 +16,14 @@ const {
 const quizRepository = new QuizRepository();
 const rankingRepository = new RankingRepository();
 
+const sendClearWindowToPlayer = playerSocketId => {
+  io.to(playerSocketId).emit('clearWindow');
+};
+
+const sendClearWindowToRoom = roomId => {
+  io.in(roomId).emit('clearWindow');
+};
+
 const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
   io.in(roomId).emit('sendCurrentSeconds', {
     currentSeconds,
@@ -23,12 +31,17 @@ const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
 };
 
 const assignStreamer = streamer => {
-  io.to(streamer.socketId).emit('assignStreamer');
+  const streamerSocketId = streamer.getSocketId();
+
+  io.to(streamerSocketId).emit('assignStreamer');
 };
 
 const assignViewer = (viewer, streamer) => {
-  io.to(viewer.socketId).emit('assignViewer', {
-    streamerSocketId: streamer.socketId,
+  const viewerSocketId = viewer.getSocketId();
+  const streamerSocketId = streamer.getSocketId();
+
+  io.to(viewerSocketId).emit('assignViewer', {
+    streamerSocketId,
   });
 };
 
@@ -40,7 +53,7 @@ const assignViewers = (viewers, streamer) => {
 
 const sendQuizToStreamer = (streamer, quiz) => {
   const streamerSocketId = streamer.getSocketId();
-  io.to(streamerSocketId).emit('clearWindow');
+  sendClearWindowToPlayer(streamerSocketId);
   io.to(streamerSocketId).emit('startSet', {
     quiz,
   });
@@ -49,7 +62,7 @@ const sendQuizToStreamer = (streamer, quiz) => {
 const sendQuizLengthToViewers = (viewers, quizLength) => {
   viewers.forEach(viewer => {
     const viewerSocketId = viewer.getSocketId();
-    io.to(viewerSocketId).emit('clearWindow');
+    sendClearWindowToPlayer(viewerSocketId);
     io.to(viewerSocketId).emit('startSet', {
       quizLength,
     });
@@ -79,27 +92,32 @@ const sendEndSet = gameManager => {
   });
 };
 
-const assignPlayerType = gameManager => {
+const sendQuizCandidatesToStreamer = (gameManager, quizCandidates) => {
+  const streamer = gameManager.getStreamer();
+  const currentRound = gameManager.getCurrentRound();
+  const currentSet = gameManager.getCurrentSet();
+
+  io.to(streamer.getSocketId()).emit('prepareSet', {
+    currentRound,
+    currentSet,
+    quizCandidates,
+  });
+};
+
+const sendEmptyQuizCandidatesToViewers = gameManager => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+  const currentRound = gameManager.getCurrentRound();
+  const currentSet = gameManager.getCurrentSet();
+  const quizCandidates = [];
 
-  assignStreamer(streamer);
-  assignViewers(viewers, streamer);
-};
-
-const pickQuizCandidates = async () => {
-  const quizzes = await quizRepository.findRandomQuizzes();
-
-  const quizCandidates = quizzes.map(quiz => quiz.word);
-
-  return quizCandidates;
-};
-
-const endSet = (gameManager, timer) => {
-  timer.clear();
-  gameManager.resetStreamerConnectionOfAllPlayers();
-  gameManager.resetCorrectionOfAllPlayers();
-  sendEndSet(gameManager);
+  viewers.forEach(viewer => {
+    io.to(viewer.getSocketId()).emit('prepareSet', {
+      currentRound,
+      currentSet,
+      quizCandidates,
+    });
+  });
 };
 
 const startSet = (gameManager, timer, quiz) => {
@@ -122,29 +140,7 @@ const quizSelectionTimeoutHandler = (gameManager, timer) => {
   startSet(gameManager, timer, quiz);
 };
 
-const prepareSet = async (gameManager, timer) => {
-  /**
-   * 연결준비 후 응답이 없는 플레이어를 제외하고 시작
-   */
-  gameManager.updateRoundAndSet();
-  gameManager.setQuiz(QUIZ_NOT_SELECTED);
-  /**
-   * @todo 추후 DB 연결시 async await 필요
-   */
-  const quizCandidates = await pickQuizCandidates();
-  gameManager.setQuizCandidates(quizCandidates);
-  gameManager.getPlayers().forEach(player => {
-    const socketId = player.getSocketId();
-
-    io.to(socketId).emit('prepareSet', {
-      currentRound: gameManager.getCurrentRound(),
-      currentSet: gameManager.getCurrentSet(),
-      quizCandidates: gameManager.isStreamer(socketId)
-        ? gameManager.getQuizCandidates()
-        : [],
-    });
-  });
-
+const runQuizSelectionTimer = (gameManager, timer) => {
   timer.startIntegrationTimer(
     MAX_QUIZ_SELECTION_WAITING_SECONDS,
     quizSelectionTimeoutHandler.bind(null, gameManager, timer),
@@ -152,34 +148,104 @@ const prepareSet = async (gameManager, timer) => {
   );
 };
 
-const disconnectPlayersAndStartGame = (gameManager, timer) => {
-  /**
-   * 스트리머가 접속을 허용하지 않았을 경우, 스트리머만 내보내고,
-   * 아닐 경우, 연결되지 않은 사람들을 내보낸다.
-   */
-  const streamer = gameManager.getStreamer();
-  const playersExceptStreamer = gameManager.getOtherPlayers(
-    streamer.getSocketId(),
-  );
-  const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
+const disconnectPlayerSocket = player => {
+  const socketId = player.getSocketId();
+  const socket = io.sockets.connected[socketId];
+  socket.disconnect();
+};
 
-  // 스트리머가 카메라 허용을 하지 않았을 경우
-  if (playersToDisconnect.length === playersExceptStreamer.length) {
-    const socket = io.sockets.connected[streamer.getSocketId()];
-    socket.disconnect();
-    return;
-  }
-  // 스트리머 이외의 사람 중 카메라 허용을 안하는 경우가 있을 경우
-  playersToDisconnect.forEach(player => {
-    const socket = io.sockets.connected[player.getSocketId()];
-    socket.disconnect();
+const disconnectPlayersSocket = players => {
+  players.forEach(player => {
+    disconnectPlayer(player);
   });
-  /**
-   * 이후에 게임을 진행할 수 있으면, disconnectingHandler쪽에서는 처리하지 않으므로
-   * 해당 로직에서 게임을 진행한다.
-   */
-  if (gameManager.isGameContinuable()) {
-    prepareSet(gameManager, timer);
+};
+
+const sendReadyPlayersToRoom = (roomId, players) => {
+  players.forEach(player => {
+    io.in(roomId).emit('sendReady', {
+      socketId: player.getSocketId(),
+      isReady: player.getIsReady(),
+    });
+  });
+};
+
+const sendStartGameToRoom = roomId => {
+  io.in(roomId).emit('startGame');
+};
+
+const sendEndGameToRoom = gameManager => {
+  const roomId = gameManager.getRoomId();
+  const scoreList = gameManager.getScoreList();
+
+  io.in(roomId).emit('endGame', {
+    scoreList,
+  });
+};
+
+const sendResetGameToRoom = gameManager => {
+  const roomId = gameManager.getRoomId();
+  const players = gameManager.getPlayers();
+
+  io.in(roomId).emit('resetGame', {
+    players,
+  });
+};
+
+const assignPlayerType = gameManager => {
+  const streamer = gameManager.getStreamer();
+  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+
+  assignStreamer(streamer);
+  assignViewers(viewers, streamer);
+};
+
+const pickQuizCandidates = async () => {
+  const quizzes = await quizRepository.findRandomQuizzes();
+
+  const quizCandidates = quizzes.map(quiz => quiz.word);
+
+  return quizCandidates;
+};
+
+const endSet = (gameManager, timer) => {
+  timer.clear();
+  gameManager.setStatus('scoreSharing');
+  gameManager.resetStreamerConnectionOfAllPlayers();
+  gameManager.resetCorrectionOfAllPlayers();
+  sendEndSet(gameManager);
+};
+
+const prepareQuizSelection = async (gameManager, timer) => {
+  const quizCandidates = await pickQuizCandidates();
+  gameManager.setQuizCandidates(quizCandidates);
+
+  sendQuizCandidatesToStreamer(gameManager, quizCandidates);
+  sendEmptyQuizCandidatesToViewers(gameManager);
+
+  runQuizSelectionTimer(gameManager, timer);
+};
+
+const prepareSet = async (gameManager, timer) => {
+  gameManager.updateRoundAndSet();
+  gameManager.setQuiz(QUIZ_NOT_SELECTED);
+
+  await prepareQuizSelection(gameManager, timer);
+};
+
+const disconnectPlayersAndStartGame = (gameManager, timer) => {
+  const streamer = gameManager.getStreamer();
+  const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
+  const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
+  const isAllPlayerWebRTCDisconnected =
+    playersToDisconnect.length === viewers.length;
+
+  if (isAllPlayerWebRTCDisconnected) {
+    disconnectPlayerSocket(streamer);
+  } else {
+    disconnectPlayersSocket(playersToDisconnect);
+    if (gameManager.isGameContinuable()) {
+      prepareSet(gameManager, timer);
+    }
   }
 };
 
@@ -196,27 +262,24 @@ const preparePlayerTypes = gameManager => {
 };
 
 const prepareGame = (gameManager, timer) => {
+  const roomId = gameManager.getRoomId();
+  const players = gameManager.getPlayers();
+
   gameManager.cancelReadyAllPlayers();
-  gameManager.getPlayers().forEach(player => {
-    io.in(gameManager.getRoomId()).emit('sendReady', {
-      socketId: player.getSocketId(),
-      isReady: player.getIsReady(),
-    });
-  });
+  sendReadyPlayersToRoom(roomId, players);
 
   gameManager.prepareGame();
-  io.in(gameManager.getRoomId()).emit('startGame');
+  sendStartGameToRoom(roomId);
 
   preparePlayerTypes(gameManager);
   waitForPeerConnection(gameManager, timer);
 };
 
 const goToNextSet = (gameManager, timer) => {
-  io.in(gameManager.getRoomId()).emit('clearWindow');
+  const roomId = gameManager.getRoomId();
+
+  sendClearWindowToRoom(roomId);
   preparePlayerTypes(gameManager, timer);
-  gameManager.getPlayers().forEach(player => {
-    player.setIsCorrectPlayer(false);
-  });
   waitForPeerConnection(gameManager, timer);
 };
 
@@ -229,29 +292,25 @@ const goToNextSetAfterNSeconds = ({ seconds, gameManager, timer }) => {
 };
 
 const endGame = async (gameManager, timer) => {
-  /**
-   * 동시 접근하면 문제 발생
-   */
-  if (gameManager.getStatus() === 'ending') {
+  const roomStatus = gameManager.getStatus();
+  const players = gameManager.getPlayers();
+
+  if (roomStatus === 'ending') {
     return;
   }
   gameManager.setStatus('ending');
 
-  const players = gameManager.getPlayers();
-  io.in(gameManager.getRoomId()).emit('endGame', {
-    scoreList: gameManager.getScoreList(),
-  });
+  gameManager.resetStreamerConnectionOfAllPlayers();
+  gameManager.resetCorrectionOfAllPlayers();
+  sendEndGameToRoom(gameManager);
   timer.clear();
   await rankingRepository.insertRankings(players);
 };
 
 const resetGame = gameManager => {
-  /** @todo 점수와 닉네임을 DB에 저장하는 로직 필요 */
   gameManager.reset();
   gameManager.resetAllPlayers();
-  io.in(gameManager.getRoomId()).emit('resetGame', {
-    players: gameManager.getPlayers(),
-  });
+  sendResetGameToRoom(gameManager);
 };
 
 const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
@@ -284,7 +343,6 @@ module.exports = {
   prepareGame,
   prepareSet,
   startSet,
-  endSet,
   endGame,
   resetGameAfterNSeconds,
   repeatSet,
