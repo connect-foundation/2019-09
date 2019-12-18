@@ -31,12 +31,17 @@ const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
 };
 
 const assignStreamer = streamer => {
-  io.to(streamer.socketId).emit('assignStreamer');
+  const streamerSocketId = streamer.getSocketId();
+
+  io.to(streamerSocketId).emit('assignStreamer');
 };
 
 const assignViewer = (viewer, streamer) => {
-  io.to(viewer.socketId).emit('assignViewer', {
-    streamerSocketId: streamer.socketId,
+  const viewerSocketId = viewer.getSocketId();
+  const streamerSocketId = streamer.getSocketId();
+
+  io.to(viewerSocketId).emit('assignViewer', {
+    streamerSocketId,
   });
 };
 
