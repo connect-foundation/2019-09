@@ -5,6 +5,7 @@ import { makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import { PLAYER_TPYE } from '../constants/game';
+import { DESCRIPTION_TYPE } from '../constants/webRTC';
 
 class StreamingManager {
   constructor(socket, remotePlayers, localPlayer) {
@@ -109,7 +110,7 @@ class StreamingManager {
   async sendDescriptionHandler({ target, description }) {
     const { webRTCManager, socket } = this;
     await webRTCManager.setRemoteDescription(target, description);
-    if (description.type === 'answer') return;
+    if (description.type === DESCRIPTION_TYPE.ANSWER) return;
     const answer = await webRTCManager.createAnswerDescription(target);
     await webRTCManager.setLocalDescription(target, answer);
     socket.emit(EVENTS.SEND_DESCRIPTION, { target, description: answer });
