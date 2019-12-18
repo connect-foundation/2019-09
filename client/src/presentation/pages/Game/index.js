@@ -78,7 +78,6 @@ const Game = ({ location, match }) => {
 
   const attachPopstateEvent = () => {
     window.addEventListener(EVENTS.POPSTATE, popstateHandler);
-
     return () => {
       return window.addEventListener(EVENTS.POPSTATE, popstateHandler);
     };
@@ -121,6 +120,7 @@ const Game = ({ location, match }) => {
     globalDispatch(actions.setClientManagerInitialized(true));
   }
 
+  useEffect(closeToast, []);
   useEffect(attachPopstateEvent, []);
   useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
   useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
