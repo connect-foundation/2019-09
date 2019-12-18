@@ -71,9 +71,13 @@ const RankPodium = ({ rank, rankerScore, rankerNickname }) => {
   );
 };
 
+RankPodium.defaultProps = {
+  rankerScore: '',
+};
+
 RankPodium.propTypes = {
   rank: PropTypes.string.isRequired,
-  rankerScore: PropTypes.number.isRequired,
+  rankerScore: PropTypes.string,
   rankerNickname: PropTypes.string.isRequired,
 };
 

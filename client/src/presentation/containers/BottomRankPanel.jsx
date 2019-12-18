@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -73,8 +74,12 @@ const BottomRankPanel = ({ rankingList, loading }) => {
   );
 };
 
+BottomRankPanel.defaultProps = {
+  rankingList: [],
+};
+
 BottomRankPanel.propTypes = {
-  rankingList: PropTypes.shape.isRequired,
+  rankingList: PropTypes.array,
   loading: PropTypes.bool.isRequired,
 };
 

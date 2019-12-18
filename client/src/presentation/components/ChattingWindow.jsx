@@ -27,10 +27,11 @@ const ChattingWindow = ({ chattingList }) => {
   const classes = useStyle();
   const messageEndRef = useRef();
   useScrollToBottom(messageEndRef, chattingList);
-  const chattingRowList = chattingList.map(chatting => {
+  const chattingRowList = chattingList.map((chatting, index) => {
+    const key = `${chatting.id}${index}`;
     return (
       <ChattingRow
-        key={chatting.id}
+        key={key}
         nickname={chatting.nickname}
         nicknameColor={chatting.nicknameColor}
         message={chatting.message}

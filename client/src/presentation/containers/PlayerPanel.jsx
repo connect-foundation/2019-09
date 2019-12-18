@@ -52,8 +52,10 @@ const PlayerPanel = ({ clientManager }) => {
   return (
     <Box className={classes.playerPanel}>
       {viewPlayerList.map((player, index) => {
+        const key = `${player.nickname}${index}`;
         return (
           <PlayerProfile
+            key={key}
             order={index}
             nickname={player.nickname}
             score={player.score}

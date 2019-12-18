@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -42,13 +43,18 @@ const TextInput = ({
   );
 };
 
+TextInput.defaultProps = {
+  maxLength: 0,
+  style: {},
+};
+
 TextInput.propTypes = {
   label: PropTypes.string.isRequired,
-  style: PropTypes.shape.isRequired,
+  style: PropTypes.object,
   value: PropTypes.string.isRequired,
   textChangeHandler: PropTypes.func.isRequired,
   onKeyPress: PropTypes.func.isRequired,
-  maxLength: PropTypes.string.isRequired,
+  maxLength: PropTypes.number,
 };
 
 export default TextInput;
