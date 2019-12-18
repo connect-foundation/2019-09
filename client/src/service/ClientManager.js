@@ -83,7 +83,7 @@ class ClientManager {
   sendRoomIdHandler({ roomId }) {
     this.localPlayer.roomId = roomId;
     if (this.isRoomPrivate) {
-      this.history.push({
+      this.history.replace({
         pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
         isPrivateRoomCreation: this.isPrivateRoomCreation,
       });
