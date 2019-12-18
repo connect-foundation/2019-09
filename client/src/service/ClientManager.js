@@ -9,7 +9,8 @@ import EVENTS from '../constants/events';
 import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
 import { SOCKETIO_SERVER_URL } from '../constants/socket';
-import { GAME_STATUS } from '../constants/game';
+import { GAME_STATUS, PLAYER_TPYE } from '../constants/game';
+import LINK_PATH from '../constants/path';
 
 class ClientManager {
   constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
@@ -17,7 +18,7 @@ class ClientManager {
     this.localPlayer = {
       isReady: false,
       nickname: '',
-      type: 'viewer',
+      type: PLAYER_TPYE.VIEWER,
       socketId: '',
       score: 0,
     };
@@ -55,7 +56,7 @@ class ClientManager {
 
   disconnectHandler() {
     this.streamingManager.resetWebRTC();
-    this.history.push('/');
+    this.history.push(LINK_PATH.MAIN_PAGE);
     this.dispatch(actions.reset());
     this.gameManager.timer.clear();
   }
@@ -82,7 +83,7 @@ class ClientManager {
     this.localPlayer.roomId = roomId;
     if (this.isRoomPrivate) {
       this.history.push({
-        pathname: `/game/${roomId}`,
+        pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
         isPrivateRoomCreation: this.isPrivateRoomCreation,
       });
     }
