@@ -2,12 +2,22 @@ const { io } = require('../../io');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
 const {
-  SECONDS_AFTER_GAME_END,
   GAME_PLAYING,
   GAME_INITIALIZING,
-  GAME_INITIAL_PREPARING,
+  CONNECTING,
   MIN_PLAYER_COUNT,
 } = require('../../../config');
+
+const leavePlayer = (gameManager, socket) => {
+  gameManager.leaveRoom(socket.id);
+  socket.leave(gameManager.getRoomId());
+};
+
+const sendLeftPlayerToRoom = (roomId, socketId) => {
+  io.in(roomId).emit('sendLeftPlayer', {
+    socketId,
+  });
+};
 
 const disconnectingHandler = socket => {
   try {
@@ -16,39 +26,27 @@ const disconnectingHandler = socket => {
       return;
     }
     const { gameManager, timer } = room;
-    gameManager.leaveRoom(socket.id);
-    socket.leave(gameManager.getRoomId());
     const roomStatus = gameManager.getStatus();
+    leavePlayer(gameManager, socket);
+    sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
-    io.in(gameManager.getRoomId()).emit('sendLeftPlayer', {
-      socketId: socket.id,
-    });
+    const isGamePreparable =
+      roomStatus === 'waiting' &&
+      gameManager.checkAllPlayersAreReady() &&
+      gameManager.getPlayers().length >= MIN_PLAYER_COUNT;
 
-    if (roomStatus === 'waiting') {
-      if (
-        gameManager.checkAllPlayersAreReady() &&
-        gameManager.getPlayers().length >= MIN_PLAYER_COUNT
-      ) {
-        gameController.prepareGame(gameManager, timer);
-      }
+    if (isGamePreparable) {
+      gameController.prepareGame(gameManager, timer);
       return;
     }
 
     if (
       roomStatus === GAME_INITIALIZING ||
       roomStatus === GAME_PLAYING ||
-      roomStatus === GAME_INITIAL_PREPARING
+      roomStatus === CONNECTING ||
+      roomStatus === 'scoreSharing'
     ) {
-      if (!gameManager.isGameContinuable()) {
-        gameController.endGame(gameManager, timer);
-        gameController.resetGameAfterNSeconds({
-          seconds: SECONDS_AFTER_GAME_END,
-          gameManager,
-          timer,
-        });
-        return;
-      }
-      if (!gameManager.getStreamer()) {
+      if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
         gameController.repeatSet(gameManager, timer);
       }
     }

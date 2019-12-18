@@ -9,20 +9,8 @@ const emitEventsAfterJoin = socket => {
   socket.emit(EVENTS.SEND_ROOMID, { roomId: socket.roomId });
 };
 
-const matchHandler = (
-  socket,
-  { nickname, roomIdFromUrl, isPrivateRoomCreation },
-) => {
+const getRoomId = (roomIdFromUrl, isPrivateRoomCreation) => {
   let roomId;
-  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
-  const player = new Player({
-    nickname: slicedNickname,
-    socketId: socket.id,
-    nicknameColor: getRandomColor(),
-  });
-
-  const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
-
   if (!!roomIdFromUrl || isPrivateRoomCreation) {
     roomId = roomController.getPrivateRoomInformationToJoin(
       roomIdFromUrl,
@@ -31,25 +19,35 @@ const matchHandler = (
   } else {
     roomId = roomController.getPublicRoomInformantionToJoin();
   }
+  return roomId;
+};
 
-  roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
+const matchHandler = (
+  socket,
+  { nickname, roomIdFromUrl, isPrivateRoomCreation },
+) => {
+  const roomId = getRoomId(roomIdFromUrl, isPrivateRoomCreation);
+  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
+  const player = new Player({
+    nickname: slicedNickname,
+    socketId: socket.id,
+    nicknameColor: getRandomColor(),
+  });
 
   if (roomId) {
-    /**
-     * 새로운 플레이어는 기존 플레이어의 정보들을 전달받고
-     * 기존의 플레이어들은 새로운 플레이어의 정보를 전달받는다.
-     */
-    const room = roomController.getRoomByRoomId(roomId);
-    const otherPlayers = room.gameManager.getOtherPlayers(player.socketId);
+    const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
+    roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
+
+    const { gameManager } = roomController.getRoomByRoomId(roomId);
+    const otherPlayers = gameManager.getOtherPlayers(player.socketId);
 
     socket.broadcast.to(roomId).emit('sendNewPlayer', player);
     socket.emit('sendPlayers', { players: otherPlayers });
+    emitEventsAfterJoin(socket);
   } else {
     /** @todo 토스터 완성되면 여기서 메인보내고 토스터로 없다고 알려줘야함 */
     socket.disconnect();
-    return;
   }
-  emitEventsAfterJoin(socket);
 };
 
 module.exports = matchHandler;

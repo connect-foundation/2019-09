@@ -6,6 +6,7 @@ const {
   SECONDS_BETWEEN_SETS,
   SECONDS_AFTER_GAME_END,
   GAME_PLAYING,
+  CONNECTING,
   QUIZ_NOT_SELECTED,
 } = require('../../../config');
 const {
@@ -156,7 +157,7 @@ const disconnectPlayerSocket = player => {
 
 const disconnectPlayersSocket = players => {
   players.forEach(player => {
-    disconnectPlayer(player);
+    disconnectPlayerSocket(player);
   });
 };
 
@@ -278,6 +279,7 @@ const prepareGame = (gameManager, timer) => {
 const goToNextSet = (gameManager, timer) => {
   const roomId = gameManager.getRoomId();
 
+  gameManager.setStatus(CONNECTING);
   sendClearWindowToRoom(roomId);
   preparePlayerTypes(gameManager, timer);
   waitForPeerConnection(gameManager, timer);

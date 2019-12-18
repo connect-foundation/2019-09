@@ -21,7 +21,7 @@ module.exports = {
   NICKNAME_LENGTH: 8,
   GAME_PLAYING: 'playing',
   GAME_INITIALIZING: 'initializing',
-  GAME_INITIAL_PREPARING: 'initialPreparing',
+  CONNECTING: 'connecting',
   QUIZ_NOT_SELECTED: '',
   INVALID_DATE: 'Invalid Date',
 };
