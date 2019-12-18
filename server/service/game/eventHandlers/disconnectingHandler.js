@@ -37,7 +37,8 @@ const disconnectingHandler = socket => {
     if (
       roomStatus === GAME_INITIALIZING ||
       roomStatus === GAME_PLAYING ||
-      roomStatus === CONNECTING
+      roomStatus === CONNECTING ||
+      roomStatus === 'scoreSharing'
     ) {
       if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
         gameController.repeatSet(gameManager, timer);
