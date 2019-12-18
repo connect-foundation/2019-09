@@ -39,16 +39,7 @@ const disconnectingHandler = socket => {
       roomStatus === GAME_PLAYING ||
       roomStatus === GAME_INITIAL_PREPARING
     ) {
-      if (!gameManager.isGameContinuable()) {
-        gameController.endGame(gameManager, timer);
-        gameController.resetGameAfterNSeconds({
-          seconds: SECONDS_AFTER_GAME_END,
-          gameManager,
-          timer,
-        });
-        return;
-      }
-      if (!gameManager.getStreamer()) {
+      if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
         gameController.repeatSet(gameManager, timer);
       }
     }
