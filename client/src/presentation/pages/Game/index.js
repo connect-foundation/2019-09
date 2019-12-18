@@ -66,6 +66,7 @@ const Game = ({ location, match }) => {
     isPlayerListVisible: gameState.isPlayerListVisible,
   });
   const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isReadyButtonVisible = isGameStatusWaiting && currentIsMobile;
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
@@ -131,7 +132,7 @@ const Game = ({ location, match }) => {
     mobileChattingPanelVisibility: gameState.mobileChattingPanelVisibility,
     toast,
     closeToast,
-    isGameStatusWaiting,
+    isReadyButtonVisible,
   };
 
   return <GamePresentation gameProps={gameProps} />;

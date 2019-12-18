@@ -36,7 +36,7 @@ const GamePresentation = ({ gameProps }) => {
     mobileChattingPanelVisibility,
     toast,
     closeToast,
-    isGameStatusWaiting,
+    isReadyButtonVisible,
   } = gameProps;
 
   return (
@@ -106,7 +106,7 @@ const GamePresentation = ({ gameProps }) => {
             className={classes.mobileFullWidth}
             clientManager={clientManager}
           />
-          {isGameStatusWaiting && (
+          {isReadyButtonVisible && (
             <Box className={classes.bottomLeftButtonContainer}>
               {clientManager.getIsRoomPrivate() && (
                 <ShareUrlButton

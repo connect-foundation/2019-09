@@ -7,6 +7,8 @@ import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
 import { shareUrlButtonClickHandler } from '../../utils';
 import styleColors from '../../constants/styleColors';
 import { WAITING_STATUS } from '../../constants/game';
+import useIsMobile from '../../hooks/useIsMobile';
+import { MOBILE_VIEW_BREAKPOINT } from '../../constants/responsiveView';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -45,8 +47,10 @@ const useStyle = makeStyles(theme => ({
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
   const { viewPlayerList, gameStatus } = useContext(GlobalContext);
+  const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isReadyButtonVisible = !currentIsMobile && isGameStatusWaiting;
 
   return (
     <Box className={classes.playerPanel}>
@@ -63,7 +67,7 @@ const PlayerPanel = ({ clientManager }) => {
           />
         );
       })}
-      {isGameStatusWaiting && (
+      {isReadyButtonVisible && (
         <Box className={classes.bottomLeftButtonContainer}>
           {clientManager.getIsRoomPrivate() && (
             <ShareUrlButton
