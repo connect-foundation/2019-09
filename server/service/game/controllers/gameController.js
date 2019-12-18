@@ -157,7 +157,7 @@ const disconnectPlayerSocket = player => {
 
 const disconnectPlayersSocket = players => {
   players.forEach(player => {
-    disconnectPlayer(player);
+    disconnectPlayerSocket(player);
   });
 };
 
