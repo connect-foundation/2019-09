@@ -22,6 +22,25 @@ import { gameReducer, gameState as gameInitialState } from './store';
 
 let clientManager;
 
+const readyButtonHandler = () => {
+  clientManager.toggleReady();
+};
+
+const exitButtonHandler = () => {
+  clientManager.exitRoom();
+};
+
+const getMediaPermissionHandler = () => {
+  clientManager.init();
+};
+
+const attachPopstateEvent = () => {
+  window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
+  return () => {
+    window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
+  };
+};
+
 const Game = ({ location, match }) => {
   const {
     gameStatus,
@@ -39,16 +58,40 @@ const Game = ({ location, match }) => {
     actions,
   });
   const [gameState, gameDispatch] = useReducer(gameReducer, gameInitialState);
-
   const history = useHistory();
   const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
-
+  const classes = useStyles({
+    gamePageRootHeight: gameState.gamePageRootHeight,
+    isPlayerListVisible: gameState.isPlayerListVisible,
+  });
+  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
+  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
 
-  const getMediaPermissionHandler = () => {
-    clientManager.init();
+  const showPlayersButtonHandler = () => {
+    gameDispatch(
+      actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
+    );
+  };
+
+  const showPlayerListByViewShifting = () => {
+    if (shiftingToWhichView === MOBILE_VIEW) {
+      gameDispatch(actions.setIsPlayerListVisible(false));
+      return;
+    }
+    if (shiftingToWhichView === DESKTOP_VIEW) {
+      gameDispatch(actions.setIsPlayerListVisible(true));
+    }
+  };
+
+  const dispatchMobileChattingPanelVisibility = () => {
+    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
+  };
+
+  const dispatchGamePageRootHeight = () => {
+    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
   };
 
   const getMediaPermissionErrorHandler = () => {
@@ -70,50 +113,10 @@ const Game = ({ location, match }) => {
     globalDispatch(actions.setClientManagerInitialized(true));
   }
 
-  const exitButtonHandler = () => {
-    clientManager.exitRoom();
-  };
-
-  const showPlayersButtonHandler = () => {
-    gameDispatch(
-      actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
-    );
-  };
-
-  const readyButtonHandler = () => {
-    clientManager.toggleReady();
-  };
-
-  useEffect(() => {
-    window.addEventListener(EVENTS.POPSTATE, exitButtonHandler);
-    return () => {
-      window.removeEventListener(EVENTS.POPSTATE, exitButtonHandler);
-    };
-  }, []);
-
-  useEffect(() => {
-    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
-    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
-  }, [currentIsMobile]);
-
-  useEffect(() => {
-    if (shiftingToWhichView === MOBILE_VIEW) {
-      gameDispatch(actions.setIsPlayerListVisible(false));
-      return;
-    }
-    if (shiftingToWhichView === DESKTOP_VIEW) {
-      gameDispatch(actions.setIsPlayerListVisible(true));
-    }
-  }, [shiftingToWhichView]);
-
-  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
-
-  const classes = useStyles({
-    gamePageRootHeight: gameState.gamePageRootHeight,
-    isPlayerListVisible: gameState.isPlayerListVisible,
-  });
-
-  const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+  useEffect(attachPopstateEvent, []);
+  useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
+  useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
+  useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
 
   const gameProps = {
     quiz,
