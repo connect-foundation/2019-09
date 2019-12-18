@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { convertSequelizeArrayData } = require('./utils');
 const { Ranking } = require('../databaseModels');
-const { RANKING_COUNT, INVALID_DATE } = require('../../config');
+const { RANKING_COUNTS, INVALID_DATE } = require('../../constants/database');
 
 class RankingRepository {
   constructor(model = Ranking) {
@@ -29,14 +29,14 @@ class RankingRepository {
   }
 
   async getRankingsBeforeDateTime(offset = 0, dateTime) {
-    offset *= RANKING_COUNT;
+    offset *= RANKING_COUNTS;
     const convertedDateTime = this.checkInvalidDate(dateTime);
     const topRankers = await this.model.findAll({
       order: [
         ['score', 'DESC'],
         ['createdAt', 'ASC'],
       ],
-      limit: RANKING_COUNT,
+      limit: RANKING_COUNTS,
       offset,
       where: {
         createdAt: {

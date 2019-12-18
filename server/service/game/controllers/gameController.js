@@ -1,13 +1,16 @@
 const { io } = require('../../io');
-const {
-  MAX_PEER_CONNECTION_WAITING_SECONDS,
-  MAX_QUIZ_SELECTION_WAITING_SECONDS,
-  ONE_SET_SECONDS,
-  SECONDS_BETWEEN_SETS,
-  SECONDS_AFTER_GAME_END,
-  GAME_PLAYING,
-  QUIZ_NOT_SELECTED,
-} = require('../../../config');
+const GAME_RULE = require('../../../constants/gameRule');
+const EVENT = require('../../../constants/event');
+const GAME_STATUS = require('../../../constants/gameStatus');
+// const {
+//   MAX_PEER_CONNECTION_WAITING_SECONDS,
+//   MAX_QUIZ_SELECTION_WAITING_SECONDS,
+//   ONE_SET_SECONDS,
+//   SECONDS_BETWEEN_SETS,
+//   SECONDS_AFTER_GAME_END,
+//   GAME_PLAYING,
+//   QUIZ_NOT_SELECTED,
+// } = require('../../../config');
 const {
   QuizRepository,
   RankingRepository,
@@ -17,15 +20,15 @@ const quizRepository = new QuizRepository();
 const rankingRepository = new RankingRepository();
 
 const sendClearWindowToPlayer = playerSocketId => {
-  io.to(playerSocketId).emit('clearWindow');
+  io.to(playerSocketId).emit(EVENT.CLEAR_WINDOW);
 };
 
 const sendClearWindowToRoom = roomId => {
-  io.in(roomId).emit('clearWindow');
+  io.in(roomId).emit(EVENT.CLEAR_WINDOW);
 };
 
 const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
-  io.in(roomId).emit('sendCurrentSeconds', {
+  io.in(roomId).emit(EVENT.SEND_CURRENT_SECONDS, {
     currentSeconds,
   });
 };
@@ -33,14 +36,14 @@ const sendCurrentSecondsHandler = (currentSeconds, roomId) => {
 const assignStreamer = streamer => {
   const streamerSocketId = streamer.getSocketId();
 
-  io.to(streamerSocketId).emit('assignStreamer');
+  io.to(streamerSocketId).emit(EVENT.ASSIGN_STREAMER);
 };
 
 const assignViewer = (viewer, streamer) => {
   const viewerSocketId = viewer.getSocketId();
   const streamerSocketId = streamer.getSocketId();
 
-  io.to(viewerSocketId).emit('assignViewer', {
+  io.to(viewerSocketId).emit(EVENT.ASSIGN_VIEWER, {
     streamerSocketId,
   });
 };
@@ -54,7 +57,7 @@ const assignViewers = (viewers, streamer) => {
 const sendQuizToStreamer = (streamer, quiz) => {
   const streamerSocketId = streamer.getSocketId();
   sendClearWindowToPlayer(streamerSocketId);
-  io.to(streamerSocketId).emit('startSet', {
+  io.to(streamerSocketId).emit(EVENT.START_SET, {
     quiz,
   });
 };
@@ -63,7 +66,7 @@ const sendQuizLengthToViewers = (viewers, quizLength) => {
   viewers.forEach(viewer => {
     const viewerSocketId = viewer.getSocketId();
     sendClearWindowToPlayer(viewerSocketId);
-    io.to(viewerSocketId).emit('startSet', {
+    io.to(viewerSocketId).emit(EVENT.START_SET, {
       quizLength,
     });
   });
@@ -84,7 +87,7 @@ const sendEndSet = gameManager => {
   const currentSet = gameManager.getCurrentSet();
   const scoreList = gameManager.getScoreList();
 
-  io.in(roomId).emit('endSet', {
+  io.in(roomId).emit(EVENT.END_SET, {
     players,
     currentRound,
     currentSet,
@@ -97,7 +100,7 @@ const sendQuizCandidatesToStreamer = (gameManager, quizCandidates) => {
   const currentRound = gameManager.getCurrentRound();
   const currentSet = gameManager.getCurrentSet();
 
-  io.to(streamer.getSocketId()).emit('prepareSet', {
+  io.to(streamer.getSocketId()).emit(EVENT.PREPARE_SET, {
     currentRound,
     currentSet,
     quizCandidates,
@@ -112,7 +115,7 @@ const sendEmptyQuizCandidatesToViewers = gameManager => {
   const quizCandidates = [];
 
   viewers.forEach(viewer => {
-    io.to(viewer.getSocketId()).emit('prepareSet', {
+    io.to(viewer.getSocketId()).emit(EVENT.PREPARE_SET, {
       currentRound,
       currentSet,
       quizCandidates,
@@ -142,7 +145,7 @@ const quizSelectionTimeoutHandler = (gameManager, timer) => {
 
 const runQuizSelectionTimer = (gameManager, timer) => {
   timer.startIntegrationTimer(
-    MAX_QUIZ_SELECTION_WAITING_SECONDS,
+    GAME_RULE.MAX_QUIZ_SELECTION_WAITING_SECONDS,
     quizSelectionTimeoutHandler.bind(null, gameManager, timer),
     sendCurrentSecondsHandler,
   );
@@ -162,7 +165,7 @@ const disconnectPlayersSocket = players => {
 
 const sendReadyPlayersToRoom = (roomId, players) => {
   players.forEach(player => {
-    io.in(roomId).emit('sendReady', {
+    io.in(roomId).emit(EVENT.SEND_READY, {
       socketId: player.getSocketId(),
       isReady: player.getIsReady(),
     });
@@ -170,14 +173,14 @@ const sendReadyPlayersToRoom = (roomId, players) => {
 };
 
 const sendStartGameToRoom = roomId => {
-  io.in(roomId).emit('startGame');
+  io.in(roomId).emit(EVENT.START_GAME);
 };
 
 const sendEndGameToRoom = gameManager => {
   const roomId = gameManager.getRoomId();
   const scoreList = gameManager.getScoreList();
 
-  io.in(roomId).emit('endGame', {
+  io.in(roomId).emit(EVENT.END_GAME, {
     scoreList,
   });
 };
@@ -186,7 +189,7 @@ const sendResetGameToRoom = gameManager => {
   const roomId = gameManager.getRoomId();
   const players = gameManager.getPlayers();
 
-  io.in(roomId).emit('resetGame', {
+  io.in(roomId).emit(EVENT.RESET_GAME, {
     players,
   });
 };
@@ -209,7 +212,7 @@ const pickQuizCandidates = async () => {
 
 const endSet = (gameManager, timer) => {
   timer.clear();
-  gameManager.setStatus('scoreSharing');
+  gameManager.setStatus(GAME_STATUS.SCORE_SHARING);
   gameManager.resetStreamerConnectionOfAllPlayers();
   gameManager.resetCorrectionOfAllPlayers();
   sendEndSet(gameManager);
@@ -227,7 +230,7 @@ const prepareQuizSelection = async (gameManager, timer) => {
 
 const prepareSet = async (gameManager, timer) => {
   gameManager.updateRoundAndSet();
-  gameManager.setQuiz(QUIZ_NOT_SELECTED);
+  gameManager.setQuiz(GAME_RULE.DEFAULT_QUIZ);
 
   await prepareQuizSelection(gameManager, timer);
 };
@@ -251,7 +254,7 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
 
 const waitForPeerConnection = (gameManager, timer) => {
   timer.startTimeoutTimer(
-    MAX_PEER_CONNECTION_WAITING_SECONDS,
+    GAME_RULE.MAX_PEER_CONNECTION_WAITING_SECONDS,
     disconnectPlayersAndStartGame.bind(null, gameManager, timer),
   );
 };
@@ -295,10 +298,10 @@ const endGame = async (gameManager, timer) => {
   const roomStatus = gameManager.getStatus();
   const players = gameManager.getPlayers();
 
-  if (roomStatus === 'ending') {
+  if (roomStatus === GAME_STATUS.ENDING) {
     return;
   }
-  gameManager.setStatus('ending');
+  gameManager.setStatus(GAME_STATUS.ENDING);
 
   gameManager.resetStreamerConnectionOfAllPlayers();
   gameManager.resetCorrectionOfAllPlayers();

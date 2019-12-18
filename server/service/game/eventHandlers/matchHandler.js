@@ -1,12 +1,12 @@
 const Player = require('../models/Player');
 const roomController = require('../controllers/roomController');
 const { getRandomColor } = require('../../../utils/colorGenerator');
-const { NICKNAME_LENGTH } = require('../../../config');
-const EVENTS = require('../../../constants/events');
+const { MAX_NICKNAME_LENGTH } = require('../../../constants/gameRule');
+const EVENT = require('../../../constants/event');
 
 const emitEventsAfterJoin = socket => {
-  socket.emit('startChatting');
-  socket.emit(EVENTS.SEND_ROOMID, { roomId: socket.roomId });
+  socket.emit(EVENT.START_CHATTING);
+  socket.emit(EVENT.SEND_ROOMID, { roomId: socket.roomId });
 };
 
 const matchHandler = (
@@ -14,7 +14,7 @@ const matchHandler = (
   { nickname, roomIdFromUrl, isPrivateRoomCreation },
 ) => {
   let roomId;
-  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
+  const slicedNickname = nickname.slice(0, MAX_NICKNAME_LENGTH);
   const player = new Player({
     nickname: slicedNickname,
     socketId: socket.id,
@@ -42,8 +42,8 @@ const matchHandler = (
     const room = roomController.getRoomByRoomId(roomId);
     const otherPlayers = room.gameManager.getOtherPlayers(player.socketId);
 
-    socket.broadcast.to(roomId).emit('sendNewPlayer', player);
-    socket.emit('sendPlayers', { players: otherPlayers });
+    socket.broadcast.to(roomId).emit(EVENT.SEND_NEW_PLAYER, player);
+    socket.emit(EVENT.SEND_PLAYERS, { players: otherPlayers });
   } else {
     /** @todo 토스터 완성되면 여기서 메인보내고 토스터로 없다고 알려줘야함 */
     socket.disconnect();

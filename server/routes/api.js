@@ -1,14 +1,13 @@
 const express = require('express');
 const { RankingRepository } = require('../databaseFiles/repositories');
 const { RANKING, RANKING_INFORMATION } = require('./paths');
-const { ERROR_500_DATABASE } = require('../constants');
+const { ERROR_500_DATABASE } = require('../constants/api');
 const { getCurrentTime } = require('../utils/getCurrentTime');
 
 const router = express.Router();
 const rankingRepository = new RankingRepository();
 
 router.get(RANKING, async (req, res) => {
-  console.log('req.query.datetime: ', req.query.datetime);
   const offset = +req.query.offset || 0;
   try {
     const rankings = await rankingRepository.getRankingsBeforeDateTime(

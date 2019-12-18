@@ -1,6 +1,7 @@
 const short = require('short-uuid');
 const { rooms } = require('../../io');
-const { MAX_PLAYER_COUNT } = require('../../../config');
+const { MAX_PLAYER_COUNT } = require('../../../constants/gameRule');
+const { WAITING } = require('../../../constants/gameStatus');
 const GameManager = require('../models/GameManager');
 const Timer = require('../models/Timer');
 
@@ -47,7 +48,7 @@ const isRoomJoinable = (gameManager, urlRoomId) => {
   }
 
   const isRoomFull = players.length >= MAX_PLAYER_COUNT;
-  const isRoomWaiting = gameManager.getStatus() === 'waiting';
+  const isRoomWaiting = gameManager.getStatus() === WAITING;
   return !isRoomFull && isRoomWaiting && isRoomAccessible;
 };
 

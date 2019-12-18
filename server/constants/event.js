@@ -22,6 +22,11 @@ const EVENT = {
   SEND_PLAYERS: 'sendPlayers',
   SEND_NEW_PLAYER: 'sendNewPlayer',
   SEND_LEFT_PLAYER: 'sendLeftPlayer',
+  CORRECT_ANSWER: 'correctAnswer',
+  UPDATE_PROFILE: 'updateProfile',
+  SEND_DESCRIPTION: 'sendDescription',
+  SEND_ICE_CANDIDATE: 'sendIceCandidate',
+  CONNECTION: 'connection',
 };
 
 module.exports = EVENT;
