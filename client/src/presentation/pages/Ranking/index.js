@@ -16,23 +16,34 @@ const getBottomRankingList = totalRankingList => {
   return totalRankingList.slice(3);
 };
 
+const isAllRankingsFetched = ({
+  rankingCount,
+  bottomRankingList,
+  topRankingList,
+}) => {
+  return (
+    rankingCount !== -1 &&
+    rankingCount <= bottomRankingList.length + topRankingList.length
+  );
+};
+
 const Ranking = () => {
   const classes = useStyle();
   const [offset, setOffset] = useState(0);
-  const [rankingCount, setRankingCount] = useState(0);
+  const [rankingCount, setRankingCount] = useState(-1);
   const [currentDateTime, setCurrentDateTime] = useState('');
   const [moreButtonLock, setMoreButtonLock] = useState(false);
   const [topRankingList, setTopRankingList] = useState([]);
   const [bottomRankingList, setBottomRankingList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [moreButtomVisibiliy, setMoreButtomVisibiliy] = useState(true);
+  const [isMoreButtomVisibile, setIsMoreButtomVisibile] = useState(true);
+  const [isBottomRankingVisible, setIsBottomRankingVisible] = useState(false);
 
-  const isAllRankingsFetched = () => {
-    return (
-      rankingCount !== 0 &&
-      rankingCount <= bottomRankingList.length + topRankingList.length
-    );
+  const onMoreButtonClick = () => {
+    if (moreButtonLock) return;
+    setOffset(offset + 1);
   };
+
   /**
    * offset이 변경되면 서버에 랭킹 데이터 요청 후 렌더링
    */
@@ -55,28 +66,30 @@ const Ranking = () => {
         setCurrentDateTime(rankingInformaion.currentTime);
         setTopRankingList(getTopRankingList(rankingList));
         setBottomRankingList(getBottomRankingList(rankingList));
+        setIsBottomRankingVisible(true);
       } else {
         setBottomRankingList([...bottomRankingList, ...rankingList]);
-      }
-      if (isAllRankingsFetched()) {
-        /**
-         * 모든 랭킹 데이터를 가져왔을때, 버튼과 loading 컴포넌트를 제거하고
-         * api 요청은 lock을 걸어 놓음
-         */
-        setMoreButtomVisibiliy(false);
-        setLoading(false);
-        return;
       }
       setLoading(false);
       setMoreButtonLock(false);
     }, 500);
   };
 
-  const onClick = () => {
-    if (moreButtonLock) return;
-    setOffset(offset + 1);
-  };
-
+  useEffect(() => {
+    /**
+     * 모든 랭킹 데이터를 가져왔을때, 버튼과 loading 컴포넌트를 제거하고
+     * api 요청은 lock을 걸어 놓음
+     */
+    if (
+      isAllRankingsFetched({ rankingCount, bottomRankingList, topRankingList })
+    ) {
+      setTimeout(() => {
+        setLoading(false);
+        setMoreButtonLock(true);
+        setIsMoreButtomVisibile(false);
+      }, 0);
+    }
+  }, [bottomRankingList, rankingCount]);
   useEffect(() => {
     setRankingLists();
   }, [offset]);
@@ -89,13 +102,18 @@ const Ranking = () => {
         </Link>
       </Box>
       <TopRankPanel rankingList={topRankingList} />
-      <BottomRankPanel rankingList={bottomRankingList} loading={loading} />
+      <BottomRankPanel
+        rankingList={bottomRankingList}
+        loading={loading}
+        isBottomRankingVisible={isBottomRankingVisible}
+      />
       <Box className={classes.MoreButton}>
-        {moreButtomVisibiliy ? (
-          <MoreButton onClick={onClick}>MORE</MoreButton>
-        ) : (
-          ''
-        )}
+        <MoreButton
+          onClick={onMoreButtonClick}
+          isMoreButtomVisibile={isMoreButtomVisibile}
+        >
+          MORE
+        </MoreButton>
       </Box>
     </Box>
   );
