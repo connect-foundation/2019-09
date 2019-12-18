@@ -33,13 +33,13 @@ const matchHandler = (
     socketId: socket.id,
     nicknameColor: getRandomColor(),
   });
-  const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
-
-  roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
 
   if (roomId) {
-    const room = roomController.getRoomByRoomId(roomId);
-    const otherPlayers = room.gameManager.getOtherPlayers(player.socketId);
+    const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
+    roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
+
+    const { gameManager } = roomController.getRoomByRoomId(roomId);
+    const otherPlayers = gameManager.getOtherPlayers(player.socketId);
 
     socket.broadcast.to(roomId).emit('sendNewPlayer', player);
     socket.emit('sendPlayers', { players: otherPlayers });
