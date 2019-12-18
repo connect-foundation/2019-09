@@ -2,14 +2,13 @@ const { io } = require('../../io');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
 const {
-  SECONDS_AFTER_GAME_END,
   GAME_PLAYING,
   GAME_INITIALIZING,
   CONNECTING,
   MIN_PLAYER_COUNT,
 } = require('../../../config');
 
-const LeavePlayer = (gameManager, socket) => {
+const leavePlayer = (gameManager, socket) => {
   gameManager.leaveRoom(socket.id);
   socket.leave(gameManager.getRoomId());
 };
@@ -28,14 +27,15 @@ const disconnectingHandler = socket => {
     }
     const { gameManager, timer } = room;
     const roomStatus = gameManager.getStatus();
-    LeavePlayer(gameManager, socket);
+    leavePlayer(gameManager, socket);
     sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
-    if (
+    const isGamePreparable =
       roomStatus === 'waiting' &&
       gameManager.checkAllPlayersAreReady() &&
-      gameManager.getPlayers().length >= MIN_PLAYER_COUNT
-    ) {
+      gameManager.getPlayers().length >= MIN_PLAYER_COUNT;
+
+    if (isGamePreparable) {
       gameController.prepareGame(gameManager, timer);
       return;
     }
