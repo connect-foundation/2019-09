@@ -7,7 +7,7 @@ import { GlobalContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
 import { shareUrlButtonClickHandler } from '../../utils';
 import styleColors from '../../constants/styleColors';
-import { WAITING_STATUS } from '../../constants/game';
+import { READY_BUTTON_TEXT, GAME_STATUS } from '../../constants/game';
 import useIsMobile from '../../hooks/useIsMobile';
 import { MOBILE_VIEW_BREAKPOINT } from '../../constants/responsiveView';
 
@@ -50,7 +50,7 @@ const PlayerPanel = ({ clientManager }) => {
   const { viewPlayerList, gameStatus } = useContext(GlobalContext);
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
   const isReadyButtonVisible = !currentIsMobile && isGameStatusWaiting;
 
   return (
@@ -83,7 +83,9 @@ const PlayerPanel = ({ clientManager }) => {
               clientManager.toggleReady();
             }}
           >
-            {localPlayer && localPlayer.isReady ? 'Cancel' : 'Ready'}
+            {localPlayer && localPlayer.isReady
+              ? READY_BUTTON_TEXT.CANCEL
+              : READY_BUTTON_TEXT.READY}
           </ReadyButton>
         </Box>
       )}

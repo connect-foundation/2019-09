@@ -3,6 +3,9 @@ import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 import { makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
+import actions from '../actions';
+import { PLAYER_TYPES } from '../constants/game';
+import { DESCRIPTION_TYPE } from '../constants/webRTC';
 
 class StreamingManager {
   constructor(socket, remotePlayers, localPlayer) {
@@ -39,20 +42,15 @@ class StreamingManager {
       localPlayer,
     } = this;
 
-    localPlayer.type = 'streamer';
+    localPlayer.type = PLAYER_TYPES.STREAMER;
 
     const socketIds = Object.keys(remotePlayers);
     socketIds.forEach(socketId => {
-      remotePlayers[socketId].type = 'viewer';
+      remotePlayers[socketId].type = PLAYER_TYPES.VIEWER;
     });
 
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
-    dispatch({
-      type: 'setViewPlayerList',
-      payload: {
-        viewPlayerList,
-      },
-    });
+    dispatch(actions.setViewPlayerList(viewPlayerList));
 
     // const socketIds = Object.keys(remotePlayers);
     webRTCManager.closeAllConnections();
@@ -73,7 +71,7 @@ class StreamingManager {
       });
     });
     const stream = webRTCManager.getStream();
-    this.dispatch({ type: 'setStream', payload: { stream } });
+    this.dispatch(actions.setStream(stream));
   }
 
   async assignViewerHandler({ streamerSocketId }) {
@@ -88,19 +86,14 @@ class StreamingManager {
     const socketIds = Object.keys(remotePlayers);
     socketIds.forEach(socketId => {
       if (socketId === streamerSocketId) {
-        remotePlayers[socketId].type = 'streamer';
+        remotePlayers[socketId].type = PLAYER_TYPES.STREAMER;
       } else {
-        remotePlayers[socketId].type = 'viewer';
+        remotePlayers[socketId].type = PLAYER_TYPES.VIEWER;
       }
     });
-    localPlayer.type = 'viewer';
+    localPlayer.type = PLAYER_TYPES.VIEWER;
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
-    dispatch({
-      type: 'setViewPlayerList',
-      payload: {
-        viewPlayerList,
-      },
-    });
+    dispatch(actions.setViewPlayerList(viewPlayerList));
     webRTCManager.closeAllConnections();
     webRTCManager.createConnection(streamerSocketId);
     webRTCManager.registerIceCandidate(
@@ -117,7 +110,7 @@ class StreamingManager {
   async sendDescriptionHandler({ target, description }) {
     const { webRTCManager, socket } = this;
     await webRTCManager.setRemoteDescription(target, description);
-    if (description.type === 'answer') return;
+    if (description.type === DESCRIPTION_TYPE.ANSWER) return;
     const answer = await webRTCManager.createAnswerDescription(target);
     await webRTCManager.setLocalDescription(target, answer);
     socket.emit(EVENTS.SEND_DESCRIPTION, { target, description: answer });
@@ -133,7 +126,7 @@ class StreamingManager {
 
   // eslint-disable-next-line class-methods-use-this
   trackHandler(stream) {
-    this.dispatch({ type: 'setStream', payload: { stream } });
+    this.dispatch(actions.setStream(stream));
     this.socket.emit(EVENTS.CONNECT_PEER);
   }
 

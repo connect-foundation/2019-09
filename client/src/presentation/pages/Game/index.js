@@ -12,13 +12,14 @@ import {
   MOBILE_VIEW,
   DESKTOP_VIEW,
 } from '../../../constants/responsiveView';
-import { WAITING_STATUS } from '../../../constants/game';
+import { GAME_STATUS } from '../../../constants/game';
 import GamePresentation from './presenter';
 import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
-import { TOAST_TPYES } from '../../../constants/toast';
+import { TOAST_TYPES } from '../../../constants/toast';
 import { gameReducer, gameState as gameInitialState } from './store';
+import LINK_PATH from '../../../constants/path';
 
 let clientManager;
 
@@ -58,7 +59,7 @@ const Game = ({ location, match }) => {
     gamePageRootHeight: gameState.gamePageRootHeight,
     isPlayerListVisible: gameState.isPlayerListVisible,
   });
-  const isGameStatusWaiting = gameStatus === WAITING_STATUS;
+  const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
   const isReadyButtonVisible = isGameStatusWaiting && currentIsMobile;
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
@@ -96,8 +97,8 @@ const Game = ({ location, match }) => {
   };
 
   const getMediaPermissionErrorHandler = () => {
-    history.push('/');
-    openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
+    history.push(LINK_PATH.MAIN_PAGE);
+    openToast(TOAST_TYPES.INFORMATION, ALLOW_CAMERA_MESSAGE);
     globalDispatch(actions.setClientManagerInitialized(false));
   };
 
@@ -113,7 +114,6 @@ const Game = ({ location, match }) => {
       .catch(getMediaPermissionErrorHandler);
     globalDispatch(actions.setClientManagerInitialized(true));
   }
-
   useEffect(gamePageLifecycleHandler, []);
   useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
   useEffect(dispatchGamePageRootHeight, [currentIsMobile]);

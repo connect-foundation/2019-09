@@ -6,11 +6,12 @@ import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';
 import { useToast } from '../hooks';
-import { TOAST_TPYES, TOAST_MESSAGE } from '../constants/toast';
+import { TOAST_TYPES, TOAST_MESSAGE } from '../constants/toast';
 import {
   DEFAULT_INACTIVE_PLAYER_BAN_TIME,
   PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME,
 } from '../constants/timer';
+import { GAME_STATUS } from '../constants/game';
 
 class GameManager {
   constructor({ socket, localPlayer, remotePlayers, isRoomPrivate }) {
@@ -109,7 +110,7 @@ class GameManager {
   endSetHandler({ players, currentRound, currentSet, scoreList }) {
     this.syncAllPlayers(players);
     this.makeAndDispatchViewPlayerList();
-    this.dispatch(actions.setGameStatus('scoreSharing'));
+    this.dispatch(actions.setGameStatus(GAME_STATUS.SCORE_SHARING));
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
     this.dispatch(actions.setChattingDisabled(false));
@@ -150,7 +151,7 @@ class GameManager {
 
   startGameHandler() {
     this.timer.clear();
-    this.dispatch(actions.setGameStatus('playing'));
+    this.dispatch(actions.setGameStatus(GAME_STATUS.PLAYING));
   }
 
   sendPlayersHandler({ players }) {
@@ -206,7 +207,7 @@ class GameManager {
 
   inactivePlayerBanHandler() {
     this.exitRoom();
-    this.openToast(TOAST_TPYES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
+    this.openToast(TOAST_TYPES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
   }
 
   inactivePlayerWarningHandler(inactivePlayerBanTime, time) {
@@ -215,7 +216,7 @@ class GameManager {
     }
     if (time === inactivePlayerBanTime / 2) {
       this.openToast(
-        TOAST_TPYES.WARNING,
+        TOAST_TYPES.WARNING,
         TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
       );
     }

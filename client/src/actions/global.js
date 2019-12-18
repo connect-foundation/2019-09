@@ -156,6 +156,15 @@ const openToast = (toastType, message) => {
   };
 };
 
+const addChatting = newChatting => {
+  return {
+    type: TYPES.ADD_CHATTING,
+    payload: {
+      newChatting,
+    },
+  };
+};
+
 export default {
   setViewPlayerList,
   reset,
@@ -174,4 +183,5 @@ export default {
   setClientManagerInitialized,
   openToast,
   closeToast,
+  addChatting,
 };

@@ -3,11 +3,12 @@ import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import { MAX_CHAT_LENGTH } from '../constants/inputConstraints';
 import EVENTS from '../constants/events';
-import WELCOME_MESSAGE from '../constants/chatting';
+import { WELCOME_MESSAGE } from '../constants/chatting';
 import {
   DEFAULT_INACTIVE_PLAYER_BAN_TIME,
   PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
 } from '../constants/timer';
+import actions from '../actions/global';
 
 class ChattingManager {
   constructor(socket, isRoomPrivate) {
@@ -45,21 +46,20 @@ class ChattingManager {
   }
 
   sendChattingMessageHandler(newChatting) {
-    this.dispatch({ type: 'addChatting', payload: { newChatting } });
+    this.dispatch(actions.addChatting(newChatting));
   }
 
   startChattingHandler() {
     this.isAvailableChatting = true;
-    this.dispatch({
-      type: 'addChatting',
-      payload: {
-        newChatting: WELCOME_MESSAGE(
+    this.dispatch(
+      actions.addChatting(
+        WELCOME_MESSAGE(
           this.isRoomPrivate,
           PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
           DEFAULT_INACTIVE_PLAYER_BAN_TIME,
         ),
-      },
-    });
+      ),
+    );
   }
 }
 

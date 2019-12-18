@@ -3,13 +3,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import UnderlinedLetter from './UnderlinedLetter';
 import UnderlinedSpace from './UnderlinedSpace';
+import styleColors from '../../constants/styleColors';
 
 const QuizDisplay = ({ quiz, quizLength }) => {
   const useStyles = makeStyles(() => ({
     quizDisplay: {
       '& > *': {
         marginRight: '0.5rem',
-        color: '#ffffff',
+        color: styleColors.PURE_WHITE_COLOR,
       },
     },
   }));

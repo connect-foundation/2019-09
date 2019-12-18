@@ -3,13 +3,15 @@ const { io } = require('../../io');
 const { processChatWithSystemRule } = require('../../../utils/chatUtils');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
+const GAME_STATUS = require('../../../constants/gameStatus');
+const EVENT = require('../../../constants/event');
 
 /**
  * viewer가 입력한 채팅이 정답이라면 true를 반환하는 함수
  */
 const isCorrectAnswer = (gameManager, message, socketId) => {
   return (
-    gameManager.getStatus() === 'playing' &&
+    gameManager.getStatus() === GAME_STATUS.PLAYING &&
     gameManager.getQuiz() === message &&
     !gameManager.isStreamer(socketId)
   );
@@ -17,7 +19,7 @@ const isCorrectAnswer = (gameManager, message, socketId) => {
 
 const sendChattingMessageToRoom = (roomId, payload) => {
   if (payload.message) {
-    io.in(roomId).emit('sendChattingMessage', payload);
+    io.in(roomId).emit(EVENT.SEND_CHATTING_MESSAGE, payload);
   }
 };
 
@@ -33,7 +35,7 @@ const sendChattingMessageHandler = (socket, { message }) => {
 
   if (
     isCorrectAnswer(gameManager, message, socket.id) &&
-    gameManager.getStatus() === 'playing'
+    gameManager.getStatus() === GAME_STATUS.PLAYING
   ) {
     payload.nickname = '안내';
     payload.message = `${playerNickname}님이 정답을 맞췄습니다!`;
@@ -42,8 +44,8 @@ const sendChattingMessageHandler = (socket, { message }) => {
     const score = player.getScore() + timer.getRemainingTime() + 50;
     player.setScore(score);
     player.setIsCorrectPlayer(true);
-    io.to(socket.id).emit('correctAnswer');
-    io.in(socket.roomId).emit('updateProfile', { player });
+    io.to(socket.id).emit(EVENT.CORRECT_ANSWER);
+    io.in(socket.roomId).emit(EVENT.UPDATE_PROFILE, { player });
 
     if (gameManager.checkAllPlayersAreCorrect()) {
       gameController.repeatSet(gameManager, timer);

@@ -9,6 +9,9 @@ import EVENTS from '../constants/events';
 import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
 import { SOCKETIO_SERVER_URL } from '../constants/socket';
+import { GAME_STATUS, PLAYER_TYPES } from '../constants/game';
+import LINK_PATH from '../constants/path';
+import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
 
 class ClientManager {
   constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
@@ -16,7 +19,7 @@ class ClientManager {
     this.localPlayer = {
       isReady: false,
       nickname: '',
-      type: 'viewer',
+      type: PLAYER_TYPES.VIEWER,
       socketId: '',
       score: 0,
     };
@@ -54,7 +57,7 @@ class ClientManager {
 
   disconnectHandler() {
     this.streamingManager.resetWebRTC();
-    this.history.push('/');
+    this.history.push(LINK_PATH.MAIN_PAGE);
     this.dispatch(actions.reset());
     this.gameManager.timer.clear();
   }
@@ -81,7 +84,7 @@ class ClientManager {
     this.localPlayer.roomId = roomId;
     if (this.isRoomPrivate) {
       this.history.push({
-        pathname: `/game/${roomId}`,
+        pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
         isPrivateRoomCreation: this.isPrivateRoomCreation,
       });
     }
@@ -110,7 +113,9 @@ class ClientManager {
     this.streamingManager.registerSocketEvents();
     this.askSocketId();
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
-    this.findMatch(browserLocalStorage.getNickname() || 'Anonymous');
+    this.findMatch(
+      browserLocalStorage.getNickname() || LOCALSTORAGE_DEFAULT_NICKNAME,
+    );
     this.chattingManager.registerSocketEvents();
     this.gameManager.setInactivePlayerBanTimer();
   }
@@ -167,10 +172,7 @@ class ClientManager {
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
     this.dispatch(actions.clearWindow());
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'waiting' },
-    });
+    this.dispatch(actions.setGameStatus(GAME_STATUS.WAITING));
     this.gameManager.setInactivePlayerBanTimer();
   }
 

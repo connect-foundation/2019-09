@@ -1,14 +1,15 @@
 const {
   MAX_ROUND_NUMBER,
   MIN_PLAYER_COUNT,
-  CONNECTING,
-} = require('../../../config');
+} = require('../../../constants/gameRule');
+const GAME_STATUS = require('../../../constants/gameStatus');
+const { VIEWER, STREAMER } = require('../../../constants/player');
 
 class GameManager {
   constructor(roomId) {
     this.roomId = roomId;
     this.isRoomPrivate = false;
-    this.status = 'waiting';
+    this.status = GAME_STATUS.WAITING;
     this.quiz = '';
     this.quizCandidates = [];
     this.players = [];
@@ -90,7 +91,7 @@ class GameManager {
    * players는 초기화하지 않는다.
    */
   reset() {
-    this.status = 'waiting';
+    this.status = GAME_STATUS.WAITING;
     this.streamerCandidates = [];
     this.streamer = null;
     this.quiz = '';
@@ -101,7 +102,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = CONNECTING;
+    this.status = GAME_STATUS.CONNECTING;
   }
 
   updateRoundAndSet() {
@@ -122,7 +123,7 @@ class GameManager {
   updatePlayersType() {
     this.players.forEach(player => {
       const type =
-        player.socketId !== this.streamer.socketId ? 'viewer' : 'streamer';
+        player.socketId !== this.streamer.socketId ? VIEWER : STREAMER;
       player.setType(type);
     });
   }
@@ -146,7 +147,7 @@ class GameManager {
   leaveRoom(socketId) {
     this.removePlayer(socketId);
 
-    if (this.status === 'waiting') return;
+    if (this.status === GAME_STATUS.WAITING) return;
 
     this.removeStreamerCandidate(socketId);
 

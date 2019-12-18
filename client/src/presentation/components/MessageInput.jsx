@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import styleColors from '../../constants/styleColors';
 import { DEFAULT_TEXT_INPUT_MAX_LENGTH } from '../../constants/inputConstraints';
+import { CHATTING_INPUT_PLACEHOLER } from '../../constants/chatting';
 
 const useStyles = makeStyles({
   input: {
@@ -25,7 +26,7 @@ const MessageInput = ({
       value={value}
       onChange={onChange}
       onKeyPress={onKeyPress}
-      placeholder="Please enter a message."
+      placeholder={CHATTING_INPUT_PLACEHOLER}
       className={classes.input}
       inputProps={{
         'aria-label': 'description',

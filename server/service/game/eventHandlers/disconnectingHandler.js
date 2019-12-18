@@ -1,12 +1,9 @@
 const { io } = require('../../io');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
-const {
-  GAME_PLAYING,
-  GAME_INITIALIZING,
-  CONNECTING,
-  MIN_PLAYER_COUNT,
-} = require('../../../config');
+const GAME_STATUS = require('../../../constants/gameStatus');
+const { MIN_PLAYER_COUNT } = require('../../../constants/gameRule');
+const { SEND_LEFT_PLAYER } = require('../../../constants/event');
 
 const leavePlayer = (gameManager, socket) => {
   gameManager.leaveRoom(socket.id);
@@ -14,7 +11,7 @@ const leavePlayer = (gameManager, socket) => {
 };
 
 const sendLeftPlayerToRoom = (roomId, socketId) => {
-  io.in(roomId).emit('sendLeftPlayer', {
+  io.in(roomId).emit(SEND_LEFT_PLAYER, {
     socketId,
   });
 };
@@ -22,6 +19,7 @@ const sendLeftPlayerToRoom = (roomId, socketId) => {
 const disconnectingHandler = socket => {
   try {
     const room = roomController.getRoomByRoomId(socket.roomId);
+    console.log('disconnectingHandler :', room);
     if (!room) {
       return;
     }
@@ -31,7 +29,7 @@ const disconnectingHandler = socket => {
     sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
     const isGamePreparable =
-      roomStatus === 'waiting' &&
+      roomStatus === GAME_STATUS.WAITING &&
       gameManager.checkAllPlayersAreReady() &&
       gameManager.getPlayers().length >= MIN_PLAYER_COUNT;
 
@@ -41,10 +39,10 @@ const disconnectingHandler = socket => {
     }
 
     if (
-      roomStatus === GAME_INITIALIZING ||
-      roomStatus === GAME_PLAYING ||
-      roomStatus === CONNECTING ||
-      roomStatus === 'scoreSharing'
+      roomStatus === GAME_STATUS.INITIALIZING ||
+      roomStatus === GAME_STATUS.PLAYING ||
+      roomStatus === GAME_STATUS.CONNECTING ||
+      roomStatus === GAME_STATUS.SCORE_SHARING
     ) {
       if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
         gameController.repeatSet(gameManager, timer);

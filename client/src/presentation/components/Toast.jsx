@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { amber, green, deepPurple, red } from '@material-ui/core/colors';
 import ToastContent from './ToastContent';
 import {
-  TOAST_TPYES,
+  TOAST_TYPES,
   TOAST_ICONS,
   TOAST_POSITION,
   TOAST_TIME,
@@ -35,8 +35,8 @@ const useStyles = makeStyles({
  * @param {*} toastType
  */
 const checkToastType = toastType => {
-  const defaultType = TOAST_TPYES.SUCCESS;
-  return Object.values(TOAST_TPYES).includes(toastType)
+  const defaultType = TOAST_TYPES.SUCCESS;
+  return Object.values(TOAST_TYPES).includes(toastType)
     ? toastType
     : defaultType;
 };
