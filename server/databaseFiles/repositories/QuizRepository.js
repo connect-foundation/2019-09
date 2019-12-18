@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { convertSequelizeArrayData } = require('./utils');
 const { Quiz } = require('../databaseModels');
-const { QUIZ_CANDIDATES_COUNT } = require('../../config');
+const { QUIZ_CANDIDATES_COUNT } = require('../../constants/gameRule');
 
 class QuizRepository {
   constructor(model = Quiz) {

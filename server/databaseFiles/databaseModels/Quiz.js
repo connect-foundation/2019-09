@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const connection = require('../connection');
+const { MODEL_QUIZ } = require('../../constants/database');
 
 class Quiz extends Sequelize.Model {}
 
@@ -21,7 +22,7 @@ Quiz.init(
   },
   {
     sequelize: connection,
-    modelName: 'quiz',
+    modelName: MODEL_QUIZ,
   },
 );
 

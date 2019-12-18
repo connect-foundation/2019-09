@@ -7,29 +7,30 @@ const {
   connectPeerHandler,
   selectQuizHandler,
 } = require('./eventHandlers');
+const EVENT = require('../../constants/event');
 
 module.exports = socket => {
   /**
    * 게임 전
    */
-  socket.on('askSocketId', askSocketIdHandler.bind(null, socket));
-  socket.on('match', matchHandler.bind(null, socket));
-  socket.on('sendReady', sendReadyHandler.bind(null, socket));
+  socket.on(EVENT.ASK_SOCKET_ID, askSocketIdHandler.bind(null, socket));
+  socket.on(EVENT.MATCH, matchHandler.bind(null, socket));
+  socket.on(EVENT.SEND_READY, sendReadyHandler.bind(null, socket));
   /**
    * 세트준비
    */
-  socket.on('connectPeer', connectPeerHandler.bind(null, socket));
-  socket.on('selectQuiz', selectQuizHandler.bind(null, socket));
+  socket.on(EVENT.CONNECT_PEER, connectPeerHandler.bind(null, socket));
+  socket.on(EVENT.SELECT_QUIZ, selectQuizHandler.bind(null, socket));
   /**
    * 채팅
    */
   socket.on(
-    'sendChattingMessage',
+    EVENT.SEND_CHATTING_MESSAGE,
     sendChattingMessageHandler.bind(null, socket),
   );
 
   /**
    * socket disconnect 관리
    */
-  socket.on('disconnecting', disconnectingHandler.bind(null, socket));
+  socket.on(EVENT.DISCONNECTING, disconnectingHandler.bind(null, socket));
 };
