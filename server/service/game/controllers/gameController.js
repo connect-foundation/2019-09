@@ -2,15 +2,6 @@ const { io } = require('../../io');
 const GAME_RULE = require('../../../constants/gameRule');
 const EVENT = require('../../../constants/event');
 const GAME_STATUS = require('../../../constants/gameStatus');
-// const {
-//   MAX_PEER_CONNECTION_WAITING_SECONDS,
-//   MAX_QUIZ_SELECTION_WAITING_SECONDS,
-//   ONE_SET_SECONDS,
-//   SECONDS_BETWEEN_SETS,
-//   SECONDS_AFTER_GAME_END,
-//   GAME_PLAYING,
-//   QUIZ_NOT_SELECTED,
-// } = require('../../../config');
 const {
   QuizRepository,
   RankingRepository,
@@ -74,7 +65,7 @@ const sendQuizLengthToViewers = (viewers, quizLength) => {
 
 const runInGameTimer = (gameManager, timer) => {
   timer.startIntegrationTimer(
-    ONE_SET_SECONDS,
+    GAME_RULE.ONE_SET_SECONDS,
     repeatSet.bind(null, gameManager, timer),
     sendCurrentSecondsHandler,
   );
@@ -126,7 +117,7 @@ const sendEmptyQuizCandidatesToViewers = gameManager => {
 const startSet = (gameManager, timer, quiz) => {
   timer.clear();
   gameManager.setQuiz(quiz);
-  gameManager.setStatus(GAME_PLAYING);
+  gameManager.setStatus(GAME_STATUS.PLAYING);
 
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
@@ -328,14 +319,14 @@ const repeatSet = (gameManager, timer) => {
   if (gameManager.isGameContinuable()) {
     endSet(gameManager, timer);
     goToNextSetAfterNSeconds({
-      seconds: SECONDS_BETWEEN_SETS,
+      seconds: GAME_RULE.SECONDS_BETWEEN_SETS,
       gameManager,
       timer,
     });
   } else {
     endGame(gameManager, timer);
     resetGameAfterNSeconds({
-      seconds: SECONDS_AFTER_GAME_END,
+      seconds: GAME_RULE.SECONDS_AFTER_GAME_END,
       gameManager,
       timer,
     });

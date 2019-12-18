@@ -38,7 +38,7 @@ class Timer {
         return;
       }
       intervalCallback(this.remainingTime, this.roomId);
-      this.timerId = setTimeout(updateTimer, ONE_SECOND);
+      this.timerId = setTimeout(updateTimer, ONE_SECOND_BY_MILLISECONDS);
     };
     this.timerId = setTimeout(updateTimer);
   }
