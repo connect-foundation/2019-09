@@ -31,13 +31,12 @@ const disconnectingHandler = socket => {
     LeavePlayer(gameManager, socket);
     sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
-    if (roomStatus === 'waiting') {
-      if (
-        gameManager.checkAllPlayersAreReady() &&
-        gameManager.getPlayers().length >= MIN_PLAYER_COUNT
-      ) {
-        gameController.prepareGame(gameManager, timer);
-      }
+    if (
+      roomStatus === 'waiting' &&
+      gameManager.checkAllPlayersAreReady() &&
+      gameManager.getPlayers().length >= MIN_PLAYER_COUNT
+    ) {
+      gameController.prepareGame(gameManager, timer);
       return;
     }
 
