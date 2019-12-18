@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -13,14 +14,19 @@ const useStyle = makeStyles({
   },
 });
 
+const scrollToBottom = messageEndRef => {
+  if (!messageEndRef.current.scrollIntoView) return;
+  messageEndRef.current.scrollIntoView({ behavior: 'auto' });
+};
+
+const useScrollToBottom = (messageEndRef, chattingList) => {
+  useEffect(scrollToBottom.bind(null, messageEndRef), [chattingList]);
+};
+
 const ChattingWindow = ({ chattingList }) => {
   const classes = useStyle();
-  const messageEndRef = useRef(null);
-  const scrollToButtom = () => {
-    messageEndRef.current.scrollIntoView({ behavior: 'auto' });
-  };
-
-  useEffect(scrollToButtom, [chattingList]);
+  const messageEndRef = useRef();
+  useScrollToBottom(messageEndRef, chattingList);
   const chattingRowList = chattingList.map(chatting => {
     return (
       <ChattingRow
@@ -39,11 +45,12 @@ const ChattingWindow = ({ chattingList }) => {
   );
 };
 
-/**
- * propstype 지정시 array는 arrayOf / object는 shape
- */
+ChattingWindow.defaultProps = {
+  chattingList: [],
+};
+
 ChattingWindow.propTypes = {
-  chattingList: PropTypes.arrayOf.isRequired,
+  chattingList: PropTypes.array,
 };
 
 export default ChattingWindow;
