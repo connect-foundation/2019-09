@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -135,8 +136,8 @@ const Game = ({ location, match }) => {
 };
 
 Game.propTypes = {
-  location: PropTypes.shape.isRequired,
-  match: PropTypes.shape.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Game;

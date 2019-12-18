@@ -95,8 +95,12 @@ const StreamingPanel = ({ clientManager }) => {
   );
 };
 
+StreamingPanel.defaultProps = {
+  clientManager: {},
+};
+
 StreamingPanel.propTypes = {
-  clientManager: PropTypes.shape.isRequired,
+  clientManager: PropTypes.object,
 };
 
 export default StreamingPanel;

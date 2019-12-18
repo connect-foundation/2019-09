@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
@@ -43,9 +44,14 @@ const ChattingPanel = ({ clientManager, mobileChattingPanelVisibility }) => {
   );
 };
 
+ChattingPanel.defaultProps = {
+  clientManager: {},
+  mobileChattingPanelVisibility: false,
+};
+
 ChattingPanel.propTypes = {
-  clientManager: PropTypes.shape.isRequired,
-  mobileChattingPanelVisibility: PropTypes.bool.isRequired,
+  clientManager: PropTypes.object,
+  mobileChattingPanelVisibility: PropTypes.bool,
 };
 
 export default ChattingPanel;
