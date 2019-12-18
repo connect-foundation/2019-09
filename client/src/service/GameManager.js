@@ -6,7 +6,7 @@ import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';
 import { useToast } from '../hooks';
-import { TOAST_TPYES, TOAST_MESSAGE } from '../constants/toast';
+import { TOAST_TYPES, TOAST_MESSAGE } from '../constants/toast';
 import {
   DEFAULT_INACTIVE_PLAYER_BAN_TIME,
   PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME,
@@ -207,7 +207,7 @@ class GameManager {
 
   inactivePlayerBanHandler() {
     this.exitRoom();
-    this.openToast(TOAST_TPYES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
+    this.openToast(TOAST_TYPES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
   }
 
   inactivePlayerWarningHandler(inactivePlayerBanTime, time) {
@@ -216,7 +216,7 @@ class GameManager {
     }
     if (time === inactivePlayerBanTime / 2) {
       this.openToast(
-        TOAST_TPYES.WARNING,
+        TOAST_TYPES.WARNING,
         TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
       );
     }

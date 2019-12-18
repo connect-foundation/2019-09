@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import styleColors from '../../constants/styleColors';
-import { PLAYER_TPYE } from '../../constants/game';
+import { PLAYER_TYPES } from '../../constants/game';
 
 const useStyles = makeStyles({
   PlayerProfile: props => ({
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.6)',
     borderRadius: '0.3rem',
     border: (() => {
-      if (props.type === PLAYER_TPYE.STREAMER) {
+      if (props.type === PLAYER_TYPES.STREAMER) {
         return `0.2rem solid ${styleColors.STREAMER_BORDER_COLOR}`;
       }
       if (props.isReady) {

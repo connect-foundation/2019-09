@@ -9,7 +9,7 @@ import EVENTS from '../constants/events';
 import actions from '../actions';
 import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
 import { SOCKETIO_SERVER_URL } from '../constants/socket';
-import { GAME_STATUS, PLAYER_TPYE } from '../constants/game';
+import { GAME_STATUS, PLAYER_TYPES } from '../constants/game';
 import LINK_PATH from '../constants/path';
 import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
 
@@ -19,7 +19,7 @@ class ClientManager {
     this.localPlayer = {
       isReady: false,
       nickname: '',
-      type: PLAYER_TPYE.VIEWER,
+      type: PLAYER_TYPES.VIEWER,
       socketId: '',
       score: 0,
     };

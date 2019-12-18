@@ -15,7 +15,7 @@ const GAME_STATUS = {
   SCORE_SHARING: 'scoreSharing',
 };
 
-const PLAYER_TPYE = {
+const PLAYER_TYPES = {
   VIEWER: 'viewer',
   STREAMER: 'streamer',
 };
@@ -24,5 +24,5 @@ export {
   READY_BUTTON_TEXT,
   STREAMING_PANEL_MESSAGE_TYPE,
   GAME_STATUS,
-  PLAYER_TPYE,
+  PLAYER_TYPES,
 };

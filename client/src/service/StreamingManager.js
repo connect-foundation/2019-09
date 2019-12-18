@@ -4,7 +4,7 @@ import WebRTCManager from './WebRTCManager';
 import { makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
-import { PLAYER_TPYE } from '../constants/game';
+import { PLAYER_TYPES } from '../constants/game';
 import { DESCRIPTION_TYPE } from '../constants/webRTC';
 
 class StreamingManager {
@@ -42,11 +42,11 @@ class StreamingManager {
       localPlayer,
     } = this;
 
-    localPlayer.type = PLAYER_TPYE.STREAMER;
+    localPlayer.type = PLAYER_TYPES.STREAMER;
 
     const socketIds = Object.keys(remotePlayers);
     socketIds.forEach(socketId => {
-      remotePlayers[socketId].type = PLAYER_TPYE.VIEWER;
+      remotePlayers[socketId].type = PLAYER_TYPES.VIEWER;
     });
 
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
@@ -86,12 +86,12 @@ class StreamingManager {
     const socketIds = Object.keys(remotePlayers);
     socketIds.forEach(socketId => {
       if (socketId === streamerSocketId) {
-        remotePlayers[socketId].type = PLAYER_TPYE.STREAMER;
+        remotePlayers[socketId].type = PLAYER_TYPES.STREAMER;
       } else {
-        remotePlayers[socketId].type = PLAYER_TPYE.VIEWER;
+        remotePlayers[socketId].type = PLAYER_TYPES.VIEWER;
       }
     });
-    localPlayer.type = PLAYER_TPYE.VIEWER;
+    localPlayer.type = PLAYER_TYPES.VIEWER;
     const viewPlayerList = makeViewPlayerList(localPlayer, remotePlayers);
     dispatch(actions.setViewPlayerList(viewPlayerList));
     webRTCManager.closeAllConnections();

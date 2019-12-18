@@ -16,7 +16,7 @@ import GamePresentation from './presenter';
 import useStyles from './style';
 import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
 import useIsMobile from '../../../hooks/useIsMobile';
-import { TOAST_TPYES } from '../../../constants/toast';
+import { TOAST_TYPES } from '../../../constants/toast';
 import EVENTS from '../../../constants/events';
 import { gameReducer, gameState as gameInitialState } from './store';
 import LINK_PATH from '../../../constants/path';
@@ -54,7 +54,7 @@ const Game = ({ location, match }) => {
 
   const getMediaPermissionErrorHandler = () => {
     history.push(LINK_PATH.MAIN_PAGE);
-    openToast(TOAST_TPYES.INFORMATION, ALLOW_CAMERA_MESSAGE);
+    openToast(TOAST_TYPES.INFORMATION, ALLOW_CAMERA_MESSAGE);
     globalDispatch(actions.setClientManagerInitialized(false));
   };
 

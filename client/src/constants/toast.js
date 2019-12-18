@@ -8,7 +8,7 @@ const WARNING = 'warning';
 const ERROR = 'error';
 const INFORMATION = 'info';
 
-const TOAST_TPYES = {
+const TOAST_TYPES = {
   SUCCESS,
   WARNING,
   ERROR,
@@ -35,4 +35,4 @@ const TOAST_MESSAGE = {
     `${banTime}초 뒤 메인페이지로 이동합니다. READY 버튼을 눌러주세요!`,
 };
 
-export { TOAST_TPYES, TOAST_ICONS, TOAST_POSITION, TOAST_TIME, TOAST_MESSAGE };
+export { TOAST_TYPES, TOAST_ICONS, TOAST_POSITION, TOAST_TIME, TOAST_MESSAGE };
