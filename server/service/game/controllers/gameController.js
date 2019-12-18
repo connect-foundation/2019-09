@@ -209,6 +209,7 @@ const pickQuizCandidates = async () => {
 
 const endSet = (gameManager, timer) => {
   timer.clear();
+  gameManager.setStatus('scoreSharing');
   gameManager.resetStreamerConnectionOfAllPlayers();
   gameManager.resetCorrectionOfAllPlayers();
   sendEndSet(gameManager);
@@ -299,6 +300,8 @@ const endGame = async (gameManager, timer) => {
   }
   gameManager.setStatus('ending');
 
+  gameManager.resetStreamerConnectionOfAllPlayers();
+  gameManager.resetCorrectionOfAllPlayers();
   sendEndGameToRoom(gameManager);
   timer.clear();
   await rankingRepository.insertRankings(players);
