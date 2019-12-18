@@ -143,13 +143,13 @@ const runQuizSelectionTimer = (gameManager, timer) => {
   );
 };
 
-const disconnectPlayer = player => {
+const disconnectPlayerSocket = player => {
   const socketId = player.getSocketId();
   const socket = io.sockets.connected[socketId];
   socket.disconnect();
 };
 
-const disconnectPlayers = players => {
+const disconnectPlayersSocket = players => {
   players.forEach(player => {
     disconnectPlayer(player);
   });
@@ -230,12 +230,13 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
   const streamer = gameManager.getStreamer();
   const viewers = gameManager.getOtherPlayers(streamer.getSocketId());
   const playersToDisconnect = gameManager.getPlayersUnconnectedToStreamer();
-  const isAllPlayerDisconnected = playersToDisconnect.length === viewers.length;
+  const isAllPlayerWebRTCDisconnected =
+    playersToDisconnect.length === viewers.length;
 
-  if (isAllPlayerDisconnected) {
-    disconnectPlayer(streamer);
+  if (isAllPlayerWebRTCDisconnected) {
+    disconnectPlayerSocket(streamer);
   } else {
-    disconnectPlayers(playersToDisconnect);
+    disconnectPlayersSocket(playersToDisconnect);
     if (gameManager.isGameContinuable()) {
       prepareSet(gameManager, timer);
     }
