@@ -9,6 +9,17 @@ const {
   MIN_PLAYER_COUNT,
 } = require('../../../config');
 
+const LeavePlayer = (gameManager, socket) => {
+  gameManager.leaveRoom(socket.id);
+  socket.leave(gameManager.getRoomId());
+};
+
+const sendLeftPlayerToRoom = (roomId, socketId) => {
+  io.in(roomId).emit('sendLeftPlayer', {
+    socketId,
+  });
+};
+
 const disconnectingHandler = socket => {
   try {
     const room = roomController.getRoomByRoomId(socket.roomId);
@@ -16,13 +27,9 @@ const disconnectingHandler = socket => {
       return;
     }
     const { gameManager, timer } = room;
-    gameManager.leaveRoom(socket.id);
-    socket.leave(gameManager.getRoomId());
     const roomStatus = gameManager.getStatus();
-
-    io.in(gameManager.getRoomId()).emit('sendLeftPlayer', {
-      socketId: socket.id,
-    });
+    LeavePlayer(gameManager, socket);
+    sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
     if (roomStatus === 'waiting') {
       if (
