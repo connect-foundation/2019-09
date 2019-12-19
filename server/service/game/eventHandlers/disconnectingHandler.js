@@ -19,7 +19,6 @@ const sendLeftPlayerToRoom = (roomId, socketId) => {
 const disconnectingHandler = socket => {
   try {
     const room = roomController.getRoomByRoomId(socket.roomId);
-    console.log('disconnectingHandler :', room);
     if (!room) {
       return;
     }
@@ -44,7 +43,7 @@ const disconnectingHandler = socket => {
       roomStatus === GAME_STATUS.CONNECTING ||
       roomStatus === GAME_STATUS.SCORE_SHARING
     ) {
-      if (!gameManager.isGameContinuable() || !gameManager.getStreamer()) {
+      if (!gameManager.isSetContinuable()) {
         gameController.repeatSet(gameManager, timer);
       }
     }
