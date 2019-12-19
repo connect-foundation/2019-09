@@ -42,3 +42,11 @@ test('GameManager에 여러 플레이어를 넣습니다.', () => {
     expect(gameManager.players[i + 1]).toStrictEqual(eachPlayer);
   });
 });
+
+test('GameManager에서 현재 플레이어를 기반으로 최대 라운드 개수만큼 다음 스트리머 후보 리스트를 생성합니다.', () => {
+  gameManager.setStreamerCandidates();
+
+  gameManager.streamerCandidates.forEach(streamerCandidate => {
+    expect(streamerCandidate).toStrictEqual(gameManager.players);
+  });
+});
