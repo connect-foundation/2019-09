@@ -6,15 +6,14 @@
  * @param {*} param0
  */
 const useToast = ({ open, dispatch, actions }) => {
+  const openToastTimeoutHandler = (toastType, message) => {
+    dispatch(actions.openToast(toastType, message));
+  };
   const openToast = (toastType, message) => {
     if (open) {
       dispatch(actions.closeToast());
-      setTimeout(() => {
-        dispatch(actions.openToast(toastType, message));
-      }, 100);
-    } else {
-      dispatch(actions.openToast(toastType, message));
     }
+    setTimeout(openToastTimeoutHandler.bind(null, toastType, message), 0);
   };
   const closeToast = () => {
     dispatch(actions.closeToast());

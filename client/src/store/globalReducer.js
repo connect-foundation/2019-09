@@ -116,6 +116,11 @@ const reducer = (state, action) => {
             : state.toast.toastType,
         },
       };
+    case TYPES.SET_IS_ROOM_ID_RECEIVED:
+      return {
+        ...state,
+        isRoomIdReceived: action.payload.isRoomIdReceived,
+      };
     default:
       throw new Error();
   }

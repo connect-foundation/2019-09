@@ -3,13 +3,15 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import { GlobalContext } from '../../contexts';
+import { GlobalContext, DispatchContext } from '../../contexts';
 import { PlayerProfile, ReadyButton, ShareUrlButton } from '../components';
-import { shareUrlButtonClickHandler } from '../../utils';
 import styleColors from '../../constants/styleColors';
 import { READY_BUTTON_TEXT, GAME_STATUS } from '../../constants/game';
 import useIsMobile from '../../hooks/useIsMobile';
+import { useToast } from '../../hooks';
+import actions from '../../actions';
 import { MOBILE_VIEW_BREAKPOINT } from '../../constants/responsiveView';
+import { createShareUrlButtonClickHandler } from '../../utils';
 
 const useStyle = makeStyles(theme => ({
   playerPanel: {
@@ -47,7 +49,21 @@ const useStyle = makeStyles(theme => ({
 
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { viewPlayerList, gameStatus } = useContext(GlobalContext);
+  const { viewPlayerList, gameStatus, isRoomIdReceived, toast } = useContext(
+    GlobalContext,
+  );
+  const globalDispatch = useContext(DispatchContext);
+
+  const { openToast, closeToast } = useToast({
+    open: toast.open,
+    dispatch: globalDispatch,
+    actions,
+  });
+
+  const shareUrlButtonClickHandler = createShareUrlButtonClickHandler(
+    openToast,
+    closeToast,
+  );
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
@@ -72,7 +88,7 @@ const PlayerPanel = ({ clientManager }) => {
       })}
       {isReadyButtonVisible && (
         <Box className={classes.bottomLeftButtonContainer}>
-          {clientManager.getIsRoomPrivate() && (
+          {isRoomIdReceived && (
             <ShareUrlButton
               onClick={shareUrlButtonClickHandler}
               classNames={[classes.shareUrlButton]}

@@ -19,7 +19,6 @@ import {
   PlayerPanel,
   MobileChattingPanel,
 } from '../../containers';
-import { shareUrlButtonClickHandler } from '../../../utils';
 import exitImageSource from '../../../assets/exit.png';
 
 const GamePresentation = ({ gameProps }) => {
@@ -37,6 +36,8 @@ const GamePresentation = ({ gameProps }) => {
     toast,
     closeToast,
     isReadyButtonVisible,
+    isRoomIdReceived,
+    shareUrlButtonClickHandler,
   } = gameProps;
 
   return (
@@ -104,7 +105,7 @@ const GamePresentation = ({ gameProps }) => {
           />
           {isReadyButtonVisible && (
             <Box className={classes.bottomLeftButtonContainer}>
-              {clientManager.getIsRoomPrivate() && (
+              {isRoomIdReceived && (
                 <ShareUrlButton
                   onClick={shareUrlButtonClickHandler}
                   classNames={[classes.shareUrlButton]}

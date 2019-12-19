@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles';
 import styleColors from '../../../constants/styleColors';
-import { MOBILE_PANEL_HEIGHT } from '../../../constants/responsiveView';
+import {
+  MOBILE_PANEL_HEIGHT,
+  MOBILE_ONE_REM_IN_PIXELS,
+} from '../../../constants/responsiveView';
 
 const useStyles = makeStyles(theme => ({
   root: props => ({
@@ -9,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: '100%',
     [theme.breakpoints.down('xs')]: {
-      height: `${props.gamePageRootHeight / 10}rem`,
+      height: `${props.gamePageRootHeight / MOBILE_ONE_REM_IN_PIXELS}rem`,
     },
     overflow: 'auto',
   }),

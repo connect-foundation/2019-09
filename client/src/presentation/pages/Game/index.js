@@ -21,6 +21,7 @@ import { TOAST_TYPES } from '../../../constants/toast';
 import { gameReducer, gameState as gameInitialState } from './store';
 import LINK_PATH from '../../../constants/path';
 import EVENTS from '../../../constants/events';
+import { createShareUrlButtonClickHandler } from '../../../utils';
 
 let clientManager;
 
@@ -45,6 +46,7 @@ const Game = ({ location, match }) => {
     quizLength,
     clientManagerInitialized,
     toast,
+    isRoomIdReceived,
   } = useContext(GlobalContext);
   const globalDispatch = useContext(DispatchContext);
   const { openToast, closeToast } = useToast({
@@ -65,6 +67,11 @@ const Game = ({ location, match }) => {
   const { isPrivateRoomCreation } = location;
   const roomIdFromUrl = match.params.roomId;
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
+
+  const shareUrlButtonClickHandler = createShareUrlButtonClickHandler(
+    openToast,
+    closeToast,
+  );
 
   const showPlayersButtonHandler = () => {
     gameDispatch(
@@ -112,6 +119,7 @@ const Game = ({ location, match }) => {
       isPrivateRoomCreation,
       dispatch: globalDispatch,
       toast,
+      openToast,
     });
     clientManager
       .getMediaPermission()
@@ -140,6 +148,8 @@ const Game = ({ location, match }) => {
     toast,
     closeToast,
     isReadyButtonVisible,
+    isRoomIdReceived,
+    shareUrlButtonClickHandler,
   };
 
   return <GamePresentation gameProps={gameProps} />;

@@ -151,13 +151,13 @@ class GameManager {
 
     this.removeStreamerCandidate(socketId);
 
-    if (this.streamer && this.isStreamer(socketId)) {
+    if (this.isStreamer(socketId)) {
       this.streamer = null;
     }
   }
 
   isStreamer(socketId) {
-    return this.streamer.socketId === socketId;
+    return this.streamer && this.streamer.socketId === socketId;
   }
 
   removeStreamerCandidate(socketId) {
@@ -221,9 +221,13 @@ class GameManager {
     return this.players.every(player => player.getIsReady());
   }
 
-  isGameContinuable() {
+  isSetContinuable() {
+    return this.streamer && this.players.length >= MIN_PLAYER_COUNT;
+  }
+
+  isNextSetAvailable() {
     return (
-      this.getStreamerCandidates().flat().length > 0 &&
+      this.streamerCandidates.flat().length > 0 &&
       this.currentRound <= MAX_ROUND_NUMBER &&
       this.players.length >= MIN_PLAYER_COUNT
     );

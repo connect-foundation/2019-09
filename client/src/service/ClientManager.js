@@ -5,17 +5,22 @@ import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
-import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
+import {
+  GAME_END_SCOREBOARD_TITLE,
+  ROOM_UNAVAILABLE_MESSAGE,
+} from '../constants/message';
 import { SOCKETIO_SERVER_URL } from '../constants/socket';
 import { GAME_STATUS, PLAYER_TYPES } from '../constants/game';
 import LINK_PATH from '../constants/path';
 import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
+import { TOAST_TYPES } from '../constants/toast';
 
 class ClientManager {
   constructor({
     history,
     roomIdFromUrl,
     isPrivateRoomCreation,
+    openToast,
     dispatch,
     toast,
   }) {
@@ -33,6 +38,7 @@ class ClientManager {
     this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
     this.dispatch = dispatch;
+    this.openToast = openToast;
     this.gameManager = new GameManager({
       socket: this.socket,
       localPlayer: this.localPlayer,
@@ -64,6 +70,15 @@ class ClientManager {
     this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
     this.socket.on(EVENTS.RESET_GAME, this.resetGameHandler.bind(this));
     this.socket.on(EVENTS.DISCONNECT, this.disconnectHandler.bind(this));
+    this.socket.on(
+      EVENTS.ROOM_UNAVAILABLE,
+      this.roomUnavailableHandler.bind(this),
+    );
+  }
+
+  roomUnavailableHandler() {
+    this.openToast(TOAST_TYPES.INFORMATION, ROOM_UNAVAILABLE_MESSAGE);
+    this.exitRoom();
   }
 
   disconnectHandler() {
@@ -91,13 +106,22 @@ class ClientManager {
     this.localPlayer.socketId = socketId;
   }
 
+  addRoomIdToUrl(roomId) {
+    this.history.replace({
+      pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
+      isPrivateRoomCreation: this.isPrivateRoomCreation,
+    });
+  }
+
+  showShareUrlButton() {
+    this.dispatch(actions.setIsRoomIdReceived(true));
+  }
+
   sendRoomIdHandler({ roomId }) {
     this.localPlayer.roomId = roomId;
     if (this.isRoomPrivate) {
-      this.history.replace({
-        pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
-        isPrivateRoomCreation: this.isPrivateRoomCreation,
-      });
+      this.addRoomIdToUrl(roomId);
+      this.showShareUrlButton();
     }
   }
 

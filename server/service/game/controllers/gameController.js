@@ -222,6 +222,7 @@ const prepareQuizSelection = async (gameManager, timer) => {
 };
 
 const prepareSet = async (gameManager, timer) => {
+  gameManager.setStatus(GAME_STATUS.INITIALIZING);
   gameManager.updateRoundAndSet();
   gameManager.setQuiz(GAME_RULE.DEFAULT_QUIZ);
 
@@ -235,11 +236,12 @@ const disconnectPlayersAndStartGame = (gameManager, timer) => {
   const isAllPlayerWebRTCDisconnected =
     playersToDisconnect.length === viewers.length;
 
+  // viewer전체가 연결되지 않은 경우 streamer에게 문제가 있다고 가정
   if (isAllPlayerWebRTCDisconnected) {
     disconnectPlayerSocket(streamer);
   } else {
     disconnectPlayersSocket(playersToDisconnect);
-    if (gameManager.isGameContinuable()) {
+    if (gameManager.isSetContinuable()) {
       prepareSet(gameManager, timer);
     }
   }
@@ -319,7 +321,7 @@ const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
 };
 
 const repeatSet = (gameManager, timer) => {
-  if (gameManager.isGameContinuable()) {
+  if (gameManager.isNextSetAvailable()) {
     endSet(gameManager, timer);
     goToNextSetAfterNSeconds({
       seconds: GAME_RULE.SECONDS_BETWEEN_SETS,
