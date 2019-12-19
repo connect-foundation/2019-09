@@ -105,3 +105,19 @@ test('isStreamer 테스트', () => {
   expect(streamerTrue).toBe(true);
   expect(streamerFalse).toBe(false);
 });
+
+test('getOtherPlayers 함수 테스트', () => {
+  const managerPlayers = gameManager.getPlayers();
+
+  managerPlayers.forEach(targetPlayer => {
+    const targetPlayerSocketId = targetPlayer.socketId;
+
+    const otherPlayersByCustom = managerPlayers.filter(
+      managerPlayer => managerPlayer.socketId !== targetPlayerSocketId,
+    );
+
+    const otherPlayers = gameManager.getOtherPlayers(targetPlayerSocketId);
+
+    expect(otherPlayers).toStrictEqual(otherPlayersByCustom);
+  });
+});
