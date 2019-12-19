@@ -7,36 +7,50 @@ import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
-import { GAME_END_SCOREBOARD_TITLE, SOCKETIO_SERVER_URL } from '../config';
+import {
+  GAME_END_SCOREBOARD_TITLE,
+  ROOM_UNAVAILABLE_MESSAGE,
+} from '../constants/message';
+import { SOCKETIO_SERVER_URL } from '../constants/socket';
+import { GAME_STATUS, PLAYER_TYPES } from '../constants/game';
+import LINK_PATH from '../constants/path';
+import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
+import { TOAST_TYPES } from '../constants/toast';
 
 class ClientManager {
-  constructor(history) {
+  constructor({ history, roomIdFromUrl, isPrivateRoomCreation, openToast }) {
     this.history = history;
     this.localPlayer = {
       isReady: false,
       nickname: '',
-      type: 'viewer',
+      type: PLAYER_TYPES.VIEWER,
       socketId: '',
       score: 0,
     };
+    this.roomIdFromUrl = roomIdFromUrl;
+    this.isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
+    this.isPrivateRoomCreation = isPrivateRoomCreation;
     this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
-    this.gameManager = new GameManager(
-      this.socket,
-      this.localPlayer,
-      this.remotePlayers,
-    );
+    this.gameManager = new GameManager({
+      socket: this.socket,
+      localPlayer: this.localPlayer,
+      remotePlayers: this.remotePlayers,
+      isRoomPrivate: this.isRoomPrivate,
+    });
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
       this.localPlayer,
     );
-    this.chattingManager = new ChattingManager(this.socket);
+    this.chattingManager = new ChattingManager(this.socket, this.isRoomPrivate);
     this.dispatch = useContext(DispatchContext);
+    this.openToast = openToast;
   }
 
   registerSocketEvents() {
     this.socket.on(EVENTS.SEND_SOCKET_ID, this.sendSocketIdHandler.bind(this));
+    this.socket.on(EVENTS.SEND_ROOMID, this.sendRoomIdHandler.bind(this));
     this.socket.on(
       EVENTS.SEND_LEFT_PLAYER,
       this.sendLeftPlayerHandler.bind(this),
@@ -44,11 +58,20 @@ class ClientManager {
     this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
     this.socket.on(EVENTS.RESET_GAME, this.resetGameHandler.bind(this));
     this.socket.on(EVENTS.DISCONNECT, this.disconnectHandler.bind(this));
+    this.socket.on(
+      EVENTS.ROOM_UNAVAILABLE,
+      this.roomUnavailableHandler.bind(this),
+    );
+  }
+
+  roomUnavailableHandler() {
+    this.openToast(TOAST_TYPES.INFORMATION, ROOM_UNAVAILABLE_MESSAGE);
+    this.exitRoom();
   }
 
   disconnectHandler() {
     this.streamingManager.resetWebRTC();
-    this.history.push('/');
+    this.history.push(LINK_PATH.MAIN_PAGE);
     this.dispatch(actions.reset());
     this.gameManager.timer.clear();
   }
@@ -71,13 +94,36 @@ class ClientManager {
     this.localPlayer.socketId = socketId;
   }
 
+  addRoomIdToUrl(roomId) {
+    this.history.replace({
+      pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
+      isPrivateRoomCreation: this.isPrivateRoomCreation,
+    });
+  }
+
+  showShareUrlButton() {
+    this.dispatch(actions.setIsRoomIdReceived(true));
+  }
+
+  sendRoomIdHandler({ roomId }) {
+    this.localPlayer.roomId = roomId;
+    if (this.isRoomPrivate) {
+      this.addRoomIdToUrl(roomId);
+      this.showShareUrlButton();
+    }
+  }
+
   askSocketId() {
     this.socket.emit(EVENTS.ASK_SOCKET_ID);
   }
 
   findMatch(nickname) {
     this.localPlayer.nickname = nickname;
-    this.gameManager.findMatch(nickname);
+    this.gameManager.findMatch({
+      nickname,
+      roomIdFromUrl: this.roomIdFromUrl,
+      isPrivateRoomCreation: this.isPrivateRoomCreation,
+    });
   }
 
   toggleReady() {
@@ -90,7 +136,9 @@ class ClientManager {
     this.streamingManager.registerSocketEvents();
     this.askSocketId();
     /** @todo 닉네임 state에서 받아오도록 설정할 것 */
-    this.findMatch(browserLocalStorage.getNickname());
+    this.findMatch(
+      browserLocalStorage.getNickname() || LOCALSTORAGE_DEFAULT_NICKNAME,
+    );
     this.chattingManager.registerSocketEvents();
     this.gameManager.setInactivePlayerBanTimer();
   }
@@ -142,44 +190,12 @@ class ClientManager {
     this.gameManager.selectQuiz(quiz);
   }
 
-  /**
-   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
-   * remotePlayers 형태를 array 변경과 함께.
-   */
-  syncLocalPlayer(players) {
-    const localPlayer = players.find(player => {
-      return player.socketId === this.localPlayer.socketId;
-    });
-    Object.keys(localPlayer).forEach(key => {
-      this.localPlayer[key] = localPlayer[key];
-    });
-  }
-
-  syncRemotePlayers(players) {
-    const remotePlayers = [];
-    players.forEach(player => {
-      if (player.socketId !== this.localPlayer.socketId) {
-        remotePlayers.push(player);
-      }
-    });
-    remotePlayers.forEach(player => {
-      const { socketId } = player;
-      Object.keys(player).forEach(key => {
-        this.remotePlayers[socketId][key] = player[key];
-      });
-    });
-  }
-
   resetGameHandler({ players }) {
-    this.syncLocalPlayer(players);
-    this.syncRemotePlayers(players);
+    this.gameManager.syncAllPlayers(players);
     this.gameManager.makeAndDispatchViewPlayerList();
     this.streamingManager.resetWebRTC();
     this.dispatch(actions.clearWindow());
-    this.dispatch({
-      type: 'setGameStatus',
-      payload: { gameStatus: 'waiting' },
-    });
+    this.dispatch(actions.setGameStatus(GAME_STATUS.WAITING));
     this.gameManager.setInactivePlayerBanTimer();
   }
 
@@ -191,6 +207,10 @@ class ClientManager {
     this.dispatch(
       actions.setClientManagerInitialized(clientManagerInitialized),
     );
+  }
+
+  getIsRoomPrivate() {
+    return this.isRoomPrivate;
   }
 }
 

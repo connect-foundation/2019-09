@@ -5,7 +5,7 @@ const {
   MINIMUM_CONNECTION_COUNT,
   MAXIMUM_WAITING_TIME,
   MAXIMUM_IDLE_TIME,
-} = require('../config');
+} = require('../constants/database');
 
 const { env } = process;
 

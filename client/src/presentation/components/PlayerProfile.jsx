@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
+import { PLAYER_TYPES } from '../../constants/game';
 
 const useStyles = makeStyles({
   PlayerProfile: props => ({
@@ -14,22 +15,25 @@ const useStyles = makeStyles({
     padding: '0.5rem 1rem',
     display: 'flex',
     fontSize: '1.6rem',
-    color: STYLE_COLORS.BASE_BLACK_COLOR,
+    color: styleColors.BASE_BLACK_COLOR,
     backgroundColor: (() => {
       return props.isCorrectPlayer
-        ? STYLE_COLORS.THEME_COLOR
-        : STYLE_COLORS.PURE_WHITE_COLOR;
+        ? styleColors.THEME_COLOR
+        : styleColors.PURE_WHITE_COLOR;
     })(),
     boxShadow: '0 0.2rem 0.7rem 0 rgba(0, 0, 0, 0.6)',
     borderRadius: '0.3rem',
     border: (() => {
-      if (props.type === 'streamer') {
-        return `0.2rem solid ${STYLE_COLORS.STREAMER_BORDER_COLOR}`;
+      if (props.type === PLAYER_TYPES.STREAMER) {
+        return `0.2rem solid ${styleColors.STREAMER_BORDER_COLOR}`;
       }
-      if (props.isReady || props.isCorrectPlayer) {
-        return `0.2rem solid ${STYLE_COLORS.THEME_COLOR}`;
+      if (props.isReady) {
+        return `0.2rem solid ${styleColors.THEME_COLOR}`;
       }
-      return `0.2rem solid ${STYLE_COLORS.BASE_WHITE_COLOR}`;
+      if (props.isCorrectPlayer) {
+        return `0.2rem solid ${styleColors.THEME_BORDER_COLOR}`;
+      }
+      return `0.2rem solid ${styleColors.BASE_WHITE_COLOR}`;
     })(),
   }),
   playerInformation: {
@@ -53,12 +57,19 @@ const useStyles = makeStyles({
   playerScore: {},
 });
 
-const PlayerProfile = ({ nickname, score, isReady, type, isLocalPlayer }) => {
+const PlayerProfile = ({
+  nickname,
+  score,
+  isReady,
+  type,
+  isLocalPlayer,
+  isCorrectPlayer,
+}) => {
   const classes = useStyles({
     isReady,
     type,
     isLocalPlayer,
-    isCorrectPlayer: false,
+    isCorrectPlayer,
   });
   return (
     <Box className={classes.PlayerProfile}>
@@ -73,12 +84,17 @@ const PlayerProfile = ({ nickname, score, isReady, type, isLocalPlayer }) => {
   );
 };
 
+PlayerProfile.defaultProps = {
+  isCorrectPlayer: false,
+};
+
 PlayerProfile.propTypes = {
   nickname: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   isReady: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
   isLocalPlayer: PropTypes.bool.isRequired,
+  isCorrectPlayer: PropTypes.bool,
 };
 
 export default PlayerProfile;

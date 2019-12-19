@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const RankPodiumBar = styled.div`
   height: ${props => {
@@ -9,14 +9,23 @@ const RankPodiumBar = styled.div`
     if (props.rank === '2') return '50%';
     return '25%';
   }};
-  border: 2px solid ${STYLE_COLORS.THEME_COLOR};
+  border-top: 2px solid ${styleColors.THEME_COLOR};
+  border-bottom: 2px solid ${styleColors.THEME_COLOR};
+  border-left: ${props => {
+    if (props.rank === '3') return 'none';
+    return `2px solid ${styleColors.THEME_COLOR}`;
+  }};
+  border-right: ${props => {
+    if (props.rank === '2') return 'none%';
+    return `2px solid ${styleColors.THEME_COLOR}`;
+  }};
   display: flex;
   font-size: 5rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${STYLE_COLORS.PURE_WHITE_COLOR};
-  color: ${STYLE_COLORS.THEME_COLOR};
+  background-color: ${styleColors.PURE_WHITE_COLOR};
+  color: ${styleColors.THEME_COLOR};
   font-weight: bold;
   @media (max-width: 600px) {
     font-size: 9rem;
@@ -62,9 +71,13 @@ const RankPodium = ({ rank, rankerScore, rankerNickname }) => {
   );
 };
 
+RankPodium.defaultProps = {
+  rankerScore: '',
+};
+
 RankPodium.propTypes = {
   rank: PropTypes.string.isRequired,
-  rankerScore: PropTypes.number.isRequired,
+  rankerScore: PropTypes.string,
   rankerNickname: PropTypes.string.isRequired,
 };
 

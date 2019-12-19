@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const useStyle = makeStyles({
   gameMessageBox: {
@@ -10,7 +10,7 @@ const useStyle = makeStyles({
     bottom: '0',
     left: '0',
     right: '0',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: styleColors.BASE_BLACK_COLOR_TRANSLUCENT,
     position: 'absolute',
     display: 'flex',
     justifyContent: 'space-around',
@@ -32,7 +32,7 @@ const useStyle = makeStyles({
     textAlign: 'center',
     '& > *': {
       fontSize: '3rem',
-      color: STYLE_COLORS.PURE_WHITE_COLOR,
+      color: styleColors.PURE_WHITE_COLOR,
     },
   },
 });

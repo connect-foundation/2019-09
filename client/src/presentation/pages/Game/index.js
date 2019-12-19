@@ -1,15 +1,43 @@
-import React, { useEffect, useState, useContext } from 'react';
+/* eslint-disable react/forbid-prop-types */
+import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ClientManager from '../../../service/ClientManager';
-import { browserLocalStorage } from '../../../utils';
-import { MOBILE_VIEW_BREAKPOINT } from '../../../config';
-import { GlobalContext } from '../../../contexts';
+import { GlobalContext, DispatchContext } from '../../../contexts';
+import actions from '../../../actions';
+import { useToast } from '../../../hooks';
+import { ALLOW_CAMERA_MESSAGE } from '../../../constants/message';
+import {
+  MOBILE_VIEW_BREAKPOINT,
+  MOBILE_VIEW,
+  DESKTOP_VIEW,
+} from '../../../constants/responsiveView';
+import { GAME_STATUS } from '../../../constants/game';
 import GamePresentation from './presenter';
 import useStyles from './style';
+import useShiftingToWhichView from '../../../hooks/useShiftingToWhichView';
+import useIsMobile from '../../../hooks/useIsMobile';
+import { TOAST_TYPES } from '../../../constants/toast';
+import { gameReducer, gameState as gameInitialState } from './store';
+import LINK_PATH from '../../../constants/path';
+import EVENTS from '../../../constants/events';
+import { createShareUrlButtonClickHandler } from '../../../utils';
 
 let clientManager;
 
-const Game = () => {
+const readyButtonHandler = () => {
+  clientManager.toggleReady();
+};
+
+const exitButtonHandler = () => {
+  clientManager.exitRoom();
+};
+
+const getMediaPermissionHandler = () => {
+  clientManager.init();
+};
+
+const Game = ({ location, match }) => {
   const {
     gameStatus,
     viewPlayerList,
@@ -17,94 +45,92 @@ const Game = () => {
     quiz,
     quizLength,
     clientManagerInitialized,
+    toast,
+    isRoomIdReceived,
   } = useContext(GlobalContext);
-
-  const exitButtonHandler = () => {
-    clientManager.exitRoom();
-  };
-
+  const globalDispatch = useContext(DispatchContext);
+  const { openToast, closeToast } = useToast({
+    open: toast.open,
+    dispatch: globalDispatch,
+    actions,
+  });
+  const [gameState, gameDispatch] = useReducer(gameReducer, gameInitialState);
   const history = useHistory();
-  if (!browserLocalStorage.getNickname()) {
-    history.push('/');
-  }
-
-  if (!clientManagerInitialized) {
-    clientManager = new ClientManager(history);
-    clientManager
-      .getMediaPermission()
-      .then(() => {
-        clientManager.init();
-        clientManager.setClientManagerInitialized(true);
-      })
-      .catch(() => {
-        history.push('/');
-        clientManager.setClientManagerInitialized(false);
-        alert('카메라를 허용해주세요');
-      });
-    clientManager.setClientManagerInitialized(true);
-  }
-
-  const classes = useStyles();
-
+  const shiftingToWhichView = useShiftingToWhichView(MOBILE_VIEW_BREAKPOINT);
+  const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
+  const classes = useStyles({
+    gamePageRootHeight: gameState.gamePageRootHeight,
+    isPlayerListVisible: gameState.isPlayerListVisible,
+  });
+  const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
+  const isReadyButtonVisible = isGameStatusWaiting && currentIsMobile;
+  const { isPrivateRoomCreation } = location;
+  const roomIdFromUrl = match.params.roomId;
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
-  const isMobile = window.innerWidth < MOBILE_VIEW_BREAKPOINT;
-  const [
-    mobileChattingPanelVisibility,
-    setMobileChattingPanelVisibility,
-  ] = useState(isMobile);
-  const [isPlayerListVisible, setIsPlayerListVisible] = useState(!isMobile);
-  let previousWindowInnerWidth = window.innerWidth;
 
-  const playerPanelContainerClasses = (() => {
-    return isPlayerListVisible
-      ? classes.playerPanelContainer
-      : [classes.playerPanelContainer, classes.mobileViewHide];
-  })();
+  const shareUrlButtonClickHandler = createShareUrlButtonClickHandler(
+    openToast,
+    closeToast,
+  );
 
-  const readyButtonContainerClasses = (() => {
-    return gameStatus === 'waiting'
-      ? [classes.mobileReadyButtonContainer, classes.desktopViewHide]
-      : classes.gameStartHide;
-  })();
-
-  const isShiftingToMobileView = currentIsMobile => {
-    return currentIsMobile && previousWindowInnerWidth > MOBILE_VIEW_BREAKPOINT;
-  };
-
-  const isShiftingToDesktopView = currentIsMobile => {
-    return (
-      !currentIsMobile && previousWindowInnerWidth <= MOBILE_VIEW_BREAKPOINT
+  const showPlayersButtonHandler = () => {
+    gameDispatch(
+      actions.setIsPlayerListVisible(!gameState.isPlayerListVisible),
     );
   };
 
-  const resizeHandler = event => {
-    const currentIsMobile = event.target.innerWidth < MOBILE_VIEW_BREAKPOINT;
-    setMobileChattingPanelVisibility(currentIsMobile);
-    if (isShiftingToMobileView(currentIsMobile)) {
-      setIsPlayerListVisible(false);
-      previousWindowInnerWidth = event.target.innerWidth;
+  const popstateHandler = () => {
+    clientManager.exitRoom();
+    window.removeEventListener(EVENTS.POPSTATE, popstateHandler);
+  };
+
+  const attachPopstateEvent = () => {
+    window.addEventListener(EVENTS.POPSTATE, popstateHandler);
+  };
+
+  const showPlayerListByViewShifting = () => {
+    if (shiftingToWhichView === MOBILE_VIEW) {
+      gameDispatch(actions.setIsPlayerListVisible(false));
       return;
     }
-    if (isShiftingToDesktopView(currentIsMobile)) {
-      setIsPlayerListVisible(true);
-      previousWindowInnerWidth = event.target.innerWidth;
+    if (shiftingToWhichView === DESKTOP_VIEW) {
+      gameDispatch(actions.setIsPlayerListVisible(true));
     }
   };
 
-  const showPlayersButtonHandler = () => {
-    setIsPlayerListVisible(!isPlayerListVisible);
+  const dispatchMobileChattingPanelVisibility = () => {
+    gameDispatch(actions.setMobileChattingPanelVisibility(currentIsMobile));
   };
 
-  const readyButtonHandler = () => {
-    clientManager.toggleReady();
+  const dispatchGamePageRootHeight = () => {
+    gameDispatch(actions.setGamePageRootHeight(window.innerHeight));
   };
 
-  useEffect(() => {
-    window.onpopstate = () => {
-      exitButtonHandler();
-    };
-    window.addEventListener('resize', resizeHandler);
-  }, []);
+  const getMediaPermissionErrorHandler = () => {
+    history.push(LINK_PATH.MAIN_PAGE);
+    openToast(TOAST_TYPES.INFORMATION, ALLOW_CAMERA_MESSAGE);
+    globalDispatch(actions.setClientManagerInitialized(false));
+  };
+
+  if (!clientManagerInitialized) {
+    clientManager = new ClientManager({
+      history,
+      roomIdFromUrl,
+      isPrivateRoomCreation,
+      openToast,
+    });
+    clientManager
+      .getMediaPermission()
+      .then(getMediaPermissionHandler)
+      .catch(getMediaPermissionErrorHandler);
+    globalDispatch(actions.setClientManagerInitialized(true));
+  }
+
+  useEffect(closeToast, []);
+  useEffect(attachPopstateEvent, []);
+  useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
+  useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
+  useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
 
   const gameProps = {
     quiz,
@@ -112,18 +138,24 @@ const Game = () => {
     exitButtonHandler,
     clientManager,
     showPlayersButtonHandler,
-    playerPanelContainerClasses,
-    readyButtonContainerClasses,
     localPlayer,
     currentSeconds,
     classes,
     readyButtonHandler,
-    mobileChattingPanelVisibility,
+    mobileChattingPanelVisibility: gameState.mobileChattingPanelVisibility,
+    toast,
+    closeToast,
+    isReadyButtonVisible,
+    isRoomIdReceived,
+    shareUrlButtonClickHandler,
   };
 
   return <GamePresentation gameProps={gameProps} />;
 };
 
-Game.propTypes = {};
+Game.propTypes = {
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+};
 
 export default Game;

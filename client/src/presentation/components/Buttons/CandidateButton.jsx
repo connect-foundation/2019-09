@@ -8,8 +8,9 @@ const useStyles = makeStyles({
   button: {
     ...buttonStyle,
     width: 'auto',
-    height: '3rem',
-    padding: '0 1rem',
+    height: 'auto',
+    padding: '0.5rem 1rem',
+    fontSize: '2rem',
     zIndex: '10',
   },
 });

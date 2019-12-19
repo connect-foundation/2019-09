@@ -1,20 +1,24 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageInput from './MessageInput';
 import { SendButton } from './Buttons';
-import { CONSTANT_VALUES } from '../../utils';
-import { MAX_CHAT_LENGTH } from '../../config';
+import { ENTER_KEYCODE } from '../../constants/browser';
+import { MAX_CHAT_LENGTH } from '../../constants/inputConstraints';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   InputWindow: {
     display: 'flex',
     padding: '1rem',
     height: '10%',
     boxSizing: 'border-box',
+    [theme.breakpoints.down('xs')]: {
+      height: '100%',
+    },
   },
-});
+}));
 
 const InputWindow = ({ clientManager, chattingDisabled }) => {
   const [value, setValue] = useState('');
@@ -35,7 +39,7 @@ const InputWindow = ({ clientManager, chattingDisabled }) => {
   };
 
   const messageInputOnKeyPressHandler = event => {
-    if (event.charCode === CONSTANT_VALUES.ENTER_KEYCODE) {
+    if (event.charCode === ENTER_KEYCODE) {
       sendChattingMessageHandler();
     }
   };
@@ -59,9 +63,14 @@ const InputWindow = ({ clientManager, chattingDisabled }) => {
   );
 };
 
+InputWindow.defaultProps = {
+  clientManager: {},
+  chattingDisabled: false,
+};
+
 InputWindow.propTypes = {
-  clientManager: PropTypes.shape.isRequired,
-  chattingDisabled: PropTypes.bool.isRequired,
+  clientManager: PropTypes.object,
+  chattingDisabled: PropTypes.bool,
 };
 
 export default InputWindow;

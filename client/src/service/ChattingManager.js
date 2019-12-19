@@ -1,14 +1,21 @@
 /* eslint-disable class-methods-use-this */
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
-import { MAX_CHAT_LENGTH } from '../config';
+import { MAX_CHAT_LENGTH } from '../constants/inputConstraints';
 import EVENTS from '../constants/events';
+import { WELCOME_MESSAGE } from '../constants/chatting';
+import {
+  DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+  PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
+} from '../constants/timer';
+import actions from '../actions/global';
 
 class ChattingManager {
-  constructor(socket) {
+  constructor(socket, isRoomPrivate) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.isAvailableChatting = false;
+    this.isRoomPrivate = isRoomPrivate;
   }
 
   sliceChattingMessage(chat) {
@@ -39,21 +46,20 @@ class ChattingManager {
   }
 
   sendChattingMessageHandler(newChatting) {
-    this.dispatch({ type: 'addChatting', payload: { newChatting } });
+    this.dispatch(actions.addChatting(newChatting));
   }
 
   startChattingHandler() {
     this.isAvailableChatting = true;
-    this.dispatch({
-      type: 'addChatting',
-      payload: {
-        newChatting: {
-          nickname: '안내',
-          message:
-            '채팅방에 입장하였습니다. 20초 안에 READY버튼을 눌러주세요.🙌',
-        },
-      },
-    });
+    this.dispatch(
+      actions.addChatting(
+        WELCOME_MESSAGE(
+          this.isRoomPrivate,
+          PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME_IN_MINUTE,
+          DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+        ),
+      ),
+    );
   }
 }
 

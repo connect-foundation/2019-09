@@ -1,6 +1,8 @@
+const { VIEWER } = require('../../../constants/player');
+
 class Player {
   constructor({ socketId, nickname, nicknameColor }) {
-    this.type = 'viewer';
+    this.type = VIEWER;
     this.isReady = false;
     this.score = 0;
     this.nickname = nickname;
@@ -11,7 +13,7 @@ class Player {
   }
 
   reset() {
-    this.type = 'viewer';
+    this.type = VIEWER;
     this.isReady = false;
     this.score = 0;
     this.isConnectedToStreamer = false;

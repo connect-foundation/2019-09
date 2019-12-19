@@ -10,7 +10,7 @@ const initialState = {
   gameStatus: 'waiting',
   currentRound: 0,
   currentSet: 0,
-  currentSeconds: 0,
+  currentSeconds: '', // string
   quiz: '',
   quizLength: 0,
 
@@ -34,6 +34,14 @@ const initialState = {
   },
 
   clientManagerInitialized: false,
+
+  toast: {
+    open: false,
+    message: '',
+    toastType: '',
+  },
+
+  isRoomIdReceived: false,
 };
 
 export default initialState;

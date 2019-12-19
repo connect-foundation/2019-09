@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const connection = require('../connection');
+const { MODEL_RANKING } = require('../../constants/database');
 
 class Ranking extends Sequelize.Model {}
 
@@ -22,7 +23,7 @@ Ranking.init(
   },
   {
     sequelize: connection,
-    modelName: 'ranking',
+    modelName: MODEL_RANKING,
   },
 );
 

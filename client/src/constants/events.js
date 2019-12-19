@@ -12,7 +12,7 @@ const EVENTS = {
   END_SET: 'endSet',
   DISCONNECT: 'disconnect',
   SELECT_QUIZ: 'selectQuiz',
-  UPDATE_PROFILE_SCORE: 'updateProfileScore',
+  UPDATE_PROFILE: 'updateProfile',
   // StreamerManager
   ASSIGN_STREAMER: 'assignStreamer',
   ASSING_VIEWER: 'assignViewer',
@@ -24,9 +24,15 @@ const EVENTS = {
   SEND_LEFT_PLAYER: 'sendLeftPlayer',
   END_GAME: 'endGame',
   ASK_SOCKET_ID: 'askSocketId',
+  ROOM_UNAVAILABLE: 'roomUnavailable',
   // ChattingManager
   SEND_CHATTING_MESSAGE: 'sendChattingMessage',
   START_CHATTING: 'startChatting',
+  SEND_ROOMID: 'sendRoomId',
+  // DOM events
+  RESIZE: 'resize',
+  POPSTATE: 'popstate',
+  // 밑의 이벤트 맞는 곳으로 이동 필요
   RESET_GAME: 'resetGame',
   CLEAR_WINDOW: 'clearWindow',
 };

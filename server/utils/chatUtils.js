@@ -1,4 +1,4 @@
-const { MAX_CHAT_LENGTH } = require('../config');
+const { MAX_CHAT_LENGTH } = require('../constants/gameRule');
 
 const sliceChatToMaxLength = chat => {
   return chat.slice(0, MAX_CHAT_LENGTH);

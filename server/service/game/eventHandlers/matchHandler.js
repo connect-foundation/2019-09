@@ -1,18 +1,32 @@
 const Player = require('../models/Player');
 const roomController = require('../controllers/roomController');
 const { getRandomColor } = require('../../../utils/colorGenerator');
-const { NICKNAME_LENGTH } = require('../../../config');
+const EVENT = require('../../../constants/event');
+const { NICKNAME_LENGTH } = require('../../../constants/gameRule');
 
 const emitEventsAfterJoin = socket => {
-  socket.emit('startChatting');
-
-  /**
-   * sendRoodId : url 기능 추가를 위한 이벤트. 아직 사용하지 않음
-   */
-  socket.emit('sendRoomId', { roomId: socket.roomId });
+  socket.emit(EVENT.START_CHATTING);
+  socket.emit(EVENT.SEND_ROOMID, { roomId: socket.roomId });
 };
 
-const matchHandler = (socket, { nickname }) => {
+const getRoomId = (roomIdFromUrl, isPrivateRoomCreation) => {
+  let roomId;
+  if (!!roomIdFromUrl || isPrivateRoomCreation) {
+    roomId = roomController.getPrivateRoomInformationToJoin(
+      roomIdFromUrl,
+      isPrivateRoomCreation,
+    );
+  } else {
+    roomId = roomController.getPublicRoomInformantionToJoin();
+  }
+  return roomId;
+};
+
+const matchHandler = (
+  socket,
+  { nickname, roomIdFromUrl, isPrivateRoomCreation },
+) => {
+  const roomId = getRoomId(roomIdFromUrl, isPrivateRoomCreation);
   const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
   const player = new Player({
     nickname: slicedNickname,
@@ -20,21 +34,19 @@ const matchHandler = (socket, { nickname }) => {
     nicknameColor: getRandomColor(),
   });
 
-  const { isExistingRoom, roomId } = roomController.getRoomInformantionToJoin();
-  roomController.joinRoom({ socket, roomId, player });
+  if (roomId) {
+    const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
+    roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
 
-  if (isExistingRoom) {
-    /**
-     * 새로운 플레이어는 기존 플레이어의 정보들을 전달받고
-     * 기존의 플레이어들은 새로운 플레이어의 정보를 전달받는다.
-     */
-    const room = roomController.getRoomByRoomId(roomId);
-    const otherPlayers = room.gameManager.getOtherPlayers(player.socketId);
+    const { gameManager } = roomController.getRoomByRoomId(roomId);
+    const otherPlayers = gameManager.getOtherPlayers(player.socketId);
 
-    socket.broadcast.to(roomId).emit('sendNewPlayer', player);
-    socket.emit('sendPlayers', { players: otherPlayers });
+    socket.broadcast.to(roomId).emit(EVENT.SEND_NEW_PLAYER, player);
+    socket.emit(EVENT.SEND_PLAYERS, { players: otherPlayers });
+    emitEventsAfterJoin(socket);
+  } else {
+    socket.emit(EVENT.ROOM_UNAVAILABLE);
   }
-  emitEventsAfterJoin(socket);
 };
 
 module.exports = matchHandler;
