@@ -27,25 +27,31 @@ const disconnectingHandler = socket => {
     leavePlayer(gameManager, socket);
     sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
 
-    const isGamePreparable =
-      roomStatus === GAME_STATUS.WAITING &&
-      gameManager.checkAllPlayersAreReady() &&
-      gameManager.getPlayers().length >= MIN_PLAYER_COUNT;
+    switch (roomStatus) {
+      case GAME_STATUS.WAITING:
+        if (
+          gameManager.checkAllPlayersAreReady() &&
+          gameManager.getPlayers().length >= MIN_PLAYER_COUNT
+        ) {
+          gameController.prepareGame(gameManager, timer);
+        }
+        break;
 
-    if (isGamePreparable) {
-      gameController.prepareGame(gameManager, timer);
-      return;
-    }
+      case GAME_STATUS.CONNECTING:
+      case GAME_STATUS.INITIALIZING:
+      case GAME_STATUS.PLAYING:
+        if (!gameManager.isSetContinuable()) {
+          gameController.repeatSet(gameManager, timer);
+        }
+        break;
 
-    if (
-      roomStatus === GAME_STATUS.INITIALIZING ||
-      roomStatus === GAME_STATUS.PLAYING ||
-      roomStatus === GAME_STATUS.CONNECTING ||
-      roomStatus === GAME_STATUS.SCORE_SHARING
-    ) {
-      if (!gameManager.isSetContinuable()) {
-        gameController.repeatSet(gameManager, timer);
-      }
+      case GAME_STATUS.SCORE_SHARING:
+        if (!gameManager.isNextSetAvailable()) {
+          gameController.goToEnding(gameManager, timer);
+        }
+        break;
+      default:
+        break;
     }
   } catch (error) {
     console.log(error);
