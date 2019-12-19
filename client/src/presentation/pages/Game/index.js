@@ -74,13 +74,11 @@ const Game = ({ location, match }) => {
 
   const popstateHandler = () => {
     clientManager.exitRoom();
+    window.removeEventListener(EVENTS.POPSTATE, popstateHandler);
   };
 
   const attachPopstateEvent = () => {
     window.addEventListener(EVENTS.POPSTATE, popstateHandler);
-    return () => {
-      return window.addEventListener(EVENTS.POPSTATE, popstateHandler);
-    };
   };
 
   const showPlayerListByViewShifting = () => {
