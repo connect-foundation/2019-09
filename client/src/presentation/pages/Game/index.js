@@ -20,6 +20,7 @@ import useIsMobile from '../../../hooks/useIsMobile';
 import { TOAST_TYPES } from '../../../constants/toast';
 import { gameReducer, gameState as gameInitialState } from './store';
 import LINK_PATH from '../../../constants/path';
+import EVENTS from '../../../constants/events';
 
 let clientManager;
 
@@ -71,11 +72,13 @@ const Game = ({ location, match }) => {
     );
   };
 
-  const gamePageLifecycleHandler = () => {
-    closeToast();
-    return () => {
-      clientManager.exitRoom();
-    };
+  const popstateHandler = () => {
+    clientManager.exitRoom();
+    window.removeEventListener(EVENTS.POPSTATE, popstateHandler);
+  };
+
+  const attachPopstateEvent = () => {
+    window.addEventListener(EVENTS.POPSTATE, popstateHandler);
   };
 
   const showPlayerListByViewShifting = () => {
@@ -114,7 +117,9 @@ const Game = ({ location, match }) => {
       .catch(getMediaPermissionErrorHandler);
     globalDispatch(actions.setClientManagerInitialized(true));
   }
-  useEffect(gamePageLifecycleHandler, []);
+
+  useEffect(closeToast, []);
+  useEffect(attachPopstateEvent, []);
   useEffect(dispatchMobileChattingPanelVisibility, [currentIsMobile]);
   useEffect(dispatchGamePageRootHeight, [currentIsMobile]);
   useEffect(showPlayerListByViewShifting, [shiftingToWhichView]);
