@@ -1,5 +1,6 @@
 const GameManager = require('../service/game/models/GameManager');
 const Player = require('../service/game/models/Player');
+const { VIEWER, STREAMER } = require('../constants/player');
 
 const roomId = 1;
 const gameManager = new GameManager(roomId);
@@ -59,4 +60,16 @@ test('GameManager에서 getNextStreamer 함수 실행', () => {
     gameManager.players.splice(1, gameManager.players.length),
   );
   gameManager.streamerCandidates[0].unshift(streamer);
+});
+
+test('GameManager에서 selectStreamer 실행 및 플레이어의 타입 업데이트', () => {
+  gameManager.selectStreamer();
+  expect(gameManager.streamer).toStrictEqual(streamer);
+  expect(streamer.type).toEqual(STREAMER);
+
+  gameManager.players.forEach(eachPlayer => {
+    if (eachPlayer.socketId !== streamer.socketId) {
+      expect(eachPlayer.type).toEqual(VIEWER);
+    }
+  });
 });
