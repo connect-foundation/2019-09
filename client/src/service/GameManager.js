@@ -107,7 +107,7 @@ class GameManager {
     });
   }
 
-  endSetHandler({ players, currentRound, currentSet, scoreList }) {
+  endSetHandler({ players, /** currentRound, */ currentSet, scoreList }) {
     this.syncAllPlayers(players);
     this.makeAndDispatchViewPlayerList();
     this.dispatch(actions.setGameStatus(GAME_STATUS.SCORE_SHARING));
@@ -118,7 +118,7 @@ class GameManager {
     this.dispatch(
       actions.setScoreNotice({
         isVisible: true,
-        message: `${currentRound} - ${currentSet}`,
+        message: `세트 ${currentSet} 종료`,
         scoreList,
       }),
     );
