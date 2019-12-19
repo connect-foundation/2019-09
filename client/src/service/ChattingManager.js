@@ -1,6 +1,4 @@
 /* eslint-disable class-methods-use-this */
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
 import { MAX_CHAT_LENGTH } from '../constants/inputConstraints';
 import EVENTS from '../constants/events';
 import { WELCOME_MESSAGE } from '../constants/chatting';
@@ -11,8 +9,8 @@ import {
 import actions from '../actions/global';
 
 class ChattingManager {
-  constructor(socket, isRoomPrivate) {
-    this.dispatch = useContext(DispatchContext);
+  constructor(socket, isRoomPrivate, dispatch) {
+    this.dispatch = dispatch;
     this.socket = socket;
     this.isAvailableChatting = false;
     this.isRoomPrivate = isRoomPrivate;

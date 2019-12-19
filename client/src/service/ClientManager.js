@@ -1,6 +1,4 @@
 import io from 'socket.io-client';
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
 import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
@@ -14,7 +12,13 @@ import LINK_PATH from '../constants/path';
 import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
 
 class ClientManager {
-  constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
+  constructor({
+    history,
+    roomIdFromUrl,
+    isPrivateRoomCreation,
+    dispatch,
+    toast,
+  }) {
     this.history = history;
     this.localPlayer = {
       isReady: false,
@@ -28,19 +32,26 @@ class ClientManager {
     this.isPrivateRoomCreation = isPrivateRoomCreation;
     this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
+    this.dispatch = dispatch;
     this.gameManager = new GameManager({
       socket: this.socket,
       localPlayer: this.localPlayer,
       remotePlayers: this.remotePlayers,
       isRoomPrivate: this.isRoomPrivate,
+      dispatch,
+      toast,
     });
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
       this.localPlayer,
+      dispatch,
     );
-    this.chattingManager = new ChattingManager(this.socket, this.isRoomPrivate);
-    this.dispatch = useContext(DispatchContext);
+    this.chattingManager = new ChattingManager(
+      this.socket,
+      this.isRoomPrivate,
+      dispatch,
+    );
   }
 
   registerSocketEvents() {
