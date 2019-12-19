@@ -19,7 +19,6 @@ import {
   PlayerPanel,
   MobileChattingPanel,
 } from '../../containers';
-import { shareUrlButtonClickHandler } from '../../../utils';
 import exitImageSource from '../../../assets/exit.png';
 
 const GamePresentation = ({ gameProps }) => {
@@ -38,6 +37,7 @@ const GamePresentation = ({ gameProps }) => {
     closeToast,
     isReadyButtonVisible,
     isRoomIdReceived,
+    shareUrlButtonClickHandler,
   } = gameProps;
 
   return (
