@@ -96,3 +96,12 @@ test('gameManager에서 leaveRoom viewer 테스트', () => {
   gameManager.players.unshift(target);
   gameManager.streamerCandidates[0].unshift(target);
 });
+
+test('isStreamer 테스트', () => {
+  const viewer = players[0];
+  const streamerTrue = gameManager.isStreamer(streamer.socketId);
+  const streamerFalse = gameManager.isStreamer(viewer.socketId);
+
+  expect(streamerTrue).toBe(true);
+  expect(streamerFalse).toBe(false);
+});
