@@ -80,13 +80,17 @@ class ClientManager {
     this.localPlayer.socketId = socketId;
   }
 
+  addRoomIdToUrl() {
+    this.history.replace({
+      pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
+      isPrivateRoomCreation: this.isPrivateRoomCreation,
+    });
+  }
+
   sendRoomIdHandler({ roomId }) {
     this.localPlayer.roomId = roomId;
     if (this.isRoomPrivate) {
-      this.history.replace({
-        pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
-        isPrivateRoomCreation: this.isPrivateRoomCreation,
-      });
+      this.addRoomIdToUrl();
     }
   }
 
