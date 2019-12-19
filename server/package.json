@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "jest",
-    "nodemon": "nodemon ./bin/www"
+    "nodemon": "nodemon ./bin/www",
+    "seed": "node databaseFiles/databaseModels/seeder/scripts/seedQuizzes.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -24,6 +25,7 @@
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.1"
   },
   "eslintConfig": {

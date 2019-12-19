@@ -2,12 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import timerImageSource from '../../assets/timer.png';
+import styleColors from '../../constants/styleColors';
 
 const useStyles = makeStyles(() => ({
   timer: {
     fontSize: '3rem',
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: styleColors.PURE_WHITE_COLOR,
   },
   timerImage: {
     width: '4rem',

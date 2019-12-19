@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const MessageContent = styled.span`
   font-size: 1.4rem;
   word-wrap: break-word;
-  color: ${STYLE_COLORS.BASE_BLACK_COLOR};
+  color: ${styleColors.BASE_BLACK_COLOR};
   line-height: 1.4;
 `;
 

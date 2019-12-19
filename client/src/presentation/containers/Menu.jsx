@@ -3,21 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, useHistory } from 'react-router-dom';
 import { MenuButton, TextInput } from '../components';
-import { NICKNAME_LENGTH } from '../../config';
-
-import {
-  browserLocalStorage,
-  CONSTANT_VALUES,
-  STYLE_COLORS,
-} from '../../utils';
+import { NICKNAME_LENGTH } from '../../constants/inputConstraints';
+import { PLAY_WITH_FRIENDS_BUTTON_TEXT } from '../../constants/button';
+import { browserLocalStorage } from '../../utils';
+import { ENTER_KEYCODE } from '../../constants/browser';
+import styleColors from '../../constants/styleColors';
+import LINK_PATH from '../../constants/path';
 
 const useStyle = makeStyles({
   menu: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: styleColors.PURE_WHITE_COLOR,
     width: '100%',
     height: 'auto',
     padding: '2rem',
-    border: `0.3rem solid ${STYLE_COLORS.THEME_COLOR}`,
+    border: `0.3rem solid ${styleColors.THEME_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -58,12 +57,12 @@ const Menu = () => {
   };
 
   const nicknameInputKeypressHandler = event => {
-    if (event.charCode !== CONSTANT_VALUES.ENTER_KEYCODE) return;
+    if (event.charCode !== ENTER_KEYCODE) return;
     const trimmedNickname = nickname.trim();
     if (checkNicknameValidity(trimmedNickname)) {
       const slicedNickname = sliceNicknameLength(trimmedNickname);
       browserLocalStorage.setNickname(slicedNickname);
-      history.push('/game');
+      history.push(LINK_PATH.GAME_PAGE);
     }
   };
 
@@ -93,13 +92,25 @@ const Menu = () => {
       />
 
       <Link
-        to="/game"
+        to={LINK_PATH.GAME_PAGE}
         className={classes.fullAnchor}
         onClick={playButtonClickHandler}
       >
         <MenuButton fontSize={menuButtonFontSize}>PLAY</MenuButton>
       </Link>
-      <Link to="/ranking" className={classes.fullAnchor}>
+      <Link
+        to={{
+          pathname: LINK_PATH.GAME_PAGE,
+          isPrivateRoomCreation: true,
+        }}
+        className={classes.fullAnchor}
+        onClick={playButtonClickHandler}
+      >
+        <MenuButton fontSize={menuButtonFontSize}>
+          {PLAY_WITH_FRIENDS_BUTTON_TEXT}
+        </MenuButton>
+      </Link>
+      <Link to={LINK_PATH.RANKING_PAGE} className={classes.fullAnchor}>
         <MenuButton fontSize={menuButtonFontSize}>RANK</MenuButton>
       </Link>
     </Container>

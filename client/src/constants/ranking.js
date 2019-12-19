@@ -1,0 +1,17 @@
+const DEFAULT_SCORE = '0';
+const DEFAULT_NICKNAMES = {
+  FIRST_PLACE: '1등',
+  SECOND_PLACEC: '2등',
+  THIRD_PLACE: '3등',
+};
+const FIRST_PLACE = '1';
+const SECOND_PLACE = '2';
+const THIRD_PLACE = '3';
+
+export {
+  DEFAULT_SCORE,
+  DEFAULT_NICKNAMES,
+  FIRST_PLACE,
+  SECOND_PLACE,
+  THIRD_PLACE,
+};

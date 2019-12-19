@@ -23,10 +23,14 @@ const MenuButtton = ({ onClick, children, fontSize }) => {
   );
 };
 
+MenuButtton.defaultProps = {
+  onClick: () => {},
+};
+
 MenuButtton.propTypes = {
   children: PropTypes.string.isRequired,
   fontSize: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default MenuButtton;

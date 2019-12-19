@@ -3,24 +3,27 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import UnderlinedLetter from './UnderlinedLetter';
 import UnderlinedSpace from './UnderlinedSpace';
+import styleColors from '../../constants/styleColors';
 
 const QuizDisplay = ({ quiz, quizLength }) => {
   const useStyles = makeStyles(() => ({
     quizDisplay: {
       '& > *': {
         marginRight: '0.5rem',
-        color: '#ffffff',
+        color: styleColors.PURE_WHITE_COLOR,
       },
     },
   }));
   const classes = useStyles();
-  const quizToDisplay = quiz;
+  const quizToDisplay = typeof quiz === 'undefined' ? '' : quiz;
   const letters =
-    quiz !== '' ? quizToDisplay.split() : new Array(quizLength).fill(' ');
+    quizToDisplay !== ''
+      ? quizToDisplay.split()
+      : new Array(quizLength).fill(' ');
 
   return (
     <div className={classes.quizDisplay}>
-      {quiz === ''
+      {quizToDisplay === ''
         ? letters.map((letter, index) => {
             const key = `${letter}${index}`;
             return <UnderlinedSpace key={key} />;

@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
-import { STYLE_COLORS } from '../../utils';
+import styleColors from '../../constants/styleColors';
 
 const useStyle = makeStyles({
   scoreBoard: {
@@ -10,7 +10,7 @@ const useStyle = makeStyles({
     bottom: '0',
     left: '0',
     right: '0',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: styleColors.BASE_BLACK_COLOR_TRANSLUCENT,
     position: 'absolute',
     display: 'flex',
     justifyContent: 'space-around',
@@ -20,7 +20,7 @@ const useStyle = makeStyles({
   title: {
     fontSize: '4rem',
     textAlign: 'center',
-    color: STYLE_COLORS.PURE_WHITE_COLOR,
+    color: styleColors.PURE_WHITE_COLOR,
   },
   scoreRow: {
     display: 'flex',
@@ -28,15 +28,19 @@ const useStyle = makeStyles({
     marginBottom: '1rem',
   },
   nickname: {
-    color: STYLE_COLORS.PURE_WHITE_COLOR,
+    width: 'auto',
+    color: styleColors.PURE_WHITE_COLOR,
     textAlign: 'center',
     flex: '1',
     marginRight: '1rem',
+    whiteSpace: 'nowrap',
   },
   score: {
-    color: STYLE_COLORS.THEME_COLOR,
+    width: 'auto',
+    color: styleColors.THEME_COLOR,
     textAlign: 'center',
     flex: '1',
+    whiteSpace: 'nowrap',
   },
 });
 

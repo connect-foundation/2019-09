@@ -1,13 +1,14 @@
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
-const { GAME_INITIALIZING, QUIZ_NOT_SELECTED } = require('../../../config');
+const { INITIALIZING } = require('../../../constants/gameStatus');
+const { DEFAULT_QUIZ } = require('../../../constants/gameRule');
 
 const isGameInitializing = status => {
-  return status === GAME_INITIALIZING;
+  return status === INITIALIZING;
 };
 
 const quizNotSelected = quiz => {
-  return quiz === QUIZ_NOT_SELECTED;
+  return quiz === DEFAULT_QUIZ;
 };
 
 const isQuizInQuizCandidates = (quizCandidates, quiz) => {

@@ -1,5 +1,6 @@
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
+const GAME_STATUS = require('../../../constants/gameStatus');
 
 const connectPeerHandler = socket => {
   const { gameManager, timer } = roomController.getRoomByRoomId(socket.roomId);
@@ -8,7 +9,8 @@ const connectPeerHandler = socket => {
 
   if (
     gameManager.getStreamer() &&
-    gameManager.checkAllConnectionsToStreamer()
+    gameManager.checkAllConnectionsToStreamer() &&
+    gameManager.getStatus() !== GAME_STATUS.INITIALIZING
   ) {
     /**
      * 연결 준비 후 정상 시작

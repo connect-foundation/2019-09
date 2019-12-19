@@ -1,9 +1,15 @@
-const { MAX_ROUND_NUMBER, MIN_PLAYER_COUNT } = require('../../../config');
+const {
+  MAX_ROUND_NUMBER,
+  MIN_PLAYER_COUNT,
+} = require('../../../constants/gameRule');
+const GAME_STATUS = require('../../../constants/gameStatus');
+const { VIEWER, STREAMER } = require('../../../constants/player');
 
 class GameManager {
   constructor(roomId) {
     this.roomId = roomId;
-    this.status = 'waiting';
+    this.isRoomPrivate = false;
+    this.status = GAME_STATUS.WAITING;
     this.quiz = '';
     this.quizCandidates = [];
     this.players = [];
@@ -72,12 +78,20 @@ class GameManager {
     return otherPlayers;
   }
 
+  getIsRoomPrivate() {
+    return this.isRoomPrivate;
+  }
+
+  setIsRoomPrivate(isRoomPrivate) {
+    this.isRoomPrivate = isRoomPrivate;
+  }
+
   /**
    * 게임이 재시작되더라도 방에 유저는 남아있을 수 있기 때문에
    * players는 초기화하지 않는다.
    */
   reset() {
-    this.status = 'waiting';
+    this.status = GAME_STATUS.WAITING;
     this.streamerCandidates = [];
     this.streamer = null;
     this.quiz = '';
@@ -88,7 +102,7 @@ class GameManager {
   prepareGame() {
     this.reset();
     this.setStreamerCandidates();
-    this.status = 'initializing';
+    this.status = GAME_STATUS.CONNECTING;
   }
 
   updateRoundAndSet() {
@@ -109,7 +123,7 @@ class GameManager {
   updatePlayersType() {
     this.players.forEach(player => {
       const type =
-        player.socketId !== this.streamer.socketId ? 'viewer' : 'streamer';
+        player.socketId !== this.streamer.socketId ? VIEWER : STREAMER;
       player.setType(type);
     });
   }
@@ -133,17 +147,17 @@ class GameManager {
   leaveRoom(socketId) {
     this.removePlayer(socketId);
 
-    if (this.status === 'waiting') return;
+    if (this.status === GAME_STATUS.WAITING) return;
 
     this.removeStreamerCandidate(socketId);
 
-    if (this.streamer && this.isStreamer(socketId)) {
+    if (this.isStreamer(socketId)) {
       this.streamer = null;
     }
   }
 
   isStreamer(socketId) {
-    return this.streamer.socketId === socketId;
+    return this.streamer && this.streamer.socketId === socketId;
   }
 
   removeStreamerCandidate(socketId) {
@@ -157,7 +171,8 @@ class GameManager {
   }
 
   getPlayersUnconnectedToStreamer() {
-    return this.players.filter(player => !player.getIsConnectedToStreamer());
+    const viewers = this.getOtherPlayers(this.getStreamer().getSocketId());
+    return viewers.filter(viewer => !viewer.getIsConnectedToStreamer());
   }
 
   checkAllConnectionsToStreamer() {
@@ -182,6 +197,16 @@ class GameManager {
     });
   }
 
+  resetStreamerConnectionOfAllPlayers() {
+    const players = this.getPlayers();
+    players.forEach(player => player.setIsConnectedToStreamer(false));
+  }
+
+  resetCorrectionOfAllPlayers() {
+    const players = this.getPlayers();
+    players.forEach(player => player.setIsCorrectPlayer(false));
+  }
+
   getScoreList() {
     const scoreList = this.players.map(player => {
       return {
@@ -196,9 +221,13 @@ class GameManager {
     return this.players.every(player => player.getIsReady());
   }
 
-  isGameContinuable() {
+  isSetContinuable() {
+    return this.streamer && this.players.length >= MIN_PLAYER_COUNT;
+  }
+
+  isNextSetAvailable() {
     return (
-      this.getStreamerCandidates().flat().length > 0 &&
+      this.streamerCandidates.flat().length > 0 &&
       this.currentRound <= MAX_ROUND_NUMBER &&
       this.players.length >= MIN_PLAYER_COUNT
     );

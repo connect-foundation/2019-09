@@ -1,4 +1,4 @@
-const { ONE_SECOND } = require('../../../config');
+const { ONE_SECOND_IN_MILLISECONDS } = require('../../../constants/timer');
 
 class Timer {
   constructor(roomId) {
@@ -21,7 +21,7 @@ class Timer {
         timeOutCallback();
         return;
       }
-      this.timerId = setTimeout(updateTimer, ONE_SECOND);
+      this.timerId = setTimeout(updateTimer, ONE_SECOND_IN_MILLISECONDS);
     };
     this.timerId = setTimeout(updateTimer);
   }
@@ -38,7 +38,7 @@ class Timer {
         return;
       }
       intervalCallback(this.remainingTime, this.roomId);
-      this.timerId = setTimeout(updateTimer, ONE_SECOND);
+      this.timerId = setTimeout(updateTimer, ONE_SECOND_IN_MILLISECONDS);
     };
     this.timerId = setTimeout(updateTimer);
   }
@@ -51,7 +51,7 @@ class Timer {
     this.timerId = setTimeout(() => {
       this.clear();
       timeOutCallback();
-    }, seconds * 1000);
+    }, seconds * ONE_SECOND_IN_MILLISECONDS);
   }
 
   getRemainingTime() {

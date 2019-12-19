@@ -1,23 +1,45 @@
 import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
+import { DispatchContext, GlobalContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
-import { WAITING_FOR_STREAMER } from '../config';
+import { WAITING_FOR_STREAMER } from '../constants/message';
 import EVENTS from '../constants/events';
 import actions from '../actions';
 import Timer from './Timer';
-import { INACTIVE_PLAYER_BAN_TIME } from '../constants/timer';
+import { useToast } from '../hooks';
+import { TOAST_TYPES, TOAST_MESSAGE } from '../constants/toast';
+import {
+  DEFAULT_INACTIVE_PLAYER_BAN_TIME,
+  PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME,
+} from '../constants/timer';
+import { GAME_STATUS } from '../constants/game';
 
 class GameManager {
-  constructor(socket, localPlayer, remotePlayers) {
+  constructor({ socket, localPlayer, remotePlayers, isRoomPrivate }) {
     this.dispatch = useContext(DispatchContext);
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
+    this.isRoomPrivate = isRoomPrivate;
+    const { toast } = useContext(GlobalContext);
+    this.toast = toast;
   }
 
-  findMatch(nickname) {
-    this.socket.emit(EVENTS.MATCH, { nickname });
+  openToast(toastType, message) {
+    const { openToast } = useToast({
+      open: this.toast.open,
+      dispatch: this.dispatch,
+      actions,
+    });
+    openToast(toastType, message);
+  }
+
+  findMatch({ nickname, roomIdFromUrl, isPrivateRoomCreation }) {
+    this.socket.emit(EVENTS.MATCH, {
+      nickname,
+      roomIdFromUrl,
+      isPrivateRoomCreation,
+    });
     this.makeAndDispatchViewPlayerList();
   }
 
@@ -38,18 +60,57 @@ class GameManager {
     this.socket.on(EVENTS.CORRECT_ANSWER, this.correctAnswerHandler.bind(this));
     this.socket.on(EVENTS.END_SET, this.endSetHandler.bind(this));
     this.socket.on(EVENTS.CLEAR_WINDOW, this.clearWindowHandler.bind(this));
-    this.socket.on(
-      EVENTS.UPDATE_PROFILE_SCORE,
-      this.updateProfileScoreHandler.bind(this),
-    );
+    this.socket.on(EVENTS.UPDATE_PROFILE, this.updateProfileHandler.bind(this));
   }
 
   clearWindowHandler() {
     this.dispatch(actions.clearWindow());
   }
 
-  endSetHandler({ scoreList }) {
-    this.dispatch(actions.setGameStatus('scoreSharing'));
+  syncAllPlayers(players) {
+    const localPlayer = this.findLocalPlayer(players);
+    const remotePlayers = this.findRemotePlayers(players);
+    this.syncLocalPlayer(localPlayer);
+    this.syncRemotePlayers(remotePlayers);
+  }
+
+  findLocalPlayer(players) {
+    const localPlayer = players.find(player => {
+      return player.socketId === this.localPlayer.socketId;
+    });
+    return localPlayer;
+  }
+
+  findRemotePlayers(players) {
+    const remotePlayers = players.filter(player => {
+      return player.socketId !== this.localPlayer.socketId;
+    });
+    return remotePlayers;
+  }
+
+  /**
+   * syncLocalPlayer와 syncRemotePlayers는 추후 utils로 분리 예정
+   * remotePlayers 형태를 array 변경과 함께.
+   */
+  syncLocalPlayer(localPlayer) {
+    Object.keys(localPlayer).forEach(key => {
+      this.localPlayer[key] = localPlayer[key];
+    });
+  }
+
+  syncRemotePlayers(remotePlayers) {
+    remotePlayers.forEach(player => {
+      const { socketId } = player;
+      Object.keys(player).forEach(key => {
+        this.remotePlayers[socketId][key] = player[key];
+      });
+    });
+  }
+
+  endSetHandler({ players, /** currentRound, */ currentSet, scoreList }) {
+    this.syncAllPlayers(players);
+    this.makeAndDispatchViewPlayerList();
+    this.dispatch(actions.setGameStatus(GAME_STATUS.SCORE_SHARING));
     this.dispatch(actions.setCurrentSeconds(0));
     this.dispatch(actions.setQuiz('', 0));
     this.dispatch(actions.setChattingDisabled(false));
@@ -57,7 +118,7 @@ class GameManager {
     this.dispatch(
       actions.setScoreNotice({
         isVisible: true,
-        message: '중간 점수',
+        message: `세트 ${currentSet} 종료`,
         scoreList,
       }),
     );
@@ -90,7 +151,7 @@ class GameManager {
 
   startGameHandler() {
     this.timer.clear();
-    this.dispatch(actions.setGameStatus('playing'));
+    this.dispatch(actions.setGameStatus(GAME_STATUS.PLAYING));
   }
 
   sendPlayersHandler({ players }) {
@@ -106,11 +167,12 @@ class GameManager {
     this.makeAndDispatchViewPlayerList();
   }
 
-  updateProfileScoreHandler({ player }) {
+  updateProfileHandler({ player }) {
     if (player.socketId === this.localPlayer.socketId) {
-      this.localPlayer.score = player.score;
+      this.syncLocalPlayer(player);
     } else {
-      this.remotePlayers[player.socketId].score = player.score;
+      // 해당 함수에서 인자를 배열로 받기 때문에 [player]식으로 전달
+      this.syncRemotePlayers([player]);
     }
     this.makeAndDispatchViewPlayerList();
   }
@@ -143,15 +205,31 @@ class GameManager {
     this.socket.emit(EVENTS.SELECT_QUIZ, { quiz });
   }
 
+  inactivePlayerBanHandler() {
+    this.exitRoom();
+    this.openToast(TOAST_TYPES.INFORMATION, TOAST_MESSAGE.INACTIVE_PLAYER_BAN);
+  }
+
+  inactivePlayerWarningHandler(inactivePlayerBanTime, time) {
+    if (this.localPlayer.isReady) {
+      this.timer.clear();
+    }
+    if (time === inactivePlayerBanTime / 2) {
+      this.openToast(
+        TOAST_TYPES.WARNING,
+        TOAST_MESSAGE.INACTIVE_PLAYER_WARNING(time),
+      );
+    }
+  }
+
   setInactivePlayerBanTimer() {
+    const inactivePlayerBanTime = this.isRoomPrivate
+      ? PRIVATE_ROOM_INACTIVE_PLAYER_BAN_TIME
+      : DEFAULT_INACTIVE_PLAYER_BAN_TIME;
     this.timer.startIntegrationTimer(
-      INACTIVE_PLAYER_BAN_TIME,
-      this.exitRoom.bind(this),
-      () => {
-        if (this.localPlayer.isReady) {
-          this.timer.clear();
-        }
-      },
+      inactivePlayerBanTime,
+      this.inactivePlayerBanHandler.bind(this),
+      this.inactivePlayerWarningHandler.bind(this, inactivePlayerBanTime),
     );
   }
 

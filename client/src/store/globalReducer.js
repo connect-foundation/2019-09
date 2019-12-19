@@ -105,7 +105,22 @@ const reducer = (state, action) => {
         ...state,
         clientManagerInitialized: action.payload.clientManagerInitialized,
       };
-
+    case TYPES.SET_TOAST:
+      return {
+        ...state,
+        toast: {
+          open: action.payload.toast.open,
+          message: action.payload.toast.message,
+          toastType: action.payload.toast.toastType
+            ? action.payload.toast.toastType
+            : state.toast.toastType,
+        },
+      };
+    case TYPES.SET_IS_ROOM_ID_RECEIVED:
+      return {
+        ...state,
+        isRoomIdReceived: action.payload.isRoomIdReceived,
+      };
     default:
       throw new Error();
   }
