@@ -1,6 +1,7 @@
 const GameManager = require('../service/game/models/GameManager');
 const Player = require('../service/game/models/Player');
 const { VIEWER, STREAMER } = require('../constants/player');
+const GAME_STATUS = require('../constants/gameStatus');
 
 const roomId = 1;
 const gameManager = new GameManager(roomId);
@@ -72,4 +73,26 @@ test('GameManager에서 selectStreamer 실행 및 플레이어의 타입 업데�
       expect(eachPlayer.type).toEqual(VIEWER);
     }
   });
+});
+
+gameManager.setStatus(GAME_STATUS.PLAYING);
+
+test('GameManager에서 leaveRoom 스트리머 테스트', () => {
+  gameManager.leaveRoom(streamer.socketId);
+  expect(gameManager.streamer).toBeNull();
+  expect(gameManager.players).not.toContain(streamer);
+
+  gameManager.streamer = streamer;
+  gameManager.players.unshift(streamer);
+});
+
+test('gameManager에서 leaveRoom viewer 테스트', () => {
+  const target = players[0];
+
+  gameManager.leaveRoom(target.socketId);
+  expect(gameManager.players).not.toContain(target);
+  expect(gameManager.streamerCandidates[0]).not.toContain(target);
+
+  gameManager.players.unshift(target);
+  gameManager.streamerCandidates[0].unshift(target);
 });
