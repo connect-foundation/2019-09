@@ -320,21 +320,29 @@ const resetGameAfterNSeconds = ({ seconds, gameManager, timer }) => {
   );
 };
 
+const goToScoreSharing = (gameManager, timer) => {
+  endSet(gameManager, timer);
+  goToNextSetAfterNSeconds({
+    seconds: GAME_RULE.SECONDS_BETWEEN_SETS,
+    gameManager,
+    timer,
+  });
+};
+
+const goToEnding = (gameManager, timer) => {
+  endGame(gameManager, timer);
+  resetGameAfterNSeconds({
+    seconds: GAME_RULE.SECONDS_AFTER_GAME_END,
+    gameManager,
+    timer,
+  });
+};
+
 const repeatSet = (gameManager, timer) => {
   if (gameManager.isNextSetAvailable()) {
-    endSet(gameManager, timer);
-    goToNextSetAfterNSeconds({
-      seconds: GAME_RULE.SECONDS_BETWEEN_SETS,
-      gameManager,
-      timer,
-    });
+    goToScoreSharing(gameManager, timer);
   } else {
-    endGame(gameManager, timer);
-    resetGameAfterNSeconds({
-      seconds: GAME_RULE.SECONDS_AFTER_GAME_END,
-      gameManager,
-      timer,
-    });
+    goToEnding(gameManager, timer);
   }
 };
 
@@ -345,4 +353,5 @@ module.exports = {
   endGame,
   resetGameAfterNSeconds,
   repeatSet,
+  goToEnding,
 };
