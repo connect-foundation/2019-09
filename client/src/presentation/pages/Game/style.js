@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: '100%',
     [theme.breakpoints.down('xs')]: {
-      height: `${props.gamePageRootHeight / 10}rem`,
+      height: `${props.gamePageRootHeight / 6}rem`,
     },
     overflow: 'auto',
   }),
