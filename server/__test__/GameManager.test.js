@@ -3,6 +3,7 @@ const Player = require('../service/game/models/Player');
 
 const roomId = 1;
 const gameManager = new GameManager(roomId);
+let streamer;
 
 test('GameManager는 매개변수로 받은 roomId를 저장합니다.', () => {
   expect(gameManager.roomId).toBe(roomId);
@@ -49,4 +50,13 @@ test('GameManager에서 현재 플레이어를 기반으로 최대 라운드 개
   gameManager.streamerCandidates.forEach(streamerCandidate => {
     expect(streamerCandidate).toStrictEqual(gameManager.players);
   });
+});
+
+test('GameManager에서 getNextStreamer 함수 실행', () => {
+  streamer = gameManager.getNextStreamer();
+  expect(streamer).toStrictEqual(player);
+  expect(gameManager.streamerCandidates[0]).toStrictEqual(
+    gameManager.players.splice(1, gameManager.players.length),
+  );
+  gameManager.streamerCandidates[0].unshift(streamer);
 });
