@@ -45,7 +45,7 @@
 
 ## 💡 Technologies Used
 
-![](https://user-images.githubusercontent.com/30206880/71165121-a4e17f80-2293-11ea-9b7d-2bfd5e5b9165.png)
+![](https://user-images.githubusercontent.com/30206880/71165752-c2fbaf80-2294-11ea-9025-63f9be777c5d.png)
 
 <br>
 
