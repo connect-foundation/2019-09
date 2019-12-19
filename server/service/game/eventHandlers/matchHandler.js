@@ -45,8 +45,7 @@ const matchHandler = (
     socket.emit(EVENT.SEND_PLAYERS, { players: otherPlayers });
     emitEventsAfterJoin(socket);
   } else {
-    /** @todo 토스터 완성되면 여기서 메인보내고 토스터로 없다고 알려줘야함 */
-    socket.disconnect();
+    socket.emit(EVENT.ROOM_UNAVAILABLE);
   }
 };
 

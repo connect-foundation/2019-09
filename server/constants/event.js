@@ -27,6 +27,7 @@ const EVENT = {
   SEND_DESCRIPTION: 'sendDescription',
   SEND_ICE_CANDIDATE: 'sendIceCandidate',
   CONNECTION: 'connection',
+  ROOM_UNAVAILABLE: 'roomUnavailable',
 };
 
 module.exports = EVENT;

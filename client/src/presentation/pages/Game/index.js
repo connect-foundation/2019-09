@@ -111,6 +111,7 @@ const Game = ({ location, match }) => {
       history,
       roomIdFromUrl,
       isPrivateRoomCreation,
+      openToast,
     });
     clientManager
       .getMediaPermission()

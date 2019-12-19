@@ -7,14 +7,18 @@ import ChattingManager from './ChattingManager';
 import { browserLocalStorage, makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
 import actions from '../actions';
-import { GAME_END_SCOREBOARD_TITLE } from '../constants/message';
+import {
+  GAME_END_SCOREBOARD_TITLE,
+  ROOM_UNAVAILABLE_MESSAGE,
+} from '../constants/message';
 import { SOCKETIO_SERVER_URL } from '../constants/socket';
 import { GAME_STATUS, PLAYER_TYPES } from '../constants/game';
 import LINK_PATH from '../constants/path';
 import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
+import { TOAST_TYPES } from '../constants/toast';
 
 class ClientManager {
-  constructor({ history, roomIdFromUrl, isPrivateRoomCreation }) {
+  constructor({ history, roomIdFromUrl, isPrivateRoomCreation, openToast }) {
     this.history = history;
     this.localPlayer = {
       isReady: false,
@@ -41,6 +45,7 @@ class ClientManager {
     );
     this.chattingManager = new ChattingManager(this.socket, this.isRoomPrivate);
     this.dispatch = useContext(DispatchContext);
+    this.openToast = openToast;
   }
 
   registerSocketEvents() {
@@ -53,6 +58,15 @@ class ClientManager {
     this.socket.on(EVENTS.END_GAME, this.endGameHandler.bind(this));
     this.socket.on(EVENTS.RESET_GAME, this.resetGameHandler.bind(this));
     this.socket.on(EVENTS.DISCONNECT, this.disconnectHandler.bind(this));
+    this.socket.on(
+      EVENTS.ROOM_UNAVAILABLE,
+      this.roomUnavailableHandler.bind(this),
+    );
+  }
+
+  roomUnavailableHandler() {
+    this.openToast(TOAST_TYPES.INFORMATION, ROOM_UNAVAILABLE_MESSAGE);
+    this.exitRoom();
   }
 
   disconnectHandler() {
