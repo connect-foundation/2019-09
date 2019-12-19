@@ -47,7 +47,9 @@ const useStyle = makeStyles(theme => ({
 
 const PlayerPanel = ({ clientManager }) => {
   const classes = useStyle();
-  const { viewPlayerList, gameStatus } = useContext(GlobalContext);
+  const { viewPlayerList, gameStatus, isRoomIdReceived } = useContext(
+    GlobalContext,
+  );
   const currentIsMobile = useIsMobile(MOBILE_VIEW_BREAKPOINT);
   const localPlayer = viewPlayerList.find(player => player.isLocalPlayer);
   const isGameStatusWaiting = gameStatus === GAME_STATUS.WAITING;
@@ -72,7 +74,7 @@ const PlayerPanel = ({ clientManager }) => {
       })}
       {isReadyButtonVisible && (
         <Box className={classes.bottomLeftButtonContainer}>
-          {clientManager.getIsRoomPrivate() && (
+          {isRoomIdReceived && (
             <ShareUrlButton
               onClick={shareUrlButtonClickHandler}
               classNames={[classes.shareUrlButton]}

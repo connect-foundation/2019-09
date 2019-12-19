@@ -80,17 +80,22 @@ class ClientManager {
     this.localPlayer.socketId = socketId;
   }
 
-  addRoomIdToUrl() {
+  addRoomIdToUrl(roomId) {
     this.history.replace({
       pathname: `${LINK_PATH.GAME_PAGE}/${roomId}`,
       isPrivateRoomCreation: this.isPrivateRoomCreation,
     });
   }
 
+  showShareUrlButton() {
+    this.dispatch(actions.setIsRoomIdReceived(true));
+  }
+
   sendRoomIdHandler({ roomId }) {
     this.localPlayer.roomId = roomId;
     if (this.isRoomPrivate) {
-      this.addRoomIdToUrl();
+      this.addRoomIdToUrl(roomId);
+      this.showShareUrlButton();
     }
   }
 

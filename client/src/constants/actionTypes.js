@@ -16,6 +16,7 @@ const globalTypes = {
   SET_QUIZ_CANDIDATES_NOTICE: 'setQuizCandidatesNotice',
   CLEAR_WINDOW: 'clearWindow',
   SET_CLIENT_MANAGER_INITIALIZED: 'setClientManagerInitialized',
+  SET_IS_ROOM_ID_RECEIVED: 'setIsRoomIdReceived',
 };
 
 const gameTypes = {

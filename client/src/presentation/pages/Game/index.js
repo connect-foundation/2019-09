@@ -45,6 +45,7 @@ const Game = ({ location, match }) => {
     quizLength,
     clientManagerInitialized,
     toast,
+    isRoomIdReceived,
   } = useContext(GlobalContext);
   const globalDispatch = useContext(DispatchContext);
   const { openToast, closeToast } = useToast({
@@ -138,6 +139,7 @@ const Game = ({ location, match }) => {
     toast,
     closeToast,
     isReadyButtonVisible,
+    isRoomIdReceived,
   };
 
   return <GamePresentation gameProps={gameProps} />;

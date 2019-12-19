@@ -37,6 +37,7 @@ const GamePresentation = ({ gameProps }) => {
     toast,
     closeToast,
     isReadyButtonVisible,
+    isRoomIdReceived,
   } = gameProps;
 
   return (
@@ -104,7 +105,7 @@ const GamePresentation = ({ gameProps }) => {
           />
           {isReadyButtonVisible && (
             <Box className={classes.bottomLeftButtonContainer}>
-              {clientManager.getIsRoomPrivate() && (
+              {isRoomIdReceived && (
                 <ShareUrlButton
                   onClick={shareUrlButtonClickHandler}
                   classNames={[classes.shareUrlButton]}

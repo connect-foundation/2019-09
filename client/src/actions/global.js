@@ -165,6 +165,15 @@ const addChatting = newChatting => {
   };
 };
 
+const setIsRoomIdReceived = isRoomIdReceived => {
+  return {
+    type: TYPES.SET_IS_ROOM_ID_RECEIVED,
+    payload: {
+      isRoomIdReceived,
+    },
+  };
+};
+
 export default {
   setViewPlayerList,
   reset,
@@ -184,4 +193,5 @@ export default {
   openToast,
   closeToast,
   addChatting,
+  setIsRoomIdReceived,
 };

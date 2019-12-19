@@ -40,6 +40,8 @@ const initialState = {
     message: '',
     toastType: '',
   },
+
+  isRoomIdReceived: false,
 };
 
 export default initialState;
