@@ -151,13 +151,13 @@ class GameManager {
 
     this.removeStreamerCandidate(socketId);
 
-    if (this.streamer && this.isStreamer(socketId)) {
+    if (this.isStreamer(socketId)) {
       this.streamer = null;
     }
   }
 
   isStreamer(socketId) {
-    return this.streamer.socketId === socketId;
+    return this.streamer && this.streamer.socketId === socketId;
   }
 
   removeStreamerCandidate(socketId) {
