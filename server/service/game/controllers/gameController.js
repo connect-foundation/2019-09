@@ -222,6 +222,7 @@ const prepareQuizSelection = async (gameManager, timer) => {
 };
 
 const prepareSet = async (gameManager, timer) => {
+  gameManager.setStatus(INITIALIZING);
   gameManager.updateRoundAndSet();
   gameManager.setQuiz(GAME_RULE.DEFAULT_QUIZ);
 

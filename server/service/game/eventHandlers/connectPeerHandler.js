@@ -15,7 +15,6 @@ const connectPeerHandler = socket => {
     /**
      * 연결 준비 후 정상 시작
      */
-    gameManager.setStatus(INITIALIZING);
     timer.clear();
     gameController.prepareSet(gameManager, timer);
   }
