@@ -45,7 +45,7 @@
 
 ## 💡 Technologies Used
 
-![](https://i.imgur.com/K2Pf81L.png)
+![](https://user-images.githubusercontent.com/30206880/71165121-a4e17f80-2293-11ea-9b7d-2bfd5e5b9165.png)
 
 <br>
 
@@ -69,7 +69,7 @@
 
 ## 🌊 Data flow
 
-![](https://i.imgur.com/U1vQ3sN.png)
+![](https://user-images.githubusercontent.com/30206880/71165116-a14df880-2293-11ea-8e90-f3f23e1c128f.png)
 
 <br>
 
