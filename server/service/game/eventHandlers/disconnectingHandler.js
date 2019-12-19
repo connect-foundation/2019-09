@@ -19,7 +19,6 @@ const sendLeftPlayerToRoom = (roomId, socketId) => {
 const disconnectingHandler = socket => {
   try {
     const room = roomController.getRoomByRoomId(socket.roomId);
-    console.log('disconnectingHandler :', room);
     if (!room) {
       return;
     }
