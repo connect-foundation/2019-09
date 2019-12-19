@@ -9,6 +9,8 @@ const ALLOW_CAMERA_MESSAGE = '카메라를 허용해주세요';
 
 const COPY_TO_CLIPBOARD_MESSAGE = 'is copied to your clipboard';
 
+const ROOM_UNAVAILABLE_MESSAGE = '방에 연결이 불가능 합니다.';
+
 export {
   MAIN_HOW_TO_PLAY_TITLE,
   MAIN_HOW_TO_PLAY_DESCRIPTION,
@@ -18,4 +20,5 @@ export {
   GAME_END_SCOREBOARD_TITLE,
   ALLOW_CAMERA_MESSAGE,
   COPY_TO_CLIPBOARD_MESSAGE,
+  ROOM_UNAVAILABLE_MESSAGE,
 };

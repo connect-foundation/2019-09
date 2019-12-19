@@ -24,6 +24,7 @@ const EVENTS = {
   SEND_LEFT_PLAYER: 'sendLeftPlayer',
   END_GAME: 'endGame',
   ASK_SOCKET_ID: 'askSocketId',
+  ROOM_UNAVAILABLE: 'roomUnavailable',
   // ChattingManager
   SEND_CHATTING_MESSAGE: 'sendChattingMessage',
   START_CHATTING: 'startChatting',
