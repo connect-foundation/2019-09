@@ -13,12 +13,12 @@ const sendChattingMessageHandler = (socket, { message }) => {
   const playerNicknameColor = player.getNicknameColor();
   let payload = { id: short.generate() };
 
-  if (gameController.isCorrectPlayer()) return;
+  if (gameController.isCorrectPlayer(player)) return;
 
   if (
     gameController.isCorrectAnswer(gameManager, message, socket.id) &&
     gameController.isGameStatusPlaying(gameManager) &&
-    gameController.isSentByViewer(socket.id)
+    gameController.isSentByViewer(gameManager, socket.id)
   ) {
     const score = gameController.generateScoreWithRemainingTime(player, timer);
     gameController.setPlayerScore(player, score);
@@ -30,9 +30,9 @@ const sendChattingMessageHandler = (socket, { message }) => {
       payload,
       playerNickname,
     );
-    chattingController.sendChattingMessageToRoom(roomId, payload);
+    chattingController.sendChattingMessageToRoom(io, roomId, payload);
 
-    if (gameController.checkAllPlayersAreCorrect()) {
+    if (gameController.checkAllPlayersAreCorrect(gameManager)) {
       gameController.repeatSet(gameManager, timer);
     }
     return;
