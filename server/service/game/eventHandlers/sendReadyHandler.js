@@ -11,7 +11,7 @@ const sendReadyHandler = (socket, { isReady }) => {
   gameController.sendReadyPlayerToRoom(io, gameManager, player);
 
   if (
-    gameController.checkAllPlayersAreReady() &&
+    gameController.checkAllPlayersAreReady(gameManager) &&
     gameController.isPlayerCountPlayable(playerCount)
   ) {
     gameController.prepareGame(gameManager, timer);
