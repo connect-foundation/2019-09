@@ -1,6 +1,4 @@
 import io from 'socket.io-client';
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
 import GameManager from './GameManager';
 import StreamingManager from './StreamingManager';
 import ChattingManager from './ChattingManager';
@@ -18,7 +16,14 @@ import { LOCALSTORAGE_DEFAULT_NICKNAME } from '../constants/browser';
 import { TOAST_TYPES } from '../constants/toast';
 
 class ClientManager {
-  constructor({ history, roomIdFromUrl, isPrivateRoomCreation, openToast }) {
+  constructor({
+    history,
+    roomIdFromUrl,
+    isPrivateRoomCreation,
+    openToast,
+    dispatch,
+    toast,
+  }) {
     this.history = history;
     this.localPlayer = {
       isReady: false,
@@ -32,20 +37,27 @@ class ClientManager {
     this.isPrivateRoomCreation = isPrivateRoomCreation;
     this.socket = io(SOCKETIO_SERVER_URL);
     this.remotePlayers = {};
+    this.dispatch = dispatch;
+    this.openToast = openToast;
     this.gameManager = new GameManager({
       socket: this.socket,
       localPlayer: this.localPlayer,
       remotePlayers: this.remotePlayers,
       isRoomPrivate: this.isRoomPrivate,
+      dispatch,
+      toast,
     });
     this.streamingManager = new StreamingManager(
       this.socket,
       this.remotePlayers,
       this.localPlayer,
+      dispatch,
     );
-    this.chattingManager = new ChattingManager(this.socket, this.isRoomPrivate);
-    this.dispatch = useContext(DispatchContext);
-    this.openToast = openToast;
+    this.chattingManager = new ChattingManager(
+      this.socket,
+      this.isRoomPrivate,
+      dispatch,
+    );
   }
 
   registerSocketEvents() {

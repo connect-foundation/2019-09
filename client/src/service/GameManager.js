@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { DispatchContext, GlobalContext } from '../contexts';
 import { makeViewPlayerList } from '../utils';
 import { WAITING_FOR_STREAMER } from '../constants/message';
 import EVENTS from '../constants/events';
@@ -14,14 +12,20 @@ import {
 import { GAME_STATUS } from '../constants/game';
 
 class GameManager {
-  constructor({ socket, localPlayer, remotePlayers, isRoomPrivate }) {
-    this.dispatch = useContext(DispatchContext);
+  constructor({
+    socket,
+    localPlayer,
+    remotePlayers,
+    isRoomPrivate,
+    dispatch,
+    toast,
+  }) {
+    this.dispatch = dispatch;
     this.socket = socket;
     this.remotePlayers = remotePlayers;
     this.localPlayer = localPlayer;
     this.timer = new Timer();
     this.isRoomPrivate = isRoomPrivate;
-    const { toast } = useContext(GlobalContext);
     this.toast = toast;
   }
 

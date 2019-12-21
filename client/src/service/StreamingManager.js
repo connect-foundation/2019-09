@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
 import WebRTCManager from './WebRTCManager';
 import { makeViewPlayerList } from '../utils';
 import EVENTS from '../constants/events';
@@ -8,8 +6,8 @@ import { PLAYER_TYPES } from '../constants/game';
 import { DESCRIPTION_TYPE } from '../constants/webRTC';
 
 class StreamingManager {
-  constructor(socket, remotePlayers, localPlayer) {
-    this.dispatch = useContext(DispatchContext);
+  constructor(socket, remotePlayers, localPlayer, dispatch) {
+    this.dispatch = dispatch;
     this.socket = socket;
     this.localPlayer = localPlayer;
     this.remotePlayers = remotePlayers;

@@ -117,6 +117,8 @@ const Game = ({ location, match }) => {
       history,
       roomIdFromUrl,
       isPrivateRoomCreation,
+      dispatch: globalDispatch,
+      toast,
       openToast,
     });
     clientManager
