@@ -1,8 +1,12 @@
 const { io } = require('../../io');
-
+const Player = require('../models/Player');
 const GAME_RULE = require('../../../constants/gameRule');
 const EVENT = require('../../../constants/event');
 const GAME_STATUS = require('../../../constants/gameStatus');
+const {
+  DEFAULT_QUIZ,
+  MIN_PLAYER_COUNT,
+} = require('../../../constants/gameRule');
 
 const {
   QuizRepository,
@@ -346,6 +350,151 @@ const repeatSet = (gameManager, timer) => {
   }
 };
 
+const isSetPreparable = gameManager => {
+  return (
+    gameManager.getStreamer() &&
+    gameManager.checkAllConnectionsToStreamer() &&
+    gameManager.getStatus() !== GAME_STATUS.INITIALIZING
+  );
+};
+
+const clearTimer = timer => {
+  timer.clear();
+};
+
+const setIsConnectedToStreamer = (gameManager, isConnected, socket) => {
+  const connectedPlayer = gameManager.getPlayerBySocketId(socket.id);
+  connectedPlayer.setIsConnectedToStreamer(isConnected);
+};
+
+const isQuizInQuizCandidates = (quizCandidates, quiz) => {
+  return quizCandidates.find(quizCandidate => {
+    return quizCandidate === quiz;
+  });
+};
+
+const isSetStartable = (gameManager, socket, quiz) => {
+  return (
+    gameManager.isStreamer(socket.id) &&
+    gameManager.getStatus() === GAME_STATUS.INITIALIZING &&
+    gameManager.getQuiz() === DEFAULT_QUIZ &&
+    isQuizInQuizCandidates(gameManager.getQuizCandidates(), quiz)
+  );
+};
+
+/**
+ * viewer가 입력한 채팅이 정답이라면 true를 반환하는 함수
+ */
+const isCorrectAnswer = (gameManager, message, socketId) => {
+  return gameManager.getQuiz() === message && !gameManager.isStreamer(socketId);
+};
+
+const isSentByViewer = (gameManager, socketId) => {
+  return !gameManager.isStreamer(socketId);
+};
+
+const isGameStatusPlaying = gameManager => {
+  return gameManager.getStatus() === GAME_STATUS.PLAYING;
+};
+
+const generateScoreWithRemainingTime = (player, timer) => {
+  return player.getScore() + timer.getRemainingTime() + 50;
+};
+
+const setPlayerScore = (player, score) => {
+  player.setScore(score);
+};
+
+const setIsCorrectPlayer = (player, isCorrectPlayer) => {
+  player.setIsCorrectPlayer(isCorrectPlayer);
+};
+
+const sendCorrectAnswerEventToPlayer = (socketId, io) => {
+  io.to(socketId).emit(EVENT.CORRECT_ANSWER);
+};
+
+const sendUpdateProfileToRoom = (roomId, { player }) => {
+  io.in(roomId).emit(EVENT.UPDATE_PROFILE, { player });
+};
+
+const checkAllPlayersAreCorrect = gameManager => {
+  return gameManager.checkAllPlayersAreCorrect();
+};
+
+const isCorrectPlayer = player => {
+  return player.getIsCorrectPlayer();
+};
+
+const setPlayerReady = (player, isReady) => {
+  player.setIsReady(isReady);
+};
+
+const sendReadyPlayerToRoom = (io, gameManager, player) => {
+  io.in(gameManager.getRoomId()).emit(EVENT.SEND_READY, {
+    socketId: player.getSocketId(),
+    isReady: player.getIsReady(),
+  });
+};
+
+const checkAllPlayersAreReady = gameManager => {
+  return gameManager.checkAllPlayersAreReady();
+};
+
+const isPlayerCountPlayable = playerCount => {
+  return playerCount >= MIN_PLAYER_COUNT;
+};
+
+const makePlayerLeave = (gameManager, socket) => {
+  gameManager.leaveRoom(socket.id);
+  socket.leave(gameManager.getRoomId());
+};
+
+const sendLeftPlayerToRoom = (io, roomId, socketId) => {
+  io.in(roomId).emit(EVENT.SEND_LEFT_PLAYER, {
+    socketId,
+  });
+};
+
+const getRoomStatus = gameManager => {
+  return gameManager.getStatus();
+};
+
+const isSetContinuable = gameManager => {
+  return gameManager.isSetContinuable();
+};
+
+const isNextSetAvailable = gameManager => {
+  return gameManager.isNextSetAvailable();
+};
+
+const sendStartChattingEventToSocket = socket => {
+  socket.emit(EVENT.START_CHATTING);
+};
+
+const sendRoomIdToSocket = socket => {
+  socket.emit(EVENT.SEND_ROOMID, { roomId: socket.roomId });
+};
+
+const sendPlayersToSocket = (socket, otherPlayers) => {
+  socket.emit(EVENT.SEND_PLAYERS, { players: otherPlayers });
+};
+
+const broadcastToRoom = (socket, roomId, event, payload) => {
+  socket.broadcast.to(roomId).emit(event, payload);
+};
+
+const sendRoomUnavailableEventToSocket = socket => {
+  socket.emit(EVENT.ROOM_UNAVAILABLE);
+};
+
+const createPlayer = ({ nickname, socketId, nicknameColor }) => {
+  return new Player({
+    nickname,
+    socketId,
+    nicknameColor,
+  });
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -354,4 +503,33 @@ module.exports = {
   resetGameAfterNSeconds,
   repeatSet,
   goToEnding,
+  isSetPreparable,
+  clearTimer,
+  setIsConnectedToStreamer,
+  isSetStartable,
+  isCorrectAnswer,
+  isSentByViewer,
+  isGameStatusPlaying,
+  generateScoreWithRemainingTime,
+  setPlayerScore,
+  setIsCorrectPlayer,
+  sendCorrectAnswerEventToPlayer,
+  sendUpdateProfileToRoom,
+  checkAllPlayersAreCorrect,
+  isCorrectPlayer,
+  setPlayerReady,
+  sendReadyPlayerToRoom,
+  checkAllPlayersAreReady,
+  isPlayerCountPlayable,
+  makePlayerLeave,
+  sendLeftPlayerToRoom,
+  getRoomStatus,
+  isSetContinuable,
+  isNextSetAvailable,
+  sendStartChattingEventToSocket,
+  sendRoomIdToSocket,
+  sendPlayersToSocket,
+  broadcastToRoom,
+  sendRoomUnavailableEventToSocket,
+  createPlayer,
 };
