@@ -56,9 +56,8 @@ const isRoomJoinable = (gameManager, urlRoomId) => {
  * join할 공개방의 정보를 반환해주는 함수
  * @return {string} roomId
  */
-const getPublicRoomInformantionToJoin = () => {
+const getPublicRoomIdToJoin = () => {
   const roomIds = Object.keys(rooms);
-
   const joinableRoomId = roomIds.find(roomId => {
     const room = getRoomByRoomId(roomId);
     return isRoomJoinable(room.gameManager);
@@ -67,24 +66,24 @@ const getPublicRoomInformantionToJoin = () => {
 };
 
 /**
- * join할 비공개방의 정보를 반환해주는 함수
+ * join할 비공개방의 id를 생성하여 반환해주는 함수
  * @return {string} roomId
  */
-const getPrivateRoomInformationToJoin = (
-  roomIdFromUrl,
-  isPrivateRoomCreation,
-) => {
-  if (isPrivateRoomCreation) {
-    return generateRoomId();
-  }
+const getPrivateRoomIdToCreate = () => {
+  return generateRoomId();
+};
 
+/**
+ * join할 비공개방의 id를 반환해주는 함수
+ * @return {string} roomId
+ */
+const getPrivateRoomIdToJoin = roomIdFromUrl => {
   const room = getRoomByRoomId(roomIdFromUrl);
   if (room) {
     if (isRoomJoinable(room.gameManager, roomIdFromUrl)) {
       return roomIdFromUrl;
     }
   }
-
   return null;
 };
 
@@ -92,6 +91,7 @@ module.exports = {
   joinRoom,
   generateRoomId,
   getRoomByRoomId,
-  getPublicRoomInformantionToJoin,
-  getPrivateRoomInformationToJoin,
+  getPublicRoomIdToJoin,
+  getPrivateRoomIdToJoin,
+  getPrivateRoomIdToCreate,
 };

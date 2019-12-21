@@ -1,52 +1,47 @@
-const Player = require('../models/Player');
 const roomController = require('../controllers/roomController');
+const gameController = require('../controllers/gameController');
 const { getRandomColor } = require('../../../utils/colorGenerator');
 const EVENT = require('../../../constants/event');
-const { NICKNAME_LENGTH } = require('../../../constants/gameRule');
-
-const emitEventsAfterJoin = socket => {
-  socket.emit(EVENT.START_CHATTING);
-  socket.emit(EVENT.SEND_ROOMID, { roomId: socket.roomId });
-};
-
-const getRoomId = (roomIdFromUrl, isPrivateRoomCreation) => {
-  let roomId;
-  if (!!roomIdFromUrl || isPrivateRoomCreation) {
-    roomId = roomController.getPrivateRoomInformationToJoin(
-      roomIdFromUrl,
-      isPrivateRoomCreation,
-    );
-  } else {
-    roomId = roomController.getPublicRoomInformantionToJoin();
-  }
-  return roomId;
-};
+const { processNicknameWithSystemRule } = require('../../../utils/chatUtils');
 
 const matchHandler = (
   socket,
   { nickname, roomIdFromUrl, isPrivateRoomCreation },
 ) => {
-  const roomId = getRoomId(roomIdFromUrl, isPrivateRoomCreation);
-  const slicedNickname = nickname.slice(0, NICKNAME_LENGTH);
-  const player = new Player({
-    nickname: slicedNickname,
+  let roomId;
+  const isPrivateRoomJoin = !!roomIdFromUrl;
+  const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
+
+  const processedNickname = processNicknameWithSystemRule(nickname);
+  const player = gameController.createPlayer({
+    nickname: processedNickname,
     socketId: socket.id,
     nicknameColor: getRandomColor(),
   });
 
-  if (roomId) {
-    const isRoomPrivate = !!roomIdFromUrl || isPrivateRoomCreation;
-    roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
-
-    const { gameManager } = roomController.getRoomByRoomId(roomId);
-    const otherPlayers = gameManager.getOtherPlayers(player.socketId);
-
-    socket.broadcast.to(roomId).emit(EVENT.SEND_NEW_PLAYER, player);
-    socket.emit(EVENT.SEND_PLAYERS, { players: otherPlayers });
-    emitEventsAfterJoin(socket);
+  if (isPrivateRoomJoin) {
+    roomId = roomController.getPrivateRoomIdToJoin(roomIdFromUrl);
+    /**
+     * 비공개방 url 접근시 목표방에 접근이 불가할때
+     */
+    if (!roomId) {
+      gameController.sendRoomUnavailableEventToSocket(socket);
+    }
+  } else if (isPrivateRoomCreation) {
+    roomId = roomController.getPrivateRoomIdToCreate();
   } else {
-    socket.emit(EVENT.ROOM_UNAVAILABLE);
+    roomId = roomController.getPublicRoomIdToJoin();
   }
+
+  roomController.joinRoom({ socket, roomId, player, isRoomPrivate });
+
+  const { gameManager } = roomController.getRoomByRoomId(roomId);
+  const otherPlayers = gameManager.getOtherPlayers(player.socketId);
+
+  gameController.broadcastToRoom(socket, roomId, EVENT.SEND_NEW_PLAYER, player);
+  gameController.sendPlayersToSocket(socket, otherPlayers);
+  gameController.sendStartChattingEventToSocket(socket);
+  gameController.sendRoomIdToSocket(socket);
 };
 
 module.exports = matchHandler;

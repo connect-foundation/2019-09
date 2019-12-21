@@ -1,5 +1,5 @@
 const { io } = require('../../io');
-
+const Player = require('../models/Player');
 const GAME_RULE = require('../../../constants/gameRule');
 const EVENT = require('../../../constants/event');
 const GAME_STATUS = require('../../../constants/gameStatus');
@@ -350,7 +350,7 @@ const repeatSet = (gameManager, timer) => {
   }
 };
 
-const isSetPreParable = gameManager => {
+const isSetPreparable = gameManager => {
   return (
     gameManager.getStreamer() &&
     gameManager.checkAllConnectionsToStreamer() &&
@@ -362,7 +362,7 @@ const clearTimer = timer => {
   timer.clear();
 };
 
-const setIsConnectedToStreamer = (gameManager, isConnected) => {
+const setIsConnectedToStreamer = (gameManager, isConnected, socket) => {
   const connectedPlayer = gameManager.getPlayerBySocketId(socket.id);
   connectedPlayer.setIsConnectedToStreamer(isConnected);
 };
@@ -389,7 +389,7 @@ const isCorrectAnswer = (gameManager, message, socketId) => {
   return gameManager.getQuiz() === message && !gameManager.isStreamer(socketId);
 };
 
-const isSentByViewer = gameManager => {
+const isSentByViewer = (gameManager, socketId) => {
   return !gameManager.isStreamer(socketId);
 };
 
@@ -417,7 +417,7 @@ const sendUpdateProfileToRoom = (roomId, { player }) => {
   io.in(roomId).emit(EVENT.UPDATE_PROFILE, { player });
 };
 
-const checkallPlayersAreCorrect = gameManager => {
+const checkAllPlayersAreCorrect = gameManager => {
   return gameManager.checkAllPlayersAreCorrect();
 };
 
@@ -430,7 +430,7 @@ const setPlayerReady = (player, isReady) => {
 };
 
 const sendReadyPlayerToRoom = (io, gameManager, player) => {
-  io.in(gameManager.getRoomId()).emit(EVENTS.SEND_READY, {
+  io.in(gameManager.getRoomId()).emit(EVENT.SEND_READY, {
     socketId: player.getSocketId(),
     isReady: player.getIsReady(),
   });
@@ -450,7 +450,7 @@ const makePlayerLeave = (gameManager, socket) => {
 };
 
 const sendLeftPlayerToRoom = (io, roomId, socketId) => {
-  io.in(roomId).emit(EVENTS.SEND_LEFT_PLAYER, {
+  io.in(roomId).emit(EVENT.SEND_LEFT_PLAYER, {
     socketId,
   });
 };
@@ -467,6 +467,34 @@ const isNextSetAvailable = gameManager => {
   return gameManager.isNextSetAvailable();
 };
 
+const sendStartChattingEventToSocket = socket => {
+  socket.emit(EVENT.START_CHATTING);
+};
+
+const sendRoomIdToSocket = socket => {
+  socket.emit(EVENT.SEND_ROOMID, { roomId: socket.roomId });
+};
+
+const sendPlayersToSocket = (socket, otherPlayers) => {
+  socket.emit(EVENT.SEND_PLAYERS, { players: otherPlayers });
+};
+
+const broadcastToRoom = (socket, roomId, event, payload) => {
+  socket.broadcast.to(roomId).emit(event, payload);
+};
+
+const sendRoomUnavailableEventToSocket = socket => {
+  socket.emit(EVENT.ROOM_UNAVAILABLE);
+};
+
+const createPlayer = ({ nickname, socketId, nicknameColor }) => {
+  return new Player({
+    nickname,
+    socketId,
+    nicknameColor,
+  });
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -475,7 +503,7 @@ module.exports = {
   resetGameAfterNSeconds,
   repeatSet,
   goToEnding,
-  isSetPreParable,
+  isSetPreparable,
   clearTimer,
   setIsConnectedToStreamer,
   isGameStartable,
@@ -487,7 +515,7 @@ module.exports = {
   setIsCorrectPlayer,
   sendCorrectAnswerEventToPlayer,
   sendUpdateProfileToRoom,
-  checkallPlayersAreCorrect,
+  checkAllPlayersAreCorrect,
   isCorrectPlayer,
   setPlayerReady,
   sendReadyPlayerToRoom,
@@ -498,4 +526,10 @@ module.exports = {
   getRoomStatus,
   isSetContinuable,
   isNextSetAvailable,
+  sendStartChattingEventToSocket,
+  sendRoomIdToSocket,
+  sendPlayersToSocket,
+  broadcastToRoom,
+  sendRoomUnavailableEventToSocket,
+  createPlayer,
 };
