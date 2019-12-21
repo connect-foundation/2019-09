@@ -13,9 +13,9 @@ const disconnectingHandler = socket => {
     const roomId = gameManager.getRoomId();
 
     gameController.makePlayerLeave(gameManager, socket);
-    gameContoller.sendLeftPlayerToRoom(io, roomId, socket.id);
+    gameController.sendLeftPlayerToRoom(io, roomId, socket.id);
 
-    switch (gameController.getRoomStatus()) {
+    switch (gameController.getRoomStatus(gameManager)) {
       case GAME_STATUS.WAITING:
         if (
           gameController.checkAllPlayersAreReady(gameManager) &&
