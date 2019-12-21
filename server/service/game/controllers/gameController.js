@@ -444,6 +444,29 @@ const isPlayerCountPlayable = playerCount => {
   return playerCount >= MIN_PLAYER_COUNT;
 };
 
+const makePlayerLeave = (gameManager, socket) => {
+  gameManager.leaveRoom(socket.id);
+  socket.leave(gameManager.getRoomId());
+};
+
+const sendLeftPlayerToRoom = (io, roomId, socketId) => {
+  io.in(roomId).emit(EVENTS.SEND_LEFT_PLAYER, {
+    socketId,
+  });
+};
+
+const getRoomStatus = gameManager => {
+  return gameManager.getStatus();
+};
+
+const isSetContinuable = gameManager => {
+  return gameManager.isSetContinuable();
+};
+
+const isNextSetAvailable = gameManager => {
+  return gameManager.isNextSetAvailable();
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -470,4 +493,9 @@ module.exports = {
   sendReadyPlayerToRoom,
   checkAllPlayersAreReady,
   isPlayerCountPlayable,
+  makePlayerLeave,
+  sendLeftPlayerToRoom,
+  getRoomStatus,
+  isSetContinuable,
+  isNextSetAvailable,
 };

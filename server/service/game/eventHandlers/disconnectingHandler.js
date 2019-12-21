@@ -2,36 +2,24 @@ const { io } = require('../../io');
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
 const GAME_STATUS = require('../../../constants/gameStatus');
-const { MIN_PLAYER_COUNT } = require('../../../constants/gameRule');
-const { SEND_LEFT_PLAYER } = require('../../../constants/event');
-
-const leavePlayer = (gameManager, socket) => {
-  gameManager.leaveRoom(socket.id);
-  socket.leave(gameManager.getRoomId());
-};
-
-const sendLeftPlayerToRoom = (roomId, socketId) => {
-  io.in(roomId).emit(SEND_LEFT_PLAYER, {
-    socketId,
-  });
-};
 
 const disconnectingHandler = socket => {
   try {
     const room = roomController.getRoomByRoomId(socket.roomId);
-    if (!room) {
-      return;
-    }
-    const { gameManager, timer } = room;
-    const roomStatus = gameManager.getStatus();
-    leavePlayer(gameManager, socket);
-    sendLeftPlayerToRoom(gameManager.getRoomId(), socket.id);
+    if (!room) return;
 
-    switch (roomStatus) {
+    const { gameManager, timer } = room;
+    const playerCount = gameManager.getPlayers();
+    const roomId = gameManager.getRoomId();
+
+    gameController.makePlayerLeave(gameManager, socket);
+    gameContoller.sendLeftPlayerToRoom(io, roomId, socket.id);
+
+    switch (gameController.getRoomStatus()) {
       case GAME_STATUS.WAITING:
         if (
-          gameManager.checkAllPlayersAreReady() &&
-          gameManager.getPlayers().length >= MIN_PLAYER_COUNT
+          gameController.checkAllPlayersAreReady(gameManager) &&
+          gameController.isPlayerCountPlayable(playerCount)
         ) {
           gameController.prepareGame(gameManager, timer);
         }
@@ -40,13 +28,13 @@ const disconnectingHandler = socket => {
       case GAME_STATUS.CONNECTING:
       case GAME_STATUS.INITIALIZING:
       case GAME_STATUS.PLAYING:
-        if (!gameManager.isSetContinuable()) {
+        if (!gameController.isSetContinuable(gameManager)) {
           gameController.repeatSet(gameManager, timer);
         }
         break;
 
       case GAME_STATUS.SCORE_SHARING:
-        if (!gameManager.isNextSetAvailable()) {
+        if (!gameController.isNextSetAvailable(gameManager)) {
           gameController.goToEnding(gameManager, timer);
         }
         break;
@@ -54,7 +42,7 @@ const disconnectingHandler = socket => {
         break;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
