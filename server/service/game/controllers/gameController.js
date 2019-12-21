@@ -3,7 +3,10 @@ const { io } = require('../../io');
 const GAME_RULE = require('../../../constants/gameRule');
 const EVENT = require('../../../constants/event');
 const GAME_STATUS = require('../../../constants/gameStatus');
-const { DEFAULT_QUIZ } = require('../../../constants/gameRule');
+const {
+  DEFAULT_QUIZ,
+  MIN_PLAYER_COUNT,
+} = require('../../../constants/gameRule');
 
 const {
   QuizRepository,
@@ -422,6 +425,25 @@ const isCorrectPlayer = player => {
   return player.getIsCorrectPlayer();
 };
 
+const setPlayerReady = (player, isReady) => {
+  player.setIsReady(isReady);
+};
+
+const sendReadyPlayerToRoom = (io, gameManager, player) => {
+  io.in(gameManager.getRoomId()).emit(EVENTS.SEND_READY, {
+    socketId: player.getSocketId(),
+    isReady: player.getIsReady(),
+  });
+};
+
+const checkAllPlayersAreReady = gameManager => {
+  return gameManager.checkAllPlayersAreReady();
+};
+
+const isPlayerCountPlayable = playerCount => {
+  return playerCount >= MIN_PLAYER_COUNT;
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -444,4 +466,8 @@ module.exports = {
   sendUpdateProfileToRoom,
   checkallPlayersAreCorrect,
   isCorrectPlayer,
+  setPlayerReady,
+  sendReadyPlayerToRoom,
+  checkAllPlayersAreReady,
+  isPlayerCountPlayable,
 };
