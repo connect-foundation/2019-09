@@ -9,7 +9,7 @@ const selectQuizHandler = (socket, { quiz }) => {
    * 퀴즈의 단어가 선택됐는지,
    * 마지막으로 퀴즈의 단어가 목록에 있는지 확인하는 로직
    */
-  if (gameController.isGameStartable(gameManager, socket, quiz)) {
+  if (gameController.isSetStartable(gameManager, socket, quiz)) {
     gameController.startSet(gameManager, timer, quiz);
   }
 };

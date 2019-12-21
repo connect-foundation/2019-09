@@ -373,7 +373,7 @@ const isQuizInQuizCandidates = (quizCandidates, quiz) => {
   });
 };
 
-const isGameStartable = (gameManager, socket, quiz) => {
+const isSetStartable = (gameManager, socket, quiz) => {
   return (
     gameManager.isStreamer(socket.id) &&
     gameManager.getStatus() === GAME_STATUS.INITIALIZING &&
@@ -506,7 +506,7 @@ module.exports = {
   isSetPreparable,
   clearTimer,
   setIsConnectedToStreamer,
-  isGameStartable,
+  isSetStartable,
   isCorrectAnswer,
   isSentByViewer,
   isGameStatusPlaying,
