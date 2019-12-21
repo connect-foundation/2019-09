@@ -346,6 +346,23 @@ const repeatSet = (gameManager, timer) => {
   }
 };
 
+const isSetPreParable = gameManager => {
+  return (
+    gameManager.getStreamer() &&
+    gameManager.checkAllConnectionsToStreamer() &&
+    gameManager.getStatus() !== GAME_STATUS.INITIALIZING
+  );
+};
+
+const clearTimer = timer => {
+  timer.clear();
+};
+
+const setIsConnectedToStreamer = (gameManager, isConnected) => {
+  const connectedPlayer = gameManager.getPlayerBySocketId(socket.id);
+  connectedPlayer.setIsConnectedToStreamer(isConnected);
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -354,4 +371,7 @@ module.exports = {
   resetGameAfterNSeconds,
   repeatSet,
   goToEnding,
+  isSetPreParable,
+  clearTimer,
+  setIsConnectedToStreamer,
 };
