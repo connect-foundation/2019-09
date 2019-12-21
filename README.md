@@ -56,7 +56,7 @@
 - [4주차-WebRTC로직](https://github.com/connect-foundation/2019-09/wiki/4%EC%A3%BC%EC%B0%A8-%EC%A4%91%EA%B0%84%EB%B0%9C%ED%91%9C)
 - [5주차-websocket/redis/pm2](https://github.com/connect-foundation/2019-09/wiki/5%EC%A3%BC%EC%B0%A8-%EA%B8%B0%EC%88%A0%EA%B3%B5%EC%9C%A0%EC%9E%90%EB%A3%8C-socket.io,-pm2,-redis)
 - [6주차-custom hook](https://github.com/connect-foundation/2019-09/wiki/6%EC%A3%BC%EC%B0%A8-%EA%B8%B0%EC%88%A0%EA%B3%B5%EC%9C%A0%EC%9E%90%EB%A3%8C-Custom-Hook)
-- [7주차-시간 게임에서 유저 이탈 상황 처리하기](https://github.com/connect-foundation/2019-09/wiki/7%EC%A3%BC%EC%B0%A8-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EA%B2%8C%EC%9E%84%EC%97%90%EC%84%9C-%EC%9C%A0%EC%A0%80-%EC%9D%B4%ED%83%88-%EC%83%81%ED%99%A9-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0)
+- [7주차-실시간 게임에서 유저 이탈 상황 처리하기](https://github.com/connect-foundation/2019-09/wiki/7%EC%A3%BC%EC%B0%A8-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EA%B2%8C%EC%9E%84%EC%97%90%EC%84%9C-%EC%9C%A0%EC%A0%80-%EC%9D%B4%ED%83%88-%EC%83%81%ED%99%A9-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0)
 
 <br>
 
