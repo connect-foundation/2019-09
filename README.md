@@ -49,6 +49,17 @@
 
 <br>
 
+## 🔨 Tech Researches
+
+- [2주차-WebRTC](https://github.com/connect-foundation/2019-09/wiki/2%EC%A3%BC%EC%B0%A8-WebRTC)
+- [3주차-WebRTC로직](https://github.com/connect-foundation/2019-09/wiki/3%EC%A3%BC%EC%B0%A8-WebRTC%EB%A1%9C%EC%A7%81)
+- [4주차-WebRTC로직](https://github.com/connect-foundation/2019-09/wiki/4%EC%A3%BC%EC%B0%A8-%EC%A4%91%EA%B0%84%EB%B0%9C%ED%91%9C)
+- [5주차-websocket/redis/pm2](https://github.com/connect-foundation/2019-09/wiki/5%EC%A3%BC%EC%B0%A8-%EA%B8%B0%EC%88%A0%EA%B3%B5%EC%9C%A0%EC%9E%90%EB%A3%8C-socket.io,-pm2,-redis)
+- [6주차-custom hook](https://github.com/connect-foundation/2019-09/wiki/6%EC%A3%BC%EC%B0%A8-%EA%B8%B0%EC%88%A0%EA%B3%B5%EC%9C%A0%EC%9E%90%EB%A3%8C-Custom-Hook)
+- [7주차-시간 게임에서 유저 이탈 상황 처리하기](https://github.com/connect-foundation/2019-09/wiki/7%EC%A3%BC%EC%B0%A8-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EA%B2%8C%EC%9E%84%EC%97%90%EC%84%9C-%EC%9C%A0%EC%A0%80-%EC%9D%B4%ED%83%88-%EC%83%81%ED%99%A9-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0)
+
+<br>
+
 ## :hammer_and_wrench: Process
 
 ### Sprint 1
@@ -58,8 +69,6 @@
     - <b>영상</b> : 멤버십 기간에 한번도 경험해보지 못한, 도전적인 주제
     - <b>게임</b> : 마찬가지로 경험해보지 못한 새로운 주제
   - <b>결론</b> : `영상 + 게임` 두 주제를 결합해서 지금까지 경험해보지 못한 기술에 `도전`해보자.
-
-
 
 ### Sprint 2
 
@@ -75,8 +84,6 @@
   - docker : `버전 관리`와 OS로부터 `독립적인 환경` 제공
   - HTTPS : 브라우저로부터 `카메라 권한`을 얻기 위한 HTTPS 인증
 
-
-
 ### Sprint 3
 
 - `1:N`다자간 통신
@@ -89,8 +96,6 @@
   - 게임 이벤트 처리에 대한 로직 구현
   - 한 세트(스트리머 전환 x) 게임 진행
 
-
-
 ### Sprint 4
 
 - 프론트엔드 WebRTC 리팩토링
@@ -100,16 +105,12 @@
     - 각각의 매니저가 소켓 객체를 공유하지만 담당하는 부분 분리
     - 기능 확장 용이 및 책임 분산 가능
 
-
-
 ### Sprint 5
 
 - 게임 진행 시스템 구성
   - 게임 룸에 waiting, playing 등의 `status 설정`
   - 1라운드(모든 플레이어가 돌아가면서 게임) 진행 구성
     - 기존에는 1명의 플레이어만 영상 송출이 가능했었음
-
-
 
 ### Sprint 6
 
@@ -118,8 +119,6 @@
     - 카메라 권한 거부에 대한 예외 처리
     - 게임 중간에 플레이어가 나갈 경우에 대한 예외 처리
   - 팀원 전원의 테스팅을 통해 발생하는 오류 제거
-
-
 
 ### Sprint 7
 
