@@ -379,6 +379,49 @@ const isGameStartable = (gameManager, socket, quiz) => {
   );
 };
 
+/**
+ * viewer가 입력한 채팅이 정답이라면 true를 반환하는 함수
+ */
+const isCorrectAnswer = (gameManager, message, socketId) => {
+  return gameManager.getQuiz() === message && !gameManager.isStreamer(socketId);
+};
+
+const isSentByViewer = gameManager => {
+  return !gameManager.isStreamer(socketId);
+};
+
+const isGameStatusPlaying = gameManager => {
+  return gameManager.getStatus() === GAME_STATUS.PLAYING;
+};
+
+const generateScoreWithRemainingTime = (player, timer) => {
+  return player.getScore() + timer.getRemainingTime() + 50;
+};
+
+const setPlayerScore = (player, score) => {
+  player.setScore(score);
+};
+
+const setIsCorrectPlayer = (player, isCorrectPlayer) => {
+  player.setIsCorrectPlayer(isCorrectPlayer);
+};
+
+const sendCorrectAnswerEventToPlayer = (socketId, io) => {
+  io.to(socketId).emit(EVENT.CORRECT_ANSWER);
+};
+
+const sendUpdateProfileToRoom = (roomId, { player }) => {
+  io.in(roomId).emit(EVENT.UPDATE_PROFILE, { player });
+};
+
+const checkallPlayersAreCorrect = gameManager => {
+  return gameManager.checkAllPlayersAreCorrect();
+};
+
+const isCorrectPlayer = player => {
+  return player.getIsCorrectPlayer();
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -391,4 +434,14 @@ module.exports = {
   clearTimer,
   setIsConnectedToStreamer,
   isGameStartable,
+  isCorrectAnswer,
+  isSentByViewer,
+  isGameStatusPlaying,
+  generateScoreWithRemainingTime,
+  setPlayerScore,
+  setIsCorrectPlayer,
+  sendCorrectAnswerEventToPlayer,
+  sendUpdateProfileToRoom,
+  checkallPlayersAreCorrect,
+  isCorrectPlayer,
 };
