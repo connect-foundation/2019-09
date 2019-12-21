@@ -3,6 +3,7 @@ const { io } = require('../../io');
 const GAME_RULE = require('../../../constants/gameRule');
 const EVENT = require('../../../constants/event');
 const GAME_STATUS = require('../../../constants/gameStatus');
+const { DEFAULT_QUIZ } = require('../../../constants/gameRule');
 
 const {
   QuizRepository,
@@ -363,6 +364,21 @@ const setIsConnectedToStreamer = (gameManager, isConnected) => {
   connectedPlayer.setIsConnectedToStreamer(isConnected);
 };
 
+const isQuizInQuizCandidates = (quizCandidates, quiz) => {
+  return quizCandidates.find(quizCandidate => {
+    return quizCandidate === quiz;
+  });
+};
+
+const isGameStartable = (gameManager, socket, quiz) => {
+  return (
+    gameManager.isStreamer(socket.id) &&
+    gameManager.getStatus() === GAME_STATUS.INITIALIZING &&
+    gameManager.getQuiz() === DEFAULT_QUIZ &&
+    isQuizInQuizCandidates(gameManager.getQuizCandidates(), quiz)
+  );
+};
+
 module.exports = {
   prepareGame,
   prepareSet,
@@ -374,4 +390,5 @@ module.exports = {
   isSetPreParable,
   clearTimer,
   setIsConnectedToStreamer,
+  isGameStartable,
 };

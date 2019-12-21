@@ -1,21 +1,5 @@
 const roomController = require('../controllers/roomController');
 const gameController = require('../controllers/gameController');
-const { INITIALIZING } = require('../../../constants/gameStatus');
-const { DEFAULT_QUIZ } = require('../../../constants/gameRule');
-
-const isGameInitializing = status => {
-  return status === INITIALIZING;
-};
-
-const quizNotSelected = quiz => {
-  return quiz === DEFAULT_QUIZ;
-};
-
-const isQuizInQuizCandidates = (quizCandidates, quiz) => {
-  return quizCandidates.find(quizCandidate => {
-    return quizCandidate === quiz;
-  });
-};
 
 const selectQuizHandler = (socket, { quiz }) => {
   const { gameManager, timer } = roomController.getRoomByRoomId(socket.roomId);
@@ -25,12 +9,7 @@ const selectQuizHandler = (socket, { quiz }) => {
    * 퀴즈의 단어가 선택됐는지,
    * 마지막으로 퀴즈의 단어가 목록에 있는지 확인하는 로직
    */
-  if (
-    gameManager.isStreamer(socket.id) &&
-    isGameInitializing(gameManager.getStatus()) &&
-    quizNotSelected(gameManager.getQuiz()) &&
-    isQuizInQuizCandidates(gameManager.getQuizCandidates(), quiz)
-  ) {
+  if (gameController.isGameStartable(gameManager, socket, quiz)) {
     gameController.startSet(gameManager, timer, quiz);
   }
 };
