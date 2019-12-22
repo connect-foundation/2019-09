@@ -86,6 +86,13 @@
 
 ### Sprint 3
 
+- Client React App 개발 시작
+  - 모바일 뷰(responsive) 지원 결정
+  - client 프로젝트 구성방법 회의/결정
+  - component(가장 작은 컴포넌트), container(몇개의 가장 작은 컴포넌트의 집합으로 이루어진 컴포넌트), page(component와 container의 집합으로 route와 묶이는 실제적 페이지 컴포넌트)로 구성
+  - material-ui 필요여부결정 및 적용
+  - 메인페이지(component, container, page) 구현
+
 - `1:N`다자간 통신
   - 기존 WebRTC에서는 클라이언트 전원의 `N:N` 연결
   - `불필요한 연결`이 발생하는 문제
@@ -97,6 +104,10 @@
   - 한 세트(스트리머 전환 x) 게임 진행
 
 ### Sprint 4
+- React
+  - 게임페이지(component, container, page) 구현
+  - 글로벌 상태와 reducer를 이용한 dispatch 구현
+  - 채팅 컴포넌트 구현 및 위의 dispatch 적용
 
 - 프론트엔드 WebRTC 리팩토링
   - 기존의 코드 : <b>socket의 기능이 WebRTC에 종속적인 구조</b>
@@ -106,6 +117,12 @@
     - 기능 확장 용이 및 책임 분산 가능
 
 ### Sprint 5
+- React
+  - 랭킹페이지(component, container, page) 구현
+  - 모바일 뷰 최적화를 위한 리팩토링
+  - 게임뷰에서 필요한 여러 notice 컴포넌트 구현
+  - - 큰 페이지 컴포넌트인 Game 리팩토링
+    - presenter(jsx), index(logic), style(style)로 파일 분리
 
 - 게임 진행 시스템 구성
   - 게임 룸에 waiting, playing 등의 `status 설정`
@@ -113,6 +130,10 @@
     - 기존에는 1명의 플레이어만 영상 송출이 가능했었음
 
 ### Sprint 6
+- React
+  - 글로벌 상태와 dispatch action을 action creator 형태로 리팩토링
+  - 큰 페이지 컴포넌트인 Game 리팩토링
+    - 로직을 hook으로 분리
 
 - 게임 진행 오류 수정
   - `Sprint 5`에 진행한 버그데이에 발생한 문제 해결
@@ -121,6 +142,11 @@
   - 팀원 전원의 테스팅을 통해 발생하는 오류 제거
 
 ### Sprint 7
+
+- React
+  - Rules of Hooks 권고사항 반영
+  - jest warning 해결
+  - 컴포넌트가 아닌 곳에서 쓰이는 hook 상위 컴포넌트로 이동
 
 - 리팩토링
   - 클라이언트와 서버에 존재하는 `Magic Number` 제거
