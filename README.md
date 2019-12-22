@@ -87,6 +87,7 @@
 ### Sprint 3
 
 - Client React App 개발 시작
+
   - 모바일 뷰(responsive) 지원 결정
   - client 프로젝트 구성방법 회의/결정
   - component(가장 작은 컴포넌트), container(몇개의 가장 작은 컴포넌트의 집합으로 이루어진 컴포넌트), page(component와 container의 집합으로 route와 묶이는 실제적 페이지 컴포넌트)로 구성
@@ -104,7 +105,9 @@
   - 한 세트(스트리머 전환 x) 게임 진행
 
 ### Sprint 4
+
 - React
+
   - 게임페이지(component, container, page) 구현
   - 글로벌 상태와 reducer를 이용한 dispatch 구현
   - 채팅 컴포넌트 구현 및 위의 dispatch 적용
@@ -117,7 +120,9 @@
     - 기능 확장 용이 및 책임 분산 가능
 
 ### Sprint 5
+
 - React
+
   - 랭킹페이지(component, container, page) 구현
   - 모바일 뷰 최적화를 위한 리팩토링
   - 게임뷰에서 필요한 여러 notice 컴포넌트 구현
@@ -130,7 +135,9 @@
     - 기존에는 1명의 플레이어만 영상 송출이 가능했었음
 
 ### Sprint 6
+
 - React
+
   - 글로벌 상태와 dispatch action을 action creator 형태로 리팩토링
   - 큰 페이지 컴포넌트인 Game 리팩토링
     - 로직을 hook으로 분리
@@ -144,6 +151,7 @@
 ### Sprint 7
 
 - React
+
   - Rules of Hooks 권고사항 반영
   - jest warning 해결
   - 컴포넌트가 아닌 곳에서 쓰이는 hook 상위 컴포넌트로 이동
@@ -169,7 +177,30 @@
 
 - [**게임 이벤트 흐름**](https://github.com/connect-foundation/2019-09/wiki/%EA%B2%8C%EC%9E%84-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4-%EC%9D%B4%EB%B2%A4%ED%8A%B8)
 
-<br>
+  - **Join and Waiting status**
+    <br>
+
+    ![Join and Waiting Status (1)](https://user-images.githubusercontent.com/30206880/71319293-9091c280-24df-11ea-9154-49fe2d94a352.png)
+
+  - **Connecting status**
+    <br>
+
+    ![connecting (1)](https://user-images.githubusercontent.com/30206880/71319295-94254980-24df-11ea-85f2-efbf999b6011.png)
+
+  - **Initializing status**
+    <br>
+
+    ![initializing](https://user-images.githubusercontent.com/30206880/71322360-1aef1c00-250a-11ea-80f7-236347c9e5ac.png)
+
+  - **Playing status**
+    <br>
+
+    ![playing (1)](https://user-images.githubusercontent.com/30206880/71319297-9b4c5780-24df-11ea-8e9c-96e7fde3427b.png)
+
+  - **Scoring status and end game**
+    <br>
+
+    ![scoringAndEndGame (1)](https://user-images.githubusercontent.com/30206880/71322301-8be20400-2509-11ea-9559-b812aa305b1e.png)
 
 ## 🌊 Data flow
 
