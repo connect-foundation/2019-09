@@ -220,6 +220,9 @@ $ docker-compose up -d
 
 ## 🎬 Demo video
 
+#### 7주차 데모
+[Youtube](https://www.youtube.com/watch?v=lg8UKEs0g90)
+
 #### 4주차 데모
 
 <img src="https://i.imgur.com/OpWe8nt.gif" width="40%"/>
